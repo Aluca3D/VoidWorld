@@ -1,0 +1,5 @@
+name: VoidWorld
+version: '0.0.1'
+main: io.papermc.voidWorld.VoidWorld
+api-version: '1.21'
+authors: [ALuca]
