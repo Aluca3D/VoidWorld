@@ -15,10 +15,16 @@ public class VWRecipeGenerator {
 
         recipeHelper.genShapedRecipe(
                 Material.OAK_SAPLING,
-                "dirtToSapling",
                 new String[]{"DB", "BD"},
                 'D', Material.DIRT,
                 'B', Material.BONE_MEAL
+        );
+
+        recipeHelper.genFurnaceRecipe(
+                Material.IRON_NUGGET,
+                Material.GRAVEL,
+                0.4f,
+                100
         );
     }
 }
