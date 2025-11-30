@@ -11,13 +11,13 @@ public final class VoidWorld extends JavaPlugin {
         getLogger().info("VoidWorld loaded!");
     }
 
-    private VWBlockGenerator oneBlock;
+    private VWOneBlockGenerator oneBlock;
 
     @Override
     public void onEnable() {
         getLogger().info("VoidWorld enabled!");
 
-        oneBlock = new VWBlockGenerator(this);
+        oneBlock = new VWOneBlockGenerator(this);
         Bukkit.getPluginManager().registerEvents(oneBlock, this);
 
         World world = Bukkit.getWorlds().getFirst();

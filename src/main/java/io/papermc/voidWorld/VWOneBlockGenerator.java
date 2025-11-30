@@ -9,11 +9,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class VWBlockGenerator implements Listener {
+public class VWOneBlockGenerator implements Listener {
     private final JavaPlugin plugin;
     private Location oneBlockLocation;
 
-    public VWBlockGenerator(JavaPlugin plugin) {
+    public VWOneBlockGenerator(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
