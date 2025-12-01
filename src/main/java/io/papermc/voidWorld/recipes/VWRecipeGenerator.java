@@ -1,6 +1,6 @@
 package io.papermc.voidWorld.recipes;
 
-import org.bukkit.Material;
+import io.papermc.voidWorld.recipes.recipes.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class VWRecipeGenerator {
@@ -13,18 +13,16 @@ public class VWRecipeGenerator {
     public void registerRecipes() {
         VWRecipeHelper recipeHelper = new VWRecipeHelper(plugin);
 
-        recipeHelper.genShapedRecipe(
-                Material.OAK_SAPLING,
-                new String[]{"DB", "BD"},
-                'D', Material.DIRT,
-                'B', Material.BONE_MEAL
-        );
+        ShapedRecipesGenerator shapedGen = new ShapedRecipesGenerator();
+        ShapelessRecipesGenerator shapelessGen = new ShapelessRecipesGenerator();
+        FurnaceRecipesGenerator furnaceGen = new FurnaceRecipesGenerator();
+        BlastingRecipesGenerator blastingGen = new BlastingRecipesGenerator();
+        SmokingRecipesGenerator smokingGen = new SmokingRecipesGenerator();
 
-        recipeHelper.genFurnaceRecipe(
-                Material.IRON_NUGGET,
-                Material.GRAVEL,
-                0.4f,
-                100
-        );
+        shapedGen.registerRecipes(recipeHelper);
+        shapelessGen.registerRecipes(recipeHelper);
+        furnaceGen.registerRecipes(recipeHelper);
+        blastingGen.registerRecipes(recipeHelper);
+        smokingGen.registerRecipes(recipeHelper);
     }
 }
