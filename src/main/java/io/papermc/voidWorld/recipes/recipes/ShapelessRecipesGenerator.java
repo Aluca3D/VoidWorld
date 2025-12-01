@@ -6,11 +6,13 @@ import org.bukkit.Material;
 public class ShapelessRecipesGenerator {
     public void registerRecipes(VWRecipeHelper recipeHelper) {
         recipeHelper.genShapelessRecipe(
+                "_from_gunpowder",
                 Material.GRAVEL, 2,
                 2, Material.DIRT,
                 2, Material.GUNPOWDER
         );
         recipeHelper.genShapelessRecipe(
+                "_from_bone_meal",
                 Material.GRAVEL, 1,
                 3, Material.DIRT,
                 1, Material.BONE_MEAL
@@ -43,11 +45,13 @@ public class ShapelessRecipesGenerator {
                 9, Material.STRING
         );
         recipeHelper.genShapelessRecipe(
+                "_from_orange_dye",
                 Material.RED_SAND, 4,
                 4, Material.SAND,
                 1, Material.ORANGE_DYE
         );
         recipeHelper.genShapelessRecipe(
+                "_from_red_dye",
                 Material.RED_SAND, 4,
                 4, Material.SAND,
                 1, Material.RED_DYE

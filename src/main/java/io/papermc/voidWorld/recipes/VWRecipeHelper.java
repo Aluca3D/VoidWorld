@@ -81,6 +81,60 @@ public class VWRecipeHelper {
         plugin.getServer().addRecipe(recipe);
     }
 
+    public void genShapedRecipe(String keySuffix, Material result, int amount, String[] shape, Object... ingredients) {
+        NamespacedKey key = new NamespacedKey(
+                plugin, result.name().toLowerCase() + keySuffix + "_shaped"
+        );
+        ItemStack itemResult = new ItemStack(result, amount);
+        ShapedRecipe recipe = new ShapedRecipe(key, itemResult);
+        recipe.shape(shape);
+        for (int i = 0; i < ingredients.length; i += 2) {
+            char keyChar = (char) ingredients[i];
+            Object ingredient = ingredients[i + 1];
+
+            if (ingredient instanceof Material mat) {
+                recipe.setIngredient(keyChar, mat);
+
+            } else if (ingredient instanceof RecipeChoice choice) {
+                recipe.setIngredient(keyChar, choice);
+
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid ingredient type: " + ingredient.getClass().getName()
+                );
+            }
+
+        }
+        plugin.getServer().addRecipe(recipe);
+    }
+
+    public void genShapelessRecipe(String keySuffix, Material result, int amount, Object... ingredients) {
+        NamespacedKey key = new NamespacedKey(
+                plugin, result.name().toLowerCase() + keySuffix + "_shapeless"
+        );
+        ItemStack itemResult = new ItemStack(result, amount);
+        ShapelessRecipe recipe = new ShapelessRecipe(key, itemResult);
+        for (int i = 0; i < ingredients.length; i += 2) {
+            int ingredientAmount = (int) ingredients[i];
+            Object ingredient = ingredients[i + 1];
+
+            if (ingredient instanceof Material mat) {
+                recipe.addIngredient(ingredientAmount, mat);
+
+            } else if (ingredient instanceof RecipeChoice choice) {
+                for (int j = 0; j < ingredientAmount; j++) {
+                    recipe.addIngredient(choice);
+                }
+
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid ingredient type: " + ingredient.getClass().getName()
+                );
+            }
+        }
+        plugin.getServer().addRecipe(recipe);
+    }
+
     public void genFurnaceRecipe(Material result, Object source, float experience, int cookingTime) {
         NamespacedKey key = new NamespacedKey(
                 plugin, result.name().toLowerCase() + "_from_" + keyPart(source) + "_furnace"
