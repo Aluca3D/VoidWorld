@@ -24,14 +24,17 @@ public final class VoidWorld extends JavaPlugin {
 
         World world = Bukkit.getWorlds().getFirst();
 
+        // Create Player Structure Detector
         EndPortalDetection endPortalDetection = new EndPortalDetection();
 
+        // Register Detectors
         VWPlayerStructureRegistry playerStructReg = new VWPlayerStructureRegistry(
                 Arrays.asList(
                         endPortalDetection
                 )
         );
 
+        // Register Player Structure Registry for events
         Bukkit.getPluginManager().registerEvents(playerStructReg, this);
 
         // Recipe generators
@@ -50,7 +53,6 @@ public final class VoidWorld extends JavaPlugin {
                         blastingGen,
                         smokingGen
                 )
-
         );
 
         // Create Recipe Registry & Helper
