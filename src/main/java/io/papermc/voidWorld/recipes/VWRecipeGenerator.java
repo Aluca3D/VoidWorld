@@ -1,28 +1,15 @@
 package io.papermc.voidWorld.recipes;
 
-import io.papermc.voidWorld.recipes.recipes.*;
-import org.bukkit.plugin.java.JavaPlugin;
+import java.util.List;
 
 public class VWRecipeGenerator {
-    private final JavaPlugin plugin;
+    private final List<VWRecipeInterface> recipes;
 
-    public VWRecipeGenerator(JavaPlugin plugin) {
-        this.plugin = plugin;
+    public VWRecipeGenerator(List<VWRecipeInterface> recipes) {
+        this.recipes = recipes;
     }
 
-    public void registerRecipes() {
-        VWRecipeHelper recipeHelper = new VWRecipeHelper(plugin);
-
-        ShapedRecipesGenerator shapedGen = new ShapedRecipesGenerator();
-        ShapelessRecipesGenerator shapelessGen = new ShapelessRecipesGenerator();
-        FurnaceRecipesGenerator furnaceGen = new FurnaceRecipesGenerator();
-        BlastingRecipesGenerator blastingGen = new BlastingRecipesGenerator();
-        SmokingRecipesGenerator smokingGen = new SmokingRecipesGenerator();
-
-        shapedGen.registerRecipes(recipeHelper);
-        shapelessGen.registerRecipes(recipeHelper);
-        furnaceGen.registerRecipes(recipeHelper);
-        blastingGen.registerRecipes(recipeHelper);
-        smokingGen.registerRecipes(recipeHelper);
+    public List<VWRecipeInterface> getRecipes() {
+        return recipes;
     }
 }

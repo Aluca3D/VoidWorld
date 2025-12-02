@@ -1,10 +1,12 @@
 package io.papermc.voidWorld.recipes.recipes;
 
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
+import io.papermc.voidWorld.recipes.VWRecipeInterface;
 import org.bukkit.Material;
 import org.bukkit.inventory.RecipeChoice;
 
-public class ShapedRecipesGenerator {
+public class ShapedRecipesGenerator implements VWRecipeInterface {
+    @Override
     public void registerRecipes(VWRecipeHelper recipeHelper) {
         recipeHelper.genShapedRecipe(
                 Material.OAK_SAPLING, 1,

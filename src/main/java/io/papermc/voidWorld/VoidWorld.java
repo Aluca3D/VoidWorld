@@ -1,9 +1,14 @@
 package io.papermc.voidWorld;
 
 import io.papermc.voidWorld.recipes.VWRecipeGenerator;
+import io.papermc.voidWorld.recipes.VWRecipeHelper;
+import io.papermc.voidWorld.recipes.VWRecipeRegistry;
+import io.papermc.voidWorld.recipes.recipes.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
 
 public final class VoidWorld extends JavaPlugin {
     @Override
@@ -17,14 +22,36 @@ public final class VoidWorld extends JavaPlugin {
 
         World world = Bukkit.getWorlds().getFirst();
 
+        // Recipe generators
+        ShapedRecipesGenerator shapedGen = new ShapedRecipesGenerator();
+        ShapelessRecipesGenerator shapelessGen = new ShapelessRecipesGenerator();
+        FurnaceRecipesGenerator furnaceGen = new FurnaceRecipesGenerator();
+        BlastingRecipesGenerator blastingGen = new BlastingRecipesGenerator();
+        SmokingRecipesGenerator smokingGen = new SmokingRecipesGenerator();
+
+        // Create RecipeGeneratorList
+        VWRecipeGenerator recipeGen = new VWRecipeGenerator(
+                Arrays.asList(
+                        shapedGen,
+                        shapelessGen,
+                        furnaceGen,
+                        blastingGen,
+                        smokingGen
+                )
+
+        );
+
+        // Create Recipe Registry & Helper
+        VWRecipeRegistry recipeRegistry = new VWRecipeRegistry(recipeGen.getRecipes());
+        VWRecipeHelper recipeHelper = new VWRecipeHelper(this);
+
+        // Register Recipes
+        recipeRegistry.registerAll(recipeHelper);
+
+        // OneBlock
         VWOneBlockGenerator oneBlock = new VWOneBlockGenerator(this);
-        VWRecipeGenerator recipeGen = new VWRecipeGenerator(this);
-
-
         Bukkit.getPluginManager().registerEvents(oneBlock, this);
-
         oneBlock.setOneBlock(world);
-        recipeGen.registerRecipes();
     }
 
     @Override
