@@ -1,10 +1,12 @@
 package io.papermc.voidWorld.recipes.recipes;
 
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
+import io.papermc.voidWorld.recipes.VWRecipeInterface;
 import org.bukkit.Material;
 import org.bukkit.inventory.RecipeChoice;
 
-public class ShapelessRecipesGenerator {
+public class ShapelessRecipesGenerator implements VWRecipeInterface {
+    @Override
     public void registerRecipes(VWRecipeHelper recipeHelper) {
         recipeHelper.genShapelessRecipe(
                 "_from_gunpowder",
