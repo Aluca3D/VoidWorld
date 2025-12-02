@@ -1,10 +1,14 @@
 package io.papermc.voidWorld;
 
 import io.papermc.paper.datapack.Datapack;
+import io.papermc.voidWorld.buildStructureDetection.structures.EndPortalDetection;
 import io.papermc.voidWorld.recipes.VWRecipeGenerator;
+import io.papermc.voidWorld.buildStructureDetection.VWPlayerStructureRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
 
 public final class VoidWorld extends JavaPlugin {
     @Override
@@ -18,6 +22,17 @@ public final class VoidWorld extends JavaPlugin {
     @Override
     public void onEnable() {
         getLogger().info("VoidWorld enabled!");
+
+        // Player Structure Detectors
+        EndPortalDetection endPortalDetection = new EndPortalDetection();
+
+        VWPlayerStructureRegistry playerStructReg = new VWPlayerStructureRegistry(
+                Arrays.asList(
+                        endPortalDetection
+                )
+        );
+
+        Bukkit.getPluginManager().registerEvents(playerStructReg, this);
 
         oneBlock = new VWOneBlockGenerator(this);
         recipeGen = new VWRecipeGenerator(this);
