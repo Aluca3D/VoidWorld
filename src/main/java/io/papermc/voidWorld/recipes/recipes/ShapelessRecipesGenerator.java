@@ -2,6 +2,7 @@ package io.papermc.voidWorld.recipes.recipes;
 
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import org.bukkit.Material;
+import org.bukkit.inventory.RecipeChoice;
 
 public class ShapelessRecipesGenerator {
     public void registerRecipes(VWRecipeHelper recipeHelper) {
@@ -45,16 +46,12 @@ public class ShapelessRecipesGenerator {
                 9, Material.STRING
         );
         recipeHelper.genShapelessRecipe(
-                "_from_orange_dye",
                 Material.RED_SAND, 4,
                 4, Material.SAND,
-                1, Material.ORANGE_DYE
-        );
-        recipeHelper.genShapelessRecipe(
-                "_from_red_dye",
-                Material.RED_SAND, 4,
-                4, Material.SAND,
-                1, Material.RED_DYE
+                1, new RecipeChoice.MaterialChoice(
+                        Material.RED_DYE,
+                        Material.ORANGE_DYE
+                )
         );
     }
 }
