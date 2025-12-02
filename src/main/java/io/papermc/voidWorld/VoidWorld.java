@@ -1,6 +1,7 @@
 package io.papermc.voidWorld;
 
 import io.papermc.paper.datapack.Datapack;
+import io.papermc.voidWorld.recipes.VWRecipeGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,17 +13,21 @@ public final class VoidWorld extends JavaPlugin {
     }
 
     private VWOneBlockGenerator oneBlock;
+    private VWRecipeGenerator recipeGen;
 
     @Override
     public void onEnable() {
         getLogger().info("VoidWorld enabled!");
 
         oneBlock = new VWOneBlockGenerator(this);
-        Bukkit.getPluginManager().registerEvents(oneBlock, this);
+        recipeGen = new VWRecipeGenerator(this);
 
         World world = Bukkit.getWorlds().getFirst();
-        oneBlock.setOneBlock(world);
 
+        Bukkit.getPluginManager().registerEvents(oneBlock, this);
+
+        oneBlock.setOneBlock(world);
+        recipeGen.registerRecipes();
 
         Datapack pack = this.getServer().getDatapackManager().getPack(getPluginMeta().getName() + "/provided");
         if (pack != null) {
