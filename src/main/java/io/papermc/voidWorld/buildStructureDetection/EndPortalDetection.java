@@ -7,14 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.LightningStrikeEvent;
 
-import java.util.List;
-
-public class VWPlayerStructureRegistry implements Listener {
-    private final List<VWPlayerStructureInterface> detectors;
-
-    public VWPlayerStructureRegistry(List<VWPlayerStructureInterface> detectors) {
-        this.detectors = detectors;
-    }
+public class EndPortalDetection  implements Listener {
 
     @EventHandler
     public void onLightningStrike(LightningStrikeEvent event) {
@@ -22,10 +15,26 @@ public class VWPlayerStructureRegistry implements Listener {
         Block struckBlock = lightning.getLocation().getBlock();
 
         if (struckBlock.getType() == Material.LIGHTNING_ROD) {
-            for (VWPlayerStructureInterface detector : detectors) {
-                detector.detectStructure(struckBlock);
+            if (isEndPortalBuild(struckBlock)) {
+                endPortalBuild(struckBlock);
+            } else if (isEndPortalDestroy(struckBlock)) {
+                endPortalDestroy(struckBlock);
             }
         }
+    }
+
+    private boolean isEndPortalBuild(Block startBlock) {
+        return true;
+    }
+
+    private void endPortalBuild(Block startBlock) {
+    }
+
+    private boolean isEndPortalDestroy(Block startBlock) {
+        return true;
+    }
+
+    private void endPortalDestroy(Block startBlock) {
     }
 
 }

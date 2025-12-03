@@ -1,7 +1,6 @@
 package io.papermc.voidWorld;
 
-import io.papermc.voidWorld.buildStructureDetection.VWPlayerStructureRegistry;
-import io.papermc.voidWorld.buildStructureDetection.structures.EndPortalDetection;
+import io.papermc.voidWorld.buildStructureDetection.EndPortalDetection;
 import io.papermc.voidWorld.recipes.VWRecipeGenerator;
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import io.papermc.voidWorld.recipes.VWRecipeRegistry;
@@ -26,16 +25,7 @@ public final class VoidWorld extends JavaPlugin {
 
         // Create Player Structure Detector
         EndPortalDetection endPortalDetection = new EndPortalDetection();
-
-        // Register Detectors
-        VWPlayerStructureRegistry playerStructReg = new VWPlayerStructureRegistry(
-                Arrays.asList(
-                        endPortalDetection
-                )
-        );
-
-        // Register Player Structure Registry for events
-        Bukkit.getPluginManager().registerEvents(playerStructReg, this);
+        Bukkit.getPluginManager().registerEvents(endPortalDetection, this);
 
         // Recipe generators
         ShapedRecipesGenerator shapedGen = new ShapedRecipesGenerator();
