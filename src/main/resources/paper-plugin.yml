@@ -1,6 +1,6 @@
 name: VoidWorld
-version: '0.0.1'
+version: '$projectVersion'
 main: io.papermc.voidWorld.VoidWorld
-api-version: '1.21'
+api-version: '$apiVersion'
 authors: [ ALuca ]
 bootstrapper: io.papermc.voidWorld.VoidWorldBootstrap
