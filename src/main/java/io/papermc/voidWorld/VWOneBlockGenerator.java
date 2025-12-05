@@ -17,10 +17,22 @@ public class VWOneBlockGenerator implements Listener {
         this.plugin = plugin;
     }
 
-    public void setOneBlock(World world) {
-        Location spawn = world.getSpawnLocation();
+    public void setOneBlock() {
+        World world = Bukkit.getWorld("world");
+        if (world == null) {
+            plugin.getLogger().warning("Overworld not found, cannot place OneBlock!");
+            return;
+        }
+        
+        Location spawn = world.getSpawnLocation().getBlock().getLocation();
+
+        if (spawn.getBlock().getType() != Material.AIR) {
+            plugin.getLogger().info("OneBlock already exists at spawn, skipping placement.");
+        } else {
+            plugin.getLogger().info("Placed OneBlock at spawn: " + spawn);
+            spawn.getBlock().setType(Material.DIRT);
+        }
         oneBlockLocation = spawn.clone();
-        oneBlockLocation.getBlock().setType(Material.DIRT);
     }
 
     @EventHandler
