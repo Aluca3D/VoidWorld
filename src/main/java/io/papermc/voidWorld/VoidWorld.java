@@ -1,7 +1,6 @@
 package io.papermc.voidWorld;
 
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection;
-import io.papermc.voidWorld.recipes.VWRecipeGenerator;
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import io.papermc.voidWorld.recipes.VWRecipeRegistry;
 import io.papermc.voidWorld.recipes.recipes.*;
@@ -27,30 +26,21 @@ public final class VoidWorld extends JavaPlugin {
         EndPortalDetection endPortalDetection = new EndPortalDetection();
         Bukkit.getPluginManager().registerEvents(endPortalDetection, this);
 
-        // Recipe generators
-        ShapedRecipesGenerator shapedGen = new ShapedRecipesGenerator();
-        ShapelessRecipesGenerator shapelessGen = new ShapelessRecipesGenerator();
-        FurnaceRecipesGenerator furnaceGen = new FurnaceRecipesGenerator();
-        BlastingRecipesGenerator blastingGen = new BlastingRecipesGenerator();
-        SmokingRecipesGenerator smokingGen = new SmokingRecipesGenerator();
+        VWRecipeHelper helper = new VWRecipeHelper(this);
 
-        // Create RecipeGeneratorList
-        VWRecipeGenerator recipeGen = new VWRecipeGenerator(
+        // Recipes
+        VWRecipeRegistry recipeRegistry = new VWRecipeRegistry(
                 Arrays.asList(
-                        shapedGen,
-                        shapelessGen,
-                        furnaceGen,
-                        blastingGen,
-                        smokingGen
+                        new ShapedRecipesGenerator(),
+                        new ShapelessRecipesGenerator(),
+                        new FurnaceRecipesGenerator(),
+                        new BlastingRecipesGenerator(),
+                        new SmokingRecipesGenerator()
                 )
+
         );
 
-        // Create Recipe Registry & Helper
-        VWRecipeRegistry recipeRegistry = new VWRecipeRegistry(recipeGen.getRecipes());
-        VWRecipeHelper recipeHelper = new VWRecipeHelper(this);
-
-        // Register Recipes
-        recipeRegistry.registerAll(recipeHelper);
+        recipeRegistry.registerAll(helper);
 
         // OneBlock
         VWOneBlockGenerator oneBlock = new VWOneBlockGenerator(this);
