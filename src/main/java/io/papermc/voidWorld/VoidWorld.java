@@ -1,6 +1,6 @@
 package io.papermc.voidWorld;
 
-import io.papermc.voidWorld.buildStructureDetection.EndPortalDetection;
+import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection;
 import io.papermc.voidWorld.recipes.VWRecipeGenerator;
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import io.papermc.voidWorld.recipes.VWRecipeRegistry;
