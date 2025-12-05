@@ -3,15 +3,15 @@ package io.papermc.voidWorld.recipes;
 import java.util.List;
 
 public class VWRecipeRegistry {
-    private final List<VWRecipeInterface> recipes;
+    private final List<VWRecipeInterface> generators;
 
-    public VWRecipeRegistry(List<VWRecipeInterface> recipes) {
-        this.recipes = recipes;
+    public VWRecipeRegistry(List<VWRecipeInterface> generators) {
+        this.generators = generators;
     }
 
-    public void registerAll(VWRecipeHelper recipeHelper) {
-        for (VWRecipeInterface recipe : recipes) {
-            recipe.registerRecipes(recipeHelper);
+    public void registerAll(VWRecipeHelper helper) {
+        for (VWRecipeInterface generator : generators) {
+            generator.registerRecipes(helper);
         }
     }
 }
