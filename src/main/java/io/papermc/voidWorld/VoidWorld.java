@@ -1,5 +1,6 @@
 package io.papermc.voidWorld;
 
+import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection;
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import io.papermc.voidWorld.recipes.VWRecipeRegistry;
 import io.papermc.voidWorld.recipes.recipes.*;
@@ -21,6 +22,10 @@ public final class VoidWorld extends JavaPlugin {
 
         World world = Bukkit.getWorlds().getFirst();
 
+        // Create Player Structure Detector
+        EndPortalDetection endPortalDetection = new EndPortalDetection();
+        Bukkit.getPluginManager().registerEvents(endPortalDetection, this);
+
         VWRecipeHelper helper = new VWRecipeHelper(this);
 
         // Recipes
@@ -32,6 +37,7 @@ public final class VoidWorld extends JavaPlugin {
                         new BlastingRecipesGenerator(),
                         new SmokingRecipesGenerator()
                 )
+
         );
 
         recipeRegistry.registerAll(helper);
