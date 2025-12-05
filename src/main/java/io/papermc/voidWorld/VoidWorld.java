@@ -2,6 +2,7 @@ package io.papermc.voidWorld;
 
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection;
 import io.papermc.voidWorld.mobs.VWMobDrops;
+import io.papermc.voidWorld.mobs.VWMobSpawn;
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import io.papermc.voidWorld.recipes.VWRecipeRegistry;
 import io.papermc.voidWorld.recipes.recipes.*;
@@ -22,9 +23,6 @@ public final class VoidWorld extends JavaPlugin {
     public void onEnable() {
         getLogger().info("VoidWorld enabled!");
 
-        // Create Player Structure Detector
-        EndPortalDetection endPortalDetection = new EndPortalDetection();
-
         // Recipes
         VWRecipeRegistry recipeRegistry = new VWRecipeRegistry(
                 Arrays.asList(
@@ -39,21 +37,16 @@ public final class VoidWorld extends JavaPlugin {
         VWRecipeHelper helper = new VWRecipeHelper(this);
         recipeRegistry.registerAll(helper);
 
-        // Mobs
-        ///  Loot
-        VWMobDrops mobDrops = new VWMobDrops();
-        /// Spawn
-        /// Trade
-
         // OneBlock
         VWOneBlockGenerator oneBlock = new VWOneBlockGenerator(this);
         Bukkit.getScheduler().runTask(this, oneBlock::setOneBlock);
 
         registerEventListeners(
                 Arrays.asList(
-                        mobDrops,
                         oneBlock,
-                        endPortalDetection
+                        new VWMobDrops(),
+                        new VWMobSpawn(this),
+                        new EndPortalDetection()
                 )
         );
     }
@@ -61,10 +54,6 @@ public final class VoidWorld extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("VoidWorld disabled!");
-    }
-
-    public JavaPlugin getPlugin() {
-        return this;
     }
 
     private void registerEventListeners(List<Listener> listeners) {

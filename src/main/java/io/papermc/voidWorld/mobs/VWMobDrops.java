@@ -15,6 +15,9 @@ public class VWMobDrops implements Listener {
         LivingEntity entity = event.getEntity();
 
         if (entity.getType() == EntityType.ENDERMAN) {
+            // TODO:
+            //  - Add Functions to make it interact with Looting enchantment
+            //  - Add Config file for easier addition of new loot with "use Looting" bool
             if (Math.random() < 0.20) {
                 event.getDrops().add(new ItemStack(Material.END_STONE, 1));
             }
