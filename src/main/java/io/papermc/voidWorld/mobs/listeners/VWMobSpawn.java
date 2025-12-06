@@ -20,9 +20,9 @@ public class VWMobSpawn implements Listener {
     private final JavaPlugin plugin;
     private final VWMobSpawnConfig config;
 
-    public VWMobSpawn(JavaPlugin plugin) {
+    public VWMobSpawn(JavaPlugin plugin, VWMobSpawnConfig config) {
         this.plugin = plugin;
-        this.config = new VWMobSpawnConfig(plugin);
+        this.config = config;
     }
 
     @EventHandler

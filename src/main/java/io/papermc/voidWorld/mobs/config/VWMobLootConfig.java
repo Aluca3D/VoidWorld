@@ -1,9 +1,9 @@
 package io.papermc.voidWorld.mobs.config;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.*;
 
@@ -11,72 +11,61 @@ public class VWMobLootConfig {
 
     private final Map<EntityType, List<DropDefinition>> lootTable = new HashMap<>();
 
-    public VWMobLootConfig(JavaPlugin plugin) {
+    public VWMobLootConfig(JavaPlugin plugin, ConfigurationNode root) {
 
-        ConfigurationSection root = plugin.getConfig().getConfigurationSection("mob-loot");
-        if (root == null) {
-            plugin.getLogger().warning("No mob-loot section found in config!");
+        ConfigurationNode section = root.node("mob-loot");
+
+        if (section.empty()) {
+            System.out.println("[VW] No mob-loot section found!");
             return;
         }
 
-        for (String mobKey : root.getKeys(false)) {
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : section.childrenMap().entrySet()) {
+
+            String mobName = entry.getKey().toString();
+            ConfigurationNode mobNode = entry.getValue();
 
             EntityType type;
             try {
-                type = EntityType.valueOf(mobKey.toUpperCase());
+                type = EntityType.valueOf(mobName.toUpperCase());
             } catch (Exception e) {
-                plugin.getLogger().warning("Invalid mob type in config: " + mobKey);
-                continue;
-            }
-
-            List<Map<?, ?>> dropList = root.getConfigurationSection(mobKey).getMapList("drops");
-            if (dropList.isEmpty()) {
-                plugin.getLogger().warning("Mob " + mobKey + " has no drops.");
+                plugin.getLogger().warning("Invalid mob: " + mobName);
                 continue;
             }
 
             List<DropDefinition> drops = new ArrayList<>();
 
-            for (Map<?, ?> map : dropList) {
-                String materialName = map.get("material").toString();
+            List<? extends ConfigurationNode> dropNodes = mobNode.node("drops").childrenList();
+
+            for (ConfigurationNode dropNode : dropNodes) {
+
+                String materialName = dropNode.node("material").getString();
                 Material material;
+
+                if (materialName == null) {
+                    plugin.getLogger().warning("Material name is null, skipping drop");
+
+                    continue;
+                }
+
                 try {
                     material = Material.valueOf(materialName.toUpperCase());
-                } catch (Exception e) {
+                } catch (IllegalArgumentException e) {
                     plugin.getLogger().warning("Invalid material: " + materialName);
                     continue;
                 }
 
-                Map<?, ?> amountMap = (Map<?, ?>) map.get("amount");
 
-                int min = 1;
-                int max = 1;
+                int min = dropNode.node("amount", "min").getInt(1);
+                int max = dropNode.node("amount", "max").getInt(1);
 
-                if (amountMap != null) {
-                    Object minObj = amountMap.get("min");
-                    Object maxObj = amountMap.get("max");
-                    if (minObj instanceof Number n) min = n.intValue();
-                    if (maxObj instanceof Number n) max = n.intValue();
-                }
+                double chance = dropNode.node("chance").getDouble(1.0);
 
-                double chance = 1.0;
-                Object chanceObj = map.get("chance");
-                if (chanceObj instanceof Number n) chance = n.doubleValue();
+                ConfigurationNode lootingNode = dropNode.node("looting");
 
-                Map<?, ?> lootingMap = (Map<?, ?>) map.get("looting");
-                boolean lootingEnabled = false;
-                double extraChance = 0.0;
-                int extraAmount = 0;
-                if (lootingMap != null) {
-                    Object enabledObj = lootingMap.get("enabled");
-                    if (enabledObj instanceof Boolean b) lootingEnabled = b;
-
-                    Object extraChanceObj = lootingMap.get("extra-chance-per-level");
-                    if (extraChanceObj instanceof Number n) extraChance = n.doubleValue();
-
-                    Object extraAmountObj = lootingMap.get("extra-amount-per-level");
-                    if (extraAmountObj instanceof Number n) extraAmount = n.intValue();
-                }
+                boolean lootingEnabled = lootingNode.node("enabled").getBoolean(false);
+                double extraChance = lootingNode.node("extra-chance-per-level").getDouble(0.0);
+                int extraAmount = lootingNode.node("extra-amount-per-level").getInt(0);
 
                 drops.add(new DropDefinition(
                         material, min, max, chance,
@@ -86,7 +75,10 @@ public class VWMobLootConfig {
 
             lootTable.put(type, drops);
 
-            plugin.getLogger().info("Loaded " + drops.size() + " custom drops for " + type);
+            plugin.getLogger().info("Loaded " + drops.size() + " drops for " + type);
+            for (DropDefinition drop : drops) {
+                plugin.getLogger().info("-> Material:" + drop.material().toString());
+            }
         }
     }
 

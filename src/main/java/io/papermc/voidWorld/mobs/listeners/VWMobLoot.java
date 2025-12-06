@@ -16,10 +16,12 @@ import java.util.Random;
 public class VWMobLoot implements Listener {
 
     private final Random random = new Random();
+    private final JavaPlugin plugin;
     private final VWMobLootConfig config;
 
-    public VWMobLoot(JavaPlugin plugin) {
-        this.config = new VWMobLootConfig(plugin);
+    public VWMobLoot(JavaPlugin plugin, VWMobLootConfig config) {
+        this.plugin = plugin;
+        this.config = config;
     }
 
     @EventHandler

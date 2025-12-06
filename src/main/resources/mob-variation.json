@@ -1,0 +1,32 @@
+{
+  "mob-variation": {
+    "SKELETON": {
+      "replacement": "STRAY",
+      "interval": {
+        "min": 6,
+        "max": 10
+      }
+    },
+    "ZOMBIFIED_PIGLIN": {
+      "replacement": "SKELETON",
+      "interval": {
+        "min": 15,
+        "max": 25
+      }
+    },
+    "SQUID": {
+      "replacement": "GLOW_SQUID",
+      "interval": {
+        "min": 10,
+        "max": 15
+      }
+    },
+    "GLOW_SQUID": {
+      "replacement": "AXOLOTL",
+      "interval": {
+        "min": 20,
+        "max": 25
+      }
+    }
+  }
+}
