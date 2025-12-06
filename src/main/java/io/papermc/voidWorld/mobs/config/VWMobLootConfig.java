@@ -1,5 +1,6 @@
 package io.papermc.voidWorld.mobs.config;
 
+import io.papermc.voidWorld.helper.VWDimension;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,9 +68,16 @@ public class VWMobLootConfig {
                 double extraChance = lootingNode.node("extra-chance-per-level").getDouble(0.0);
                 int extraAmount = lootingNode.node("extra-amount-per-level").getInt(0);
 
+                boolean useDimension = lootingNode.node("useDimension").getBoolean(false);
+                String dimensionStr = lootingNode.node("inDimension").getString("OVERWORLD");
+                VWDimension dimension = VWDimension.fromString(dimensionStr);
+
                 drops.add(new DropDefinition(
-                        material, min, max, chance,
-                        lootingEnabled, extraChance, extraAmount
+                        material,
+                        min, max, chance,
+                        lootingEnabled,
+                        extraChance, extraAmount,
+                        useDimension, dimension
                 ));
             }
 

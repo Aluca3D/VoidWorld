@@ -1,5 +1,6 @@
 package io.papermc.voidWorld.mobs.config;
 
+import io.papermc.voidWorld.helper.VWDimension;
 import org.bukkit.Material;
 
 public record DropDefinition(
@@ -9,6 +10,8 @@ public record DropDefinition(
         double chance,
         boolean lootingEnabled,
         double extraChancePerLevel,
-        int extraAmountPerLevel
+        int extraAmountPerLevel,
+        boolean useDimension,
+        VWDimension inDimension
 ) {
 }

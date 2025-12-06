@@ -1,14 +1,19 @@
 package io.papermc.voidWorld.mobs.config;
 
+import io.papermc.voidWorld.helper.VWDimension;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.potion.PotionEffectType;
 
 public record MobVariation(
         EntityType replacement,
         int intervalMin,
         int intervalMax,
-        String standingOn,
-        boolean burning,
-        boolean storm,
-        String effect,
-        String dimension
-) {}
+        boolean isBurning,
+        boolean isHitByLightning,
+        Material standingOn,
+        PotionEffectType hasEffect,
+        boolean useDimension,
+        VWDimension inDimension
+) {
+}
