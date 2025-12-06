@@ -1,8 +1,8 @@
 package io.papermc.voidWorld;
 
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection;
-import io.papermc.voidWorld.mobs.VWMobDrops;
-import io.papermc.voidWorld.mobs.VWMobSpawn;
+import io.papermc.voidWorld.mobs.listeners.VWMobLoot;
+import io.papermc.voidWorld.mobs.listeners.VWMobSpawn;
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import io.papermc.voidWorld.recipes.VWRecipeRegistry;
 import io.papermc.voidWorld.recipes.recipes.*;
@@ -22,6 +22,7 @@ public final class VoidWorld extends JavaPlugin {
     @Override
     public void onEnable() {
         getLogger().info("VoidWorld enabled!");
+        saveDefaultConfig();
 
         // Recipes
         VWRecipeRegistry recipeRegistry = new VWRecipeRegistry(
@@ -44,7 +45,7 @@ public final class VoidWorld extends JavaPlugin {
         registerEventListeners(
                 Arrays.asList(
                         oneBlock,
-                        new VWMobDrops(),
+                        new VWMobLoot(this),
                         new VWMobSpawn(this),
                         new EndPortalDetection()
                 )
