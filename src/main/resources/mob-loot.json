@@ -4,6 +4,7 @@
       "drops": [
         {
           "material": "END_STONE",
+          "useDimension": true,
           "amount": {
             "min": 1,
             "max": 1

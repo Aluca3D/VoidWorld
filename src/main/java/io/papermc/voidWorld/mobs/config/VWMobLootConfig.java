@@ -62,15 +62,15 @@ public class VWMobLootConfig {
 
                 double chance = dropNode.node("chance").getDouble(1.0);
 
+                boolean useDimension = dropNode.node("useDimension").getBoolean(false);
+                String dimensionStr = dropNode.node("inDimension").getString("OVERWORLD");
+                VWDimension dimension = VWDimension.fromString(dimensionStr);
+
                 ConfigurationNode lootingNode = dropNode.node("looting");
 
                 boolean lootingEnabled = lootingNode.node("enabled").getBoolean(false);
                 double extraChance = lootingNode.node("extra-chance-per-level").getDouble(0.0);
                 int extraAmount = lootingNode.node("extra-amount-per-level").getInt(0);
-
-                boolean useDimension = lootingNode.node("useDimension").getBoolean(false);
-                String dimensionStr = lootingNode.node("inDimension").getString("OVERWORLD");
-                VWDimension dimension = VWDimension.fromString(dimensionStr);
 
                 drops.add(new DropDefinition(
                         material,

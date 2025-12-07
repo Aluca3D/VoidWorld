@@ -2,6 +2,7 @@ package io.papermc.voidWorld.mobs.listeners;
 
 import io.papermc.voidWorld.mobs.config.DropDefinition;
 import io.papermc.voidWorld.mobs.config.VWMobLootConfig;
+import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
@@ -28,6 +29,8 @@ public class VWMobLoot implements Listener {
     public void onMobDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
 
+        World.Environment dimension = entity.getWorld().getEnvironment();
+
         List<DropDefinition> drops = config.getDrops(entity.getType());
         if (drops.isEmpty()) return;
 
@@ -41,6 +44,8 @@ public class VWMobLoot implements Listener {
         }
 
         for (DropDefinition def : drops) {
+
+            if (def.useDimension() && !def.inDimension().getEnvironment().equals(dimension)) continue;
 
             double chance = def.chance();
 
