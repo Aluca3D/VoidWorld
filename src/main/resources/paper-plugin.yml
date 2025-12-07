@@ -2,5 +2,5 @@ name: VoidWorld
 version: '$projectVersion'
 main: io.papermc.voidWorld.VoidWorld
 api-version: '$apiVersion'
-authors: [ ALuca ]
+authors: [ VoidDevLuca ]
 bootstrapper: io.papermc.voidWorld.VoidWorldBootstrap
