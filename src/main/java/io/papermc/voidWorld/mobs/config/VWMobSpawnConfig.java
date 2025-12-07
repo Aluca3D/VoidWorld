@@ -91,6 +91,12 @@ public class VWMobSpawnConfig {
         return !getAllVariations(type).isEmpty();
     }
 
+    public MobVariation getVariation(NamespacedKey key) {
+        List<MobVariation> list = variations.get(key);
+        if (list == null || list.isEmpty()) return null;
+        return list.getFirst();
+    }
+
     public EntityType getReplacement(NamespacedKey key) {
         List<MobVariation> list = variations.get(key);
         if (list == null || list.isEmpty()) return null;
@@ -107,17 +113,6 @@ public class VWMobSpawnConfig {
         return ThreadLocalRandom.current().nextInt(variation.intervalMin(), variation.intervalMax() + 1);
     }
 
-    private List<MobVariation> getAllVariations(EntityType type) {
-        List<MobVariation> all = new ArrayList<>();
-        String prefix = type.name().toLowerCase() + "-";
-        for (Map.Entry<NamespacedKey, List<MobVariation>> entry : variations.entrySet()) {
-            if (entry.getKey().getKey().startsWith(prefix)) {
-                all.addAll(entry.getValue());
-            }
-        }
-        return all;
-    }
-
     public List<NamespacedKey> getKeysForEntity(EntityType type) {
         List<NamespacedKey> keys = new ArrayList<>();
         String prefix = type.name().toLowerCase() + "-";
@@ -127,6 +122,17 @@ public class VWMobSpawnConfig {
             }
         }
         return keys;
+    }
+
+    private List<MobVariation> getAllVariations(EntityType type) {
+        List<MobVariation> all = new ArrayList<>();
+        String prefix = type.name().toLowerCase() + "-";
+        for (Map.Entry<NamespacedKey, List<MobVariation>> entry : variations.entrySet()) {
+            if (entry.getKey().getKey().startsWith(prefix)) {
+                all.addAll(entry.getValue());
+            }
+        }
+        return all;
     }
 
     private static Material parseBlock(String blockName) {
