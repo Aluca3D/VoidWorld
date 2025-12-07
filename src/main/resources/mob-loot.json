@@ -1,228 +1,226 @@
 {
-  "mob-loot": {
-    "ENDERMAN": {
-      "drops": [
-        {
-          "material": "END_STONE",
-          "useDimension": true,
-          "amount": {
-            "min": 1,
-            "max": 1
-          },
-          "chance": 0.15,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.05,
-            "extra-amount-per-level": 1
-          }
+  "ENDERMAN": {
+    "drops": [
+      {
+        "material": "END_STONE",
+        "useDimension": true,
+        "amount": {
+          "min": 1,
+          "max": 1
+        },
+        "chance": 0.15,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.05,
+          "extra-amount-per-level": 1
         }
-      ]
-    },
-    "STRAY": {
-      "drops": [
-        {
-          "material": "SNOWBALL",
-          "amount": {
-            "min": 1,
-            "max": 3
-          },
-          "chance": 0.30,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.05,
-            "extra-amount-per-level": 1
-          }
+      }
+    ]
+  },
+  "STRAY": {
+    "drops": [
+      {
+        "material": "SNOWBALL",
+        "amount": {
+          "min": 1,
+          "max": 3
+        },
+        "chance": 0.30,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.05,
+          "extra-amount-per-level": 1
         }
-      ]
-    },
-    "ELDER_GUARDIAN": {
-      "drops": [
-        {
-          "material": "HEART_OF_THE_SEA",
-          "amount": {
-            "min": 1,
-            "max": 1
-          },
-          "chance": 0.75,
-          "looting": {
-            "enabled": false,
-            "extra-chance-per-level": 0.00,
-            "extra-amount-per-level": 0
-          }
+      }
+    ]
+  },
+  "ELDER_GUARDIAN": {
+    "drops": [
+      {
+        "material": "HEART_OF_THE_SEA",
+        "amount": {
+          "min": 1,
+          "max": 1
+        },
+        "chance": 0.75,
+        "looting": {
+          "enabled": false,
+          "extra-chance-per-level": 0.00,
+          "extra-amount-per-level": 0
         }
-      ]
-    },
-    "DROWNED": {
-      "drops": [
-        {
-          "material": "PRISMARINE_SHARD",
-          "amount": {
-            "min": 2,
-            "max": 4
-          },
-          "chance": 0.25,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
+      }
+    ]
+  },
+  "DROWNED": {
+    "drops": [
+      {
+        "material": "PRISMARINE_SHARD",
+        "amount": {
+          "min": 2,
+          "max": 4
         },
-        {
-          "material": "PRISMARINE_CRYSTALS",
-          "amount": {
-            "min": 1,
-            "max": 3
-          },
-          "chance": 0.15,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
-        },
-        {
-          "material": "COPPER_INGOT",
-          "amount": {
-            "min": 1,
-            "max": 2
-          },
-          "chance": 0.20,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.05,
-            "extra-amount-per-level": 1
-          }
+        "chance": 0.25,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
         }
-      ]
-    },
-    "PIGLIN": {
-      "drops": [
-        {
-          "material": "GLOWSTONE_DUST",
-          "amount": {
-            "min": 2,
-            "max": 4
-          },
-          "chance": 0.25,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
+      },
+      {
+        "material": "PRISMARINE_CRYSTALS",
+        "amount": {
+          "min": 1,
+          "max": 3
         },
-        {
-          "material": "NETHERRACK",
-          "amount": {
-            "min": 2,
-            "max": 4
-          },
-          "chance": 0.25,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
-        },
-        {
-          "material": "SOUL_SAND",
-          "amount": {
-            "min": 1,
-            "max": 3
-          },
-          "chance": 0.15,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
+        "chance": 0.15,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
         }
-      ]
-    },
-    "PIGLIN_BRUTE": {
-      "drops": [
-        {
-          "material": "GLOWSTONE_DUST",
-          "amount": {
-            "min": 2,
-            "max": 4
-          },
-          "chance": 0.25,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
+      },
+      {
+        "material": "COPPER_INGOT",
+        "amount": {
+          "min": 1,
+          "max": 2
         },
-        {
-          "material": "NETHERRACK",
-          "amount": {
-            "min": 2,
-            "max": 4
-          },
-          "chance": 0.25,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
-        },
-        {
-          "material": "SOUL_SAND",
-          "amount": {
-            "min": 1,
-            "max": 3
-          },
-          "chance": 0.15,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
+        "chance": 0.20,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.05,
+          "extra-amount-per-level": 1
         }
-      ]
-    },
-    "ZOMBIFIED_PIGLIN": {
-      "drops": [
-        {
-          "material": "GLOWSTONE_DUST",
-          "amount": {
-            "min": 2,
-            "max": 4
-          },
-          "chance": 0.25,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
+      }
+    ]
+  },
+  "PIGLIN": {
+    "drops": [
+      {
+        "material": "GLOWSTONE_DUST",
+        "amount": {
+          "min": 2,
+          "max": 4
         },
-        {
-          "material": "NETHERRACK",
-          "amount": {
-            "min": 2,
-            "max": 4
-          },
-          "chance": 0.25,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
-        },
-        {
-          "material": "SOUL_SAND",
-          "amount": {
-            "min": 1,
-            "max": 3
-          },
-          "chance": 0.15,
-          "looting": {
-            "enabled": true,
-            "extra-chance-per-level": 0.10,
-            "extra-amount-per-level": 1
-          }
+        "chance": 0.25,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
         }
-      ]
-    }
+      },
+      {
+        "material": "NETHERRACK",
+        "amount": {
+          "min": 2,
+          "max": 4
+        },
+        "chance": 0.25,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      },
+      {
+        "material": "SOUL_SAND",
+        "amount": {
+          "min": 1,
+          "max": 3
+        },
+        "chance": 0.15,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      }
+    ]
+  },
+  "PIGLIN_BRUTE": {
+    "drops": [
+      {
+        "material": "GLOWSTONE_DUST",
+        "amount": {
+          "min": 2,
+          "max": 4
+        },
+        "chance": 0.25,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      },
+      {
+        "material": "NETHERRACK",
+        "amount": {
+          "min": 2,
+          "max": 4
+        },
+        "chance": 0.25,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      },
+      {
+        "material": "SOUL_SAND",
+        "amount": {
+          "min": 1,
+          "max": 3
+        },
+        "chance": 0.15,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      }
+    ]
+  },
+  "ZOMBIFIED_PIGLIN": {
+    "drops": [
+      {
+        "material": "GLOWSTONE_DUST",
+        "amount": {
+          "min": 2,
+          "max": 4
+        },
+        "chance": 0.25,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      },
+      {
+        "material": "NETHERRACK",
+        "amount": {
+          "min": 2,
+          "max": 4
+        },
+        "chance": 0.25,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      },
+      {
+        "material": "SOUL_SAND",
+        "amount": {
+          "min": 1,
+          "max": 3
+        },
+        "chance": 0.15,
+        "looting": {
+          "enabled": true,
+          "extra-chance-per-level": 0.10,
+          "extra-amount-per-level": 1
+        }
+      }
+    ]
   }
 }

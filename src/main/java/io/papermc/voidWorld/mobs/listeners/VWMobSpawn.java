@@ -1,5 +1,6 @@
 package io.papermc.voidWorld.mobs.listeners;
 
+import io.papermc.voidWorld.mobs.MobEquipment;
 import io.papermc.voidWorld.mobs.MobVariation;
 import io.papermc.voidWorld.mobs.config.VWMobSpawnConfig;
 import org.bukkit.*;
@@ -61,13 +62,10 @@ public class VWMobSpawn implements Listener {
             if (count >= nextInterval) {
                 EntityType replacement = config.getReplacement(key);
 
-                Bukkit.getScheduler().runTaskLater(
-                        plugin, () -> {
-                            entity.remove();
-                            entity.getWorld().spawnEntity(entity.getLocation(), replacement);
-                        },
-                        1L
-                );
+                MobVariation variation = config.getVariation(key);
+                if (variation == null) continue;
+
+                replaceEntity(entity, replacement, variation);
 
                 mobCounts.put(key, 0);
                 mobNextInterval.put(key, config.getRandomInterval(key));
@@ -99,13 +97,7 @@ public class VWMobSpawn implements Listener {
             }
 
             EntityType replacement = config.getReplacement(key);
-            Bukkit.getScheduler().runTaskLater(
-                    plugin, () -> {
-                        entity.remove();
-                        entity.getWorld().spawnEntity(entity.getLocation(), replacement);
-                    },
-                    1L
-            );
+            replaceEntity(entity, replacement, variation);
             break;
         }
     }
@@ -132,15 +124,47 @@ public class VWMobSpawn implements Listener {
             if (Registry.MOB_EFFECT.get(variation.hasEffect().key()) != effect.getType()) continue;
 
             EntityType replacement = config.getReplacement(key);
-            Bukkit.getScheduler().runTaskLater(
-                    plugin, () -> {
-                        entity.remove();
-                        entity.getWorld().spawnEntity(entity.getLocation(), replacement);
-                    },
-                    1L
-            );
+            replaceEntity(entity, replacement, variation);
             break;
         }
+    }
+
+    private void replaceEntity(LivingEntity originalEntity, EntityType replacementType, MobVariation variation) {
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Location location = originalEntity.getLocation();
+            originalEntity.remove();
+
+            LivingEntity spawned = (LivingEntity) location.getWorld().spawnEntity(location, replacementType);
+
+            List<String> tags = variation.tags();
+
+            if (tags != null) {
+                for (String tag : tags) {
+                    if (tag == null || tag.isBlank()) continue;
+                    spawned.addScoreboardTag(tag);
+                }
+            }
+
+            if (variation.name() != null) {
+                spawned.customName(variation.name());
+                spawned.setCustomNameVisible(true);
+            }
+
+            MobEquipment equipment = variation.equipment();
+            applyEquipment(spawned, equipment);
+        }, 1L);
+    }
+
+    private void applyEquipment(LivingEntity mob, MobEquipment eq) {
+        if (eq == null || mob.getEquipment() == null) return;
+
+        if (eq.mainHand() != null) mob.getEquipment().setItemInMainHand(eq.mainHand());
+        if (eq.offHand() != null) mob.getEquipment().setItemInOffHand(eq.offHand());
+        if (eq.helmet() != null) mob.getEquipment().setHelmet(eq.helmet());
+        if (eq.chestplate() != null) mob.getEquipment().setChestplate(eq.chestplate());
+        if (eq.leggings() != null) mob.getEquipment().setLeggings(eq.leggings());
+        if (eq.boots() != null) mob.getEquipment().setBoots(eq.boots());
     }
 
     private boolean isNotInDimension(LivingEntity entity, NamespacedKey key) {

@@ -15,14 +15,12 @@ public class VWMobLootConfig {
 
     public VWMobLootConfig(JavaPlugin plugin, ConfigurationNode root) {
 
-        ConfigurationNode section = root.node("mob-loot");
-
-        if (section.empty()) {
+        if (root.empty()) {
             System.out.println("[VW] No mob-loot section found!");
             return;
         }
 
-        for (Map.Entry<Object, ? extends ConfigurationNode> entry : section.childrenMap().entrySet()) {
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : root.childrenMap().entrySet()) {
 
             String mobName = entry.getKey().toString();
             ConfigurationNode mobNode = entry.getValue();
@@ -67,6 +65,12 @@ public class VWMobLootConfig {
                 String dimensionStr = dropNode.node("inDimension").getString("OVERWORLD");
                 VWDimension dimension = VWDimension.fromString(dimensionStr);
 
+                List<String> tags = new ArrayList<>();
+                for (ConfigurationNode tagNode : dropNode.node("tags").childrenList()) {
+                    String tag = tagNode.getString();
+                    if (tag != null) tags.add(tag);
+                }
+
                 ConfigurationNode lootingNode = dropNode.node("looting");
 
                 boolean lootingEnabled = lootingNode.node("enabled").getBoolean(false);
@@ -78,7 +82,8 @@ public class VWMobLootConfig {
                         min, max, chance,
                         lootingEnabled,
                         extraChance, extraAmount,
-                        useDimension, dimension
+                        useDimension, dimension,
+                        tags
                 ));
             }
 

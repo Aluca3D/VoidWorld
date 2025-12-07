@@ -45,6 +45,24 @@ public class VWMobLoot implements Listener {
 
         for (DropDefinition def : drops) {
 
+            List<String> tags = def.tags();
+
+            if (tags != null && !tags.isEmpty()) {
+
+                boolean matches = false;
+
+                for (String tag : tags) {
+                    if (tag == null || tag.isBlank()) continue;
+
+                    if (entity.getScoreboardTags().contains(tag)) {
+                        matches = true;
+                        break;
+                    }
+                }
+
+                if (!matches) continue;
+            }
+
             if (def.useDimension() && !def.inDimension().getEnvironment().equals(dimension)) continue;
 
             double chance = def.chance();

@@ -3,6 +3,8 @@ package io.papermc.voidWorld.mobs;
 import io.papermc.voidWorld.helper.VWDimension;
 import org.bukkit.Material;
 
+import java.util.List;
+
 public record DropDefinition(
         Material material,
         int minAmount,
@@ -12,6 +14,8 @@ public record DropDefinition(
         double extraChancePerLevel,
         int extraAmountPerLevel,
         boolean useDimension,
-        VWDimension inDimension
+        VWDimension inDimension,
+
+        List<String> tags
 ) {
 }
