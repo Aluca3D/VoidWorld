@@ -1,6 +1,7 @@
 package io.papermc.voidWorld.mobs.config;
 
 import io.papermc.voidWorld.helper.VWDimension;
+import io.papermc.voidWorld.mobs.MobVariation;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;

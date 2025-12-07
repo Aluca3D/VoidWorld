@@ -1,6 +1,7 @@
 package io.papermc.voidWorld.mobs.config;
 
 import io.papermc.voidWorld.helper.VWDimension;
+import io.papermc.voidWorld.mobs.DropDefinition;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;

@@ -1,6 +1,6 @@
 package io.papermc.voidWorld.mobs.listeners;
 
-import io.papermc.voidWorld.mobs.config.MobVariation;
+import io.papermc.voidWorld.mobs.MobVariation;
 import io.papermc.voidWorld.mobs.config.VWMobSpawnConfig;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,14 @@ public class VWMobSpawn implements Listener {
 
     private final Map<NamespacedKey, Integer> mobCounts = new HashMap<>();
     private final Map<NamespacedKey, Integer> mobNextInterval = new HashMap<>();
+
+    private final EnumSet<EntityDamageEvent.DamageCause> burningCauses = EnumSet.of(
+            EntityDamageEvent.DamageCause.FIRE,
+            EntityDamageEvent.DamageCause.FIRE_TICK,
+            EntityDamageEvent.DamageCause.LAVA,
+            EntityDamageEvent.DamageCause.HOT_FLOOR,
+            EntityDamageEvent.DamageCause.CAMPFIRE
+    );
 
     private final JavaPlugin plugin;
     private final VWMobSpawnConfig config;
@@ -84,7 +93,10 @@ public class VWMobSpawn implements Listener {
 
             if (!variation.isHitByLightning() && !variation.isBurning()) continue;
             if (variation.isHitByLightning() && event.getCause() != EntityDamageEvent.DamageCause.LIGHTNING) continue;
-            if (variation.isBurning() && event.getCause() != EntityDamageEvent.DamageCause.FIRE) continue;
+
+            if (variation.isBurning() && !burningCauses.contains(event.getCause())) {
+                continue;
+            }
 
             EntityType replacement = config.getReplacement(key);
             Bukkit.getScheduler().runTaskLater(

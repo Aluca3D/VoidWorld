@@ -1,4 +1,4 @@
-package io.papermc.voidWorld.mobs.config;
+package io.papermc.voidWorld.mobs;
 
 import io.papermc.voidWorld.helper.VWDimension;
 import org.bukkit.Material;

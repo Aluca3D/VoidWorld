@@ -1,6 +1,6 @@
 package io.papermc.voidWorld.mobs.listeners;
 
-import io.papermc.voidWorld.mobs.config.DropDefinition;
+import io.papermc.voidWorld.mobs.DropDefinition;
 import io.papermc.voidWorld.mobs.config.VWMobLootConfig;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
