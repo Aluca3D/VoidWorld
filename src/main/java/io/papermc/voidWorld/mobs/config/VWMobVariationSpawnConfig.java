@@ -1,15 +1,14 @@
 package io.papermc.voidWorld.mobs.config;
 
 import io.papermc.voidWorld.helper.VWDimension;
-import io.papermc.voidWorld.mobs.MobEquipment;
-import io.papermc.voidWorld.mobs.MobVariation;
+import io.papermc.voidWorld.mobs.helper.MobEquipment;
+import io.papermc.voidWorld.mobs.helper.MobVariation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.entity.EntityType;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -20,12 +19,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class VWMobSpawnConfig {
+import static io.papermc.voidWorld.mobs.helper.ItemStackConfiguration.parseItem;
+
+public class VWMobVariationSpawnConfig {
 
     private final Map<NamespacedKey, List<MobVariation>> variations = new HashMap<>();
     private final Map<EntityType, List<NamespacedKey>> keysByEntity = new HashMap<>();
 
-    public VWMobSpawnConfig(JavaPlugin plugin, ConfigurationNode root) {
+    public VWMobVariationSpawnConfig(JavaPlugin plugin, ConfigurationNode root) {
 
         if (root.empty()) {
             plugin.getLogger().warning("No " + root + " found!");
@@ -88,14 +89,13 @@ public class VWMobSpawnConfig {
                 }
 
                 ConfigurationNode equipmentNode = replacementNode.node("equipment");
-
                 MobEquipment equipment = new MobEquipment(
-                        parseItem(equipmentNode.node("mainhand").getString("NONE")),
-                        parseItem(equipmentNode.node("offhand").getString("NONE")),
-                        parseItem(equipmentNode.node("helmet").getString("NONE")),
-                        parseItem(equipmentNode.node("chestplate").getString("NONE")),
-                        parseItem(equipmentNode.node("leggings").getString("NONE")),
-                        parseItem(equipmentNode.node("boots").getString("NONE"))
+                        parseItem(equipmentNode.node("mainhand")),
+                        parseItem(equipmentNode.node("offhand")),
+                        parseItem(equipmentNode.node("helmet")),
+                        parseItem(equipmentNode.node("chestplate")),
+                        parseItem(equipmentNode.node("leggings")),
+                        parseItem(equipmentNode.node("boots"))
                 );
 
                 MobVariation variation = new MobVariation(
@@ -176,16 +176,5 @@ public class VWMobSpawnConfig {
     private static PotionEffectType parseEffect(String effectName) {
         if (effectName == null || effectName.equalsIgnoreCase("NONE")) return null;
         return Registry.MOB_EFFECT.get(NamespacedKey.minecraft(effectName.toLowerCase()));
-    }
-
-    private ItemStack parseItem(String name) {
-        if (name == null || name.equalsIgnoreCase("NONE")) return null;
-
-        try {
-            Material mat = Material.valueOf(name.toUpperCase());
-            return new ItemStack(mat);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
     }
 }

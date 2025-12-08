@@ -1,7 +1,8 @@
 package io.papermc.voidWorld.mobs.listeners;
 
-import io.papermc.voidWorld.mobs.DropDefinition;
-import io.papermc.voidWorld.mobs.config.VWMobLootConfig;
+import io.papermc.voidWorld.mobs.helper.DropDefinition;
+import io.papermc.voidWorld.mobs.config.VWMobLootDropConfig;
+import io.papermc.voidWorld.mobs.helper.ItemStackConfiguration;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.enchantments.Enchantment;
@@ -14,13 +15,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.List;
 import java.util.Random;
 
-public class VWMobLoot implements Listener {
+public class VWMobLootDrop implements Listener {
 
     private final Random random = new Random();
     private final JavaPlugin plugin;
-    private final VWMobLootConfig config;
+    private final VWMobLootDropConfig config;
 
-    public VWMobLoot(JavaPlugin plugin, VWMobLootConfig config) {
+    public VWMobLootDrop(JavaPlugin plugin, VWMobLootDropConfig config) {
         this.plugin = plugin;
         this.config = config;
     }
@@ -43,9 +44,9 @@ public class VWMobLoot implements Listener {
                     .getEnchantmentLevel(Enchantment.LOOTING);
         }
 
-        for (DropDefinition def : drops) {
+        for (DropDefinition dropDefinition : drops) {
 
-            List<String> tags = def.tags();
+            List<String> tags = dropDefinition.tags();
 
             if (tags != null && !tags.isEmpty()) {
 
@@ -63,25 +64,27 @@ public class VWMobLoot implements Listener {
                 if (!matches) continue;
             }
 
-            if (def.useDimension() && !def.inDimension().getEnvironment().equals(dimension)) continue;
+            if (dropDefinition.useDimension() && !dropDefinition.inDimension().getEnvironment().equals(dimension)) continue;
 
-            double chance = def.chance();
+            double chance = dropDefinition.chance();
 
-            if (def.lootingEnabled() && lootingLevel > 0) {
-                chance += def.extraChancePerLevel() * lootingLevel;
+            if (dropDefinition.lootingEnabled() && lootingLevel > 0) {
+                chance += dropDefinition.extraChancePerLevel() * lootingLevel;
             }
 
             if (random.nextDouble() > chance) continue;
 
-            int amount = def.minAmount() +
-                    random.nextInt(def.maxAmount() - def.minAmount() + 1);
+            int amount = dropDefinition.minAmount() +
+                    random.nextInt(dropDefinition.maxAmount() - dropDefinition.minAmount() + 1);
 
-            if (def.lootingEnabled() && lootingLevel > 0) {
-                amount += def.extraAmountPerLevel() * lootingLevel;
+            if (dropDefinition.lootingEnabled() && lootingLevel > 0) {
+                amount += dropDefinition.extraAmountPerLevel() * lootingLevel;
             }
 
             if (amount > 0) {
-                event.getDrops().add(new ItemStack(def.material(), amount));
+                ItemStack itemResult = ItemStackConfiguration.build(dropDefinition.itemStackConfiguration());
+                itemResult.setAmount(amount);
+                event.getDrops().add(itemResult);
             }
         }
     }

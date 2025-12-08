@@ -1,10 +1,10 @@
 package io.papermc.voidWorld;
 
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection;
-import io.papermc.voidWorld.mobs.config.VWMobLootConfig;
-import io.papermc.voidWorld.mobs.config.VWMobSpawnConfig;
-import io.papermc.voidWorld.mobs.listeners.VWMobLoot;
-import io.papermc.voidWorld.mobs.listeners.VWMobSpawn;
+import io.papermc.voidWorld.mobs.config.VWMobLootDropConfig;
+import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig;
+import io.papermc.voidWorld.mobs.listeners.VWMobLootDrop;
+import io.papermc.voidWorld.mobs.listeners.VWMobVariationSpawn;
 import io.papermc.voidWorld.recipes.VWRecipeHelper;
 import io.papermc.voidWorld.recipes.VWRecipeRegistry;
 import io.papermc.voidWorld.recipes.recipes.*;
@@ -47,15 +47,15 @@ public final class VoidWorld extends JavaPlugin {
         ConfigurationNode variationNode = VWConfigLoader.loadConfig(this, "mob-variation.json");
         ConfigurationNode lootNode = VWConfigLoader.loadConfig(this, "mob-loot.json");
 
-        VWMobSpawnConfig spawnConfig = new VWMobSpawnConfig(this, variationNode);
-        VWMobLootConfig lootConfig = new VWMobLootConfig(this, lootNode);
+        VWMobVariationSpawnConfig spawnConfig = new VWMobVariationSpawnConfig(this, variationNode);
+        VWMobLootDropConfig lootConfig = new VWMobLootDropConfig(this, lootNode);
 
 
         registerEventListeners(
                 Arrays.asList(
                         oneBlock,
-                        new VWMobLoot(this, lootConfig),
-                        new VWMobSpawn(this, spawnConfig),
+                        new VWMobLootDrop(this, lootConfig),
+                        new VWMobVariationSpawn(this, spawnConfig),
                         new EndPortalDetection()
                 )
         );

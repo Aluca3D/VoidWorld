@@ -17,6 +17,18 @@
       }
     ]
   },
+  "SKELETON": {
+    "drops": [
+      {
+        "tags": [
+          "nether-skeleton"
+        ],
+        "material": "STONE_SWORD",
+        "damage": 30,
+        "chance": 0.30
+      }
+    ]
+  },
   "STRAY": {
     "drops": [
       {

@@ -1,8 +1,9 @@
 package io.papermc.voidWorld.mobs.listeners;
 
-import io.papermc.voidWorld.mobs.MobEquipment;
-import io.papermc.voidWorld.mobs.MobVariation;
-import io.papermc.voidWorld.mobs.config.VWMobSpawnConfig;
+import io.papermc.voidWorld.mobs.helper.ItemStackConfiguration;
+import io.papermc.voidWorld.mobs.helper.MobEquipment;
+import io.papermc.voidWorld.mobs.helper.MobVariation;
+import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VWMobSpawn implements Listener {
+public class VWMobVariationSpawn implements Listener {
 
     private final Map<NamespacedKey, Integer> mobCounts = new HashMap<>();
     private final Map<NamespacedKey, Integer> mobNextInterval = new HashMap<>();
@@ -33,9 +34,9 @@ public class VWMobSpawn implements Listener {
     );
 
     private final JavaPlugin plugin;
-    private final VWMobSpawnConfig config;
+    private final VWMobVariationSpawnConfig config;
 
-    public VWMobSpawn(JavaPlugin plugin, VWMobSpawnConfig config) {
+    public VWMobVariationSpawn(JavaPlugin plugin, VWMobVariationSpawnConfig config) {
         this.plugin = plugin;
         this.config = config;
     }
@@ -159,12 +160,23 @@ public class VWMobSpawn implements Listener {
     private void applyEquipment(LivingEntity mob, MobEquipment eq) {
         if (eq == null || mob.getEquipment() == null) return;
 
-        if (eq.mainHand() != null) mob.getEquipment().setItemInMainHand(eq.mainHand());
-        if (eq.offHand() != null) mob.getEquipment().setItemInOffHand(eq.offHand());
-        if (eq.helmet() != null) mob.getEquipment().setHelmet(eq.helmet());
-        if (eq.chestplate() != null) mob.getEquipment().setChestplate(eq.chestplate());
-        if (eq.leggings() != null) mob.getEquipment().setLeggings(eq.leggings());
-        if (eq.boots() != null) mob.getEquipment().setBoots(eq.boots());
+        if (eq.mainHand() != null)
+            mob.getEquipment().setItemInMainHand(ItemStackConfiguration.build(eq.mainHand()));
+
+        if (eq.offHand() != null)
+            mob.getEquipment().setItemInOffHand(ItemStackConfiguration.build(eq.offHand()));
+
+        if (eq.helmet() != null)
+            mob.getEquipment().setHelmet(ItemStackConfiguration.build(eq.helmet()));
+
+        if (eq.chestplate() != null)
+            mob.getEquipment().setChestplate(ItemStackConfiguration.build(eq.chestplate()));
+
+        if (eq.leggings() != null)
+            mob.getEquipment().setLeggings(ItemStackConfiguration.build(eq.leggings()));
+
+        if (eq.boots() != null)
+            mob.getEquipment().setBoots(ItemStackConfiguration.build(eq.boots()));
     }
 
     private boolean isNotInDimension(LivingEntity entity, NamespacedKey key) {

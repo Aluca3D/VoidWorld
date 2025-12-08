@@ -1,22 +1,22 @@
 package io.papermc.voidWorld.mobs.config;
 
 import io.papermc.voidWorld.helper.VWDimension;
-import io.papermc.voidWorld.mobs.DropDefinition;
-import org.bukkit.Material;
+import io.papermc.voidWorld.mobs.helper.ItemStackConfiguration;
+import io.papermc.voidWorld.mobs.helper.DropDefinition;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.*;
 
-public class VWMobLootConfig {
+public class VWMobLootDropConfig {
 
     private final Map<EntityType, List<DropDefinition>> lootTable = new HashMap<>();
 
-    public VWMobLootConfig(JavaPlugin plugin, ConfigurationNode root) {
+    public VWMobLootDropConfig(JavaPlugin plugin, ConfigurationNode root) {
 
         if (root.empty()) {
-            System.out.println("[VW] No mob-loot section found!");
+            System.out.println("No " + root + " section found!");
             return;
         }
 
@@ -39,22 +39,12 @@ public class VWMobLootConfig {
 
             for (ConfigurationNode dropNode : dropNodes) {
 
-                String materialName = dropNode.node("material").getString();
-                Material material;
+                ItemStackConfiguration itemStackConfiguration = ItemStackConfiguration.parseItem(dropNode);
 
-                if (materialName == null) {
-                    plugin.getLogger().warning("Material name is null, skipping drop");
-
+                if (itemStackConfiguration == null) {
+                    plugin.getLogger().warning("Item is null, skipping drop");
                     continue;
                 }
-
-                try {
-                    material = Material.valueOf(materialName.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Invalid material: " + materialName);
-                    continue;
-                }
-
 
                 int min = dropNode.node("amount", "min").getInt(1);
                 int max = dropNode.node("amount", "max").getInt(1);
@@ -78,7 +68,7 @@ public class VWMobLootConfig {
                 int extraAmount = lootingNode.node("extra-amount-per-level").getInt(0);
 
                 drops.add(new DropDefinition(
-                        material,
+                        itemStackConfiguration,
                         min, max, chance,
                         lootingEnabled,
                         extraChance, extraAmount,
@@ -91,7 +81,7 @@ public class VWMobLootConfig {
 
             plugin.getLogger().info("Loaded " + drops.size() + " drops for " + type);
             for (DropDefinition drop : drops) {
-                plugin.getLogger().info("-> Material:" + drop.material().toString());
+                plugin.getLogger().info("-> Item:" + drop.itemStackConfiguration().material());
             }
         }
     }

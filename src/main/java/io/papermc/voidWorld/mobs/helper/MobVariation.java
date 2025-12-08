@@ -1,4 +1,4 @@
-package io.papermc.voidWorld.mobs;
+package io.papermc.voidWorld.mobs.helper;
 
 import io.papermc.voidWorld.helper.VWDimension;
 import net.kyori.adventure.text.Component;

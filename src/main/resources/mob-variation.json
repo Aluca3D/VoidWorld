@@ -50,9 +50,13 @@
   "ZOMBIFIED_PIGLIN": [
     {
       "replacement": "SKELETON",
-      "tags": ["nether-skeleton"],
+      "tags": [
+        "nether-skeleton"
+      ],
       "equipment": {
-        "mainhand": "STONE_SWORD"
+        "mainhand": {
+          "material": "STONE_SWORD"
+        }
       },
       "interval": {
         "min": 10,
