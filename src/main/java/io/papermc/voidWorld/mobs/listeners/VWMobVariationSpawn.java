@@ -152,6 +152,20 @@ public class VWMobVariationSpawn implements Listener {
                 spawned.setCustomNameVisible(true);
             }
 
+            if (variation.attributes() != null) {
+                variation.attributes().forEach(((attribute, value) -> {
+                    var instance = spawned.getAttribute(attribute);
+                    if (instance == null) {
+                        spawned.registerAttribute(attribute);
+                        instance = spawned.getAttribute(attribute);
+                    }
+
+                    if (instance != null) {
+                        instance.setBaseValue(value);
+                    }
+                }));
+            }
+
             MobEquipment equipment = variation.equipment();
             applyEquipment(spawned, equipment);
         }, 1L);

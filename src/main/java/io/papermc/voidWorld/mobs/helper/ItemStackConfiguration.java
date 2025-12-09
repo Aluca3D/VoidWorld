@@ -5,22 +5,23 @@ import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.spongepowered.configurate.ConfigurationNode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public record ItemStackConfiguration(
         Material material,
         int damage,
         String name,
         List<String> lore,
-        Map<String, Integer> enchants
+        Map<String, Integer> enchants,
+        Map<Attribute, Double> attributes
 ) {
     public static ItemStackConfiguration parseItem(ConfigurationNode node) {
         if (node == null || node.empty()) return null;
@@ -48,7 +49,23 @@ public record ItemStackConfiguration(
             enchants.put(enchantment, level);
         }
 
-        return new ItemStackConfiguration(material, damage, name, lore, enchants);
+        Map<Attribute, Double> attributes = new HashMap<>();
+        ConfigurationNode attributesNode = node.node("attributes");
+
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : attributesNode.childrenMap().entrySet()) {
+            String key = entry.getKey().toString();
+            double value = entry.getValue().getDouble();
+
+            Attribute attribute = RegistryAccess.registryAccess()
+                    .getRegistry(RegistryKey.ATTRIBUTE)
+                    .get(NamespacedKey.minecraft(key.toLowerCase()));
+
+            if (attribute != null) {
+                attributes.put(attribute, value);
+            }
+        }
+
+        return new ItemStackConfiguration(material, damage, name, lore, enchants, attributes);
     }
 
     public static ItemStack build(ItemStackConfiguration itemStackConfiguration) {
@@ -78,6 +95,20 @@ public record ItemStackConfiguration(
                 if (enchantment != null) {
                     meta.addEnchant(enchantment, level, true);
                 }
+            });
+        }
+
+        if (itemStackConfiguration.attributes() != null) {
+            itemStackConfiguration.attributes().forEach((attribute, value) -> {
+
+                AttributeModifier modifier = new AttributeModifier(
+                        NamespacedKey.minecraft(attribute.key().value()),
+                        value,
+                        AttributeModifier.Operation.ADD_NUMBER,
+                        EquipmentSlotGroup.ANY
+                );
+
+                meta.addAttributeModifier(attribute, modifier);
             });
         }
 

@@ -20,6 +20,8 @@ public class VWMobLootDropConfig {
             return;
         }
 
+        plugin.getLogger().info("<##> Begin of VWMobLootDropConfig <##>");
+
         for (Map.Entry<Object, ? extends ConfigurationNode> entry : root.childrenMap().entrySet()) {
 
             String mobName = entry.getKey().toString();
@@ -81,9 +83,10 @@ public class VWMobLootDropConfig {
 
             plugin.getLogger().info("Loaded " + drops.size() + " drops for " + type);
             for (DropDefinition drop : drops) {
-                plugin.getLogger().info("-> Item:" + drop.itemStackConfiguration().material());
+                plugin.getLogger().info(" -> Item:" + drop.itemStackConfiguration().material());
             }
         }
+        plugin.getLogger().info("<##> End of VWMobLootDropConfig <##>");
     }
 
     public List<DropDefinition> getDrops(EntityType type) {

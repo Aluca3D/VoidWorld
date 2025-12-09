@@ -1,5 +1,7 @@
 package io.papermc.voidWorld.mobs.config;
 
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import io.papermc.voidWorld.helper.VWDimension;
 import io.papermc.voidWorld.mobs.helper.MobEquipment;
 import io.papermc.voidWorld.mobs.helper.MobVariation;
@@ -8,6 +10,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -32,6 +35,8 @@ public class VWMobVariationSpawnConfig {
             plugin.getLogger().warning("No " + root + " found!");
             return;
         }
+
+        plugin.getLogger().info("<##> Begin of VWMobVariationSpawnConfig <##>");
 
         for (Map.Entry<Object, ? extends ConfigurationNode> mobEntry : root.childrenMap().entrySet()) {
             String mobKey = mobEntry.getKey().toString();
@@ -88,6 +93,21 @@ public class VWMobVariationSpawnConfig {
                     if (tag != null) tags.add(tag);
                 }
 
+                Map<Attribute, Double> attributes = new HashMap<>();
+                ConfigurationNode attributesNode = replacementNode.node("attributes");
+                for (Map.Entry<Object, ? extends ConfigurationNode> entry : attributesNode.childrenMap().entrySet()) {
+                    String attributeKey = entry.getKey().toString();
+                    double attributeValue = entry.getValue().getDouble(0.0);
+
+                    var attribute = RegistryAccess.registryAccess()
+                            .getRegistry(RegistryKey.ATTRIBUTE)
+                            .get(NamespacedKey.minecraft(attributeKey.toLowerCase()));
+
+                    if (attribute != null) {
+                        attributes.put(attribute, attributeValue);
+                    }
+                }
+
                 ConfigurationNode equipmentNode = replacementNode.node("equipment");
                 MobEquipment equipment = new MobEquipment(
                         parseItem(equipmentNode.node("mainhand")),
@@ -106,13 +126,17 @@ public class VWMobVariationSpawnConfig {
                         standingOn,
                         hasEffect,
                         useDimension, dimension,
-                        name, tags, equipment
+                        name,
+                        attributes,
+                        tags,
+                        equipment
                 );
 
                 list.add(variation);
-                plugin.getLogger().info("-> " + replacement + " (" + min + "-" + max + ") Key: " + namespacedKey);
+                plugin.getLogger().info(" -> " + replacement + " (" + min + "-" + max + ") Key: " + namespacedKey);
             }
         }
+        plugin.getLogger().info("<##> End of VWMobVariationSpawnConfig <##>");
     }
 
 
