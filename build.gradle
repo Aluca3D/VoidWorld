@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("xyz.jpenilla.run-paper") version "$runPaperVersion"
+    id("com.gradleup.shadow") version "$shadowVersion"
 }
 
 group = 'io.papermc'
@@ -16,7 +17,9 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$paperVersion")
-    implementation("org.spongepowered:configurate-jackson:4.2.0")
+
+    implementation("org.spongepowered:configurate-core:$configurateVersion")
+    implementation("org.spongepowered:configurate-jackson:$configurateVersion")
 }
 
 tasks.register('updatePaperPluginYaml') {
@@ -71,9 +74,9 @@ processResources {
     }
 
     def props = [
-            version: version,
+            version       : version,
             projectVersion: project.findProperty("projectVersion"),
-            apiVersion: project.findProperty("apiVersion")
+            apiVersion    : project.findProperty("apiVersion")
     ]
     filteringCharset 'UTF-8'
     filesMatching('paper-plugin.yml') {
@@ -81,3 +84,11 @@ processResources {
     }
 }
 
+tasks.shadowJar {
+    archiveClassifier.set("")
+    relocate "org.spongepowered.configurate", "io.papermc.voidworld.lib.configurate"
+}
+
+tasks.named("build") {
+    dependsOn(tasks.named("shadowJar"))
+}

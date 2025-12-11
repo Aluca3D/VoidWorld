@@ -1,0 +1,95 @@
+package io.papermc.voidWorld.mobs.config;
+
+import io.papermc.voidWorld.helper.VWDimension;
+import io.papermc.voidWorld.mobs.helper.ItemStackConfiguration;
+import io.papermc.voidWorld.mobs.helper.DropDefinition;
+import org.bukkit.entity.EntityType;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.spongepowered.configurate.ConfigurationNode;
+
+import java.util.*;
+
+public class VWMobLootDropConfig {
+
+    private final Map<EntityType, List<DropDefinition>> lootTable = new HashMap<>();
+
+    public VWMobLootDropConfig(JavaPlugin plugin, ConfigurationNode root) {
+
+        if (root.empty()) {
+            System.out.println("No " + root + " section found!");
+            return;
+        }
+
+        plugin.getLogger().info("<##> Begin of VWMobLootDropConfig <##>");
+
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : root.childrenMap().entrySet()) {
+
+            String mobName = entry.getKey().toString();
+            ConfigurationNode mobNode = entry.getValue();
+
+            EntityType type;
+            try {
+                type = EntityType.valueOf(mobName.toUpperCase());
+            } catch (Exception e) {
+                plugin.getLogger().warning("Invalid mob: " + mobName);
+                continue;
+            }
+
+            List<DropDefinition> drops = new ArrayList<>();
+
+            List<? extends ConfigurationNode> dropNodes = mobNode.node("drops").childrenList();
+
+            for (ConfigurationNode dropNode : dropNodes) {
+
+                ItemStackConfiguration itemStackConfiguration = ItemStackConfiguration.parseItem(dropNode);
+
+                if (itemStackConfiguration == null) {
+                    plugin.getLogger().warning("Item is null, skipping drop");
+                    continue;
+                }
+
+                int min = dropNode.node("amount", "min").getInt(1);
+                int max = dropNode.node("amount", "max").getInt(1);
+
+                double chance = dropNode.node("chance").getDouble(1.0);
+
+                boolean useDimension = dropNode.node("useDimension").getBoolean(false);
+                String dimensionStr = dropNode.node("inDimension").getString("OVERWORLD");
+                VWDimension dimension = VWDimension.fromString(dimensionStr);
+
+                List<String> tags = new ArrayList<>();
+                for (ConfigurationNode tagNode : dropNode.node("tags").childrenList()) {
+                    String tag = tagNode.getString();
+                    if (tag != null) tags.add(tag);
+                }
+
+                ConfigurationNode lootingNode = dropNode.node("looting");
+
+                boolean lootingEnabled = lootingNode.node("enabled").getBoolean(false);
+                double extraChance = lootingNode.node("extra-chance-per-level").getDouble(0.0);
+                int extraAmount = lootingNode.node("extra-amount-per-level").getInt(0);
+
+                drops.add(new DropDefinition(
+                        itemStackConfiguration,
+                        min, max, chance,
+                        lootingEnabled,
+                        extraChance, extraAmount,
+                        useDimension, dimension,
+                        tags
+                ));
+            }
+
+            lootTable.put(type, drops);
+
+            plugin.getLogger().info("Loaded " + drops.size() + " drops for " + type);
+            for (DropDefinition drop : drops) {
+                plugin.getLogger().info(" -> Item:" + drop.itemStackConfiguration().material());
+            }
+        }
+        plugin.getLogger().info("<##> End of VWMobLootDropConfig <##>");
+    }
+
+    public List<DropDefinition> getDrops(EntityType type) {
+        return lootTable.getOrDefault(type, Collections.emptyList());
+    }
+}

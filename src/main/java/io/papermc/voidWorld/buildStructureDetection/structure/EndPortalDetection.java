@@ -96,7 +96,7 @@ public class EndPortalDetection implements Listener {
         int z = startBlock.getZ();
 
         for (BlockMatcher blockMatcher : PORTAL_BUILD_PATTERN) {
-            if (world.getBlockAt(x + blockMatcher.dx(), y, z + blockMatcher.dz()).getType() != blockMatcher.types()[0]) {
+            if (!blockMatcher.matches(world.getBlockAt(x + blockMatcher.dx(), y, z + blockMatcher.dz()).getType())) {
                 return;
             }
         }
@@ -125,6 +125,8 @@ public class EndPortalDetection implements Listener {
 
             for (BlockMatcher blockMatcher : blockMatchers) {
                 Material current = world.getBlockAt(x + blockMatcher.dx(), y, z + blockMatcher.dz()).getType();
+
+                if (blockMatcher.matches(air)) continue;
 
                 if (!blockMatcher.matches(current)) {
                     valid = false;

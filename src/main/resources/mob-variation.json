@@ -1,0 +1,107 @@
+{
+  "SKELETON": [
+    {
+      "replacement": "STRAY",
+      "useDimension": true,
+      "interval": {
+        "min": 6,
+        "max": 10
+      }
+    },
+    {
+      "replacement": "BLAZE",
+      "isBurning": true,
+      "useDimension": true,
+      "inDimension": "NETHER"
+    },
+    {
+      "replacement": "WITHER_SKELETON",
+      "useDimension": true,
+      "inDimension": "NETHER",
+      "hasEffect": "WITHER"
+    }
+  ],
+  "ZOMBIE": [
+    {
+      "replacement": "HUSK",
+      "isBurning": true,
+      "standingOn": "SAND"
+    }
+  ],
+  "SPIDER": [
+    {
+      "replacement": "CAVE_SPIDER",
+      "hasEffect": "SPEED"
+    }
+  ],
+  "COW": [
+    {
+      "replacement": "MOOSHROOM",
+      "standingOn": "MYCELIUM",
+      "hasEffect": "WEAKNESS"
+    }
+  ],
+  "PIGLIN": [
+    {
+      "replacement": "PIGLIN_BRUTE",
+      "hasEffect": "STRENGTH"
+    }
+  ],
+  "ZOMBIFIED_PIGLIN": [
+    {
+      "replacement": "SKELETON",
+      "tags": [
+        "nether-skeleton"
+      ],
+      "equipment": {
+        "mainhand": {
+          "material": "STONE_SWORD"
+        }
+      },
+      "interval": {
+        "min": 10,
+        "max": 15
+      }
+    }
+  ],
+  "GLOW_SQUID": [
+    {
+      "replacement": "AXOLOTL",
+      "interval": {
+        "min": 20,
+        "max": 25
+      }
+    },
+    {
+      "replacement": "SQUID",
+      "interval": {
+        "min": 2,
+        "max": 5
+      }
+    },
+    {
+      "replacement": "GUARDIAN",
+      "hasEffect": "POISON"
+    }
+  ],
+  "SQUID": [
+    {
+      "replacement": "GUARDIAN",
+      "hasEffect": "POISON"
+    }
+  ],
+  "GUARDIAN": [
+    {
+      "replacement": "ELDER_GUARDIAN",
+      "hasEffect": "STRENGTH"
+    }
+  ],
+  "PIG": [
+    {
+      "replacement": "HOGLIN",
+      "hasEffect": "WEAKNESS",
+      "useDimension": true,
+      "inDimension": "NETHER"
+    }
+  ]
+}
