@@ -1,1 +1,9 @@
+pluginManagement {
+    plugins {
+        id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
+    }
+}
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version "$foojayVersion"
+}
 rootProject.name = 'VoidWorld'
