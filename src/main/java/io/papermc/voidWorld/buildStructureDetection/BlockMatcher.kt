@@ -1,17 +1,15 @@
-package io.papermc.voidWorld.buildStructureDetection;
+package io.papermc.voidWorld.buildStructureDetection
 
-import org.bukkit.Material;
+import org.bukkit.Material
 
-public record BlockMatcher(int dx, int dz, Material[] types) {
+data class BlockMatcher(
+    val dx: Int,
+    val dz: Int,
+    val types: Set<Material>
+) {
+    constructor(dx: Int, dz: Int, type: Material) :
+            this(dx, dz, setOf(type))
 
-    public BlockMatcher(int dx, int dz, Material type) {
-        this(dx, dz, new Material[]{type});
-    }
-
-    public boolean matches(Material blockType) {
-        for (Material mat : types) {
-            if (blockType == mat) return true;
-        }
-        return false;
-    }
+    fun matches(blockType: Material): Boolean =
+        blockType in types
 }

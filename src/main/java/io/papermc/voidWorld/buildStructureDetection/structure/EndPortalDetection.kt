@@ -1,26 +1,25 @@
-package io.papermc.voidWorld.buildStructureDetection.structure;
+package io.papermc.voidWorld.buildStructureDetection.structure
 
-import io.papermc.voidWorld.buildStructureDetection.BlockMatcher;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.EndPortalFrame;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.weather.LightningStrikeEvent;
+import io.papermc.voidWorld.buildStructureDetection.BlockMatcher
+import org.bukkit.Material
+import org.bukkit.block.Block
+import org.bukkit.block.BlockFace
+import org.bukkit.block.data.type.EndPortalFrame
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.weather.LightningStrikeEvent
 
-import java.util.List;
+class EndPortalDetection : Listener {
 
-public class EndPortalDetection implements Listener {
-    private static final Material cryingObsidian = Material.CRYING_OBSIDIAN;
-    private static final Material obsidian = Material.OBSIDIAN;
-    private static final Material endStoneBricks = Material.END_STONE_BRICKS;
-    private static final Material endPortalFrame = Material.END_PORTAL_FRAME;
-    private static final Material endPortal = Material.END_PORTAL;
-    private static final Material air = Material.AIR;
-    private static final Material[] allCopperVariants = {
+    companion object {
+        private val cryingObsidian = Material.CRYING_OBSIDIAN
+        private val obsidian = Material.OBSIDIAN
+        private val endStoneBricks = Material.END_STONE_BRICKS
+        private val endPortalFrame = Material.END_PORTAL_FRAME
+        private val endPortal = Material.END_PORTAL
+        private val air = Material.AIR
+
+        private val allCopperVariants = setOf(
             Material.COPPER_BLOCK,
             Material.EXPOSED_COPPER,
             Material.WEATHERED_COPPER,
@@ -29,149 +28,231 @@ public class EndPortalDetection implements Listener {
             Material.WAXED_EXPOSED_COPPER,
             Material.WAXED_WEATHERED_COPPER,
             Material.WAXED_OXIDIZED_COPPER
-    };
+        )
+
+        private val lightningRodVariants = setOf(
+            Material.LIGHTNING_ROD,
+            Material.EXPOSED_LIGHTNING_ROD,
+            Material.WEATHERED_LIGHTNING_ROD,
+            Material.OXIDIZED_LIGHTNING_ROD,
+            Material.WAXED_LIGHTNING_ROD,
+            Material.WAXED_EXPOSED_LIGHTNING_ROD,
+            Material.WAXED_WEATHERED_LIGHTNING_ROD,
+            Material.WAXED_OXIDIZED_LIGHTNING_ROD
+        )
+
+        private val PORTAL_BUILD_PATTERN = listOf(
+            BlockMatcher(2, 1, endStoneBricks),
+            BlockMatcher(2, 0, endStoneBricks),
+            BlockMatcher(2, -1, endStoneBricks),
+            BlockMatcher(1, 2, endStoneBricks),
+            BlockMatcher(1, 1, cryingObsidian),
+            BlockMatcher(1, 0, cryingObsidian),
+            BlockMatcher(1, -1, cryingObsidian),
+            BlockMatcher(1, -2, endStoneBricks),
+            BlockMatcher(0, 2, endStoneBricks),
+            BlockMatcher(0, 1, cryingObsidian),
+            BlockMatcher(0, 0, cryingObsidian),
+            BlockMatcher(0, -1, cryingObsidian),
+            BlockMatcher(0, -2, endStoneBricks),
+            BlockMatcher(-1, 2, endStoneBricks),
+            BlockMatcher(-1, 1, cryingObsidian),
+            BlockMatcher(-1, 0, cryingObsidian),
+            BlockMatcher(-1, -1, cryingObsidian),
+            BlockMatcher(-1, -2, endStoneBricks),
+            BlockMatcher(-2, 1, endStoneBricks),
+            BlockMatcher(-2, 0, endStoneBricks),
+            BlockMatcher(-2, -1, endStoneBricks)
+        )
+
+        private val PORTAL_DESTROY_PATTERN = listOf(
+            arrayOf(
+                BlockMatcher(4, 4, allCopperVariants),
+                BlockMatcher(4, 3, endPortalFrame),
+                BlockMatcher(4, 2, endPortalFrame),
+                BlockMatcher(4, 1, endPortalFrame),
+                BlockMatcher(4, 0, allCopperVariants),
+                BlockMatcher(3, 4, endPortalFrame),
+                BlockMatcher(3, 3, air),
+                BlockMatcher(3, 2, air),
+                BlockMatcher(3, 1, air),
+                BlockMatcher(3, 0, endPortalFrame),
+                BlockMatcher(2, 4, endPortalFrame),
+                BlockMatcher(2, 3, air),
+                BlockMatcher(2, 2, air),
+                BlockMatcher(2, 1, air),
+                BlockMatcher(2, 0, endPortalFrame),
+                BlockMatcher(1, 4, endPortalFrame),
+                BlockMatcher(1, 3, air),
+                BlockMatcher(1, 2, air),
+                BlockMatcher(1, 1, air),
+                BlockMatcher(1, 0, endPortalFrame),
+                BlockMatcher(0, 4, allCopperVariants),
+                BlockMatcher(0, 3, endPortalFrame),
+                BlockMatcher(0, 2, endPortalFrame),
+                BlockMatcher(0, 1, endPortalFrame),
+                BlockMatcher(0, 0, allCopperVariants)
+            ),
+            arrayOf(
+                BlockMatcher(4, 0, allCopperVariants),
+                BlockMatcher(4, -1, endPortalFrame),
+                BlockMatcher(4, -2, endPortalFrame),
+                BlockMatcher(4, -3, endPortalFrame),
+                BlockMatcher(4, -4, allCopperVariants),
+                BlockMatcher(3, 0, endPortalFrame),
+                BlockMatcher(3, -1, air),
+                BlockMatcher(3, -2, air),
+                BlockMatcher(3, -3, air),
+                BlockMatcher(3, -4, endPortalFrame),
+                BlockMatcher(2, 0, endPortalFrame),
+                BlockMatcher(2, -1, air),
+                BlockMatcher(2, -2, air),
+                BlockMatcher(2, -3, air),
+                BlockMatcher(2, -4, endPortalFrame),
+                BlockMatcher(1, 0, endPortalFrame),
+                BlockMatcher(1, -1, air),
+                BlockMatcher(1, -2, air),
+                BlockMatcher(1, -3, air),
+                BlockMatcher(1, -4, endPortalFrame),
+                BlockMatcher(0, 0, allCopperVariants),
+                BlockMatcher(0, -1, endPortalFrame),
+                BlockMatcher(0, -2, endPortalFrame),
+                BlockMatcher(0, -3, endPortalFrame),
+                BlockMatcher(0, -4, allCopperVariants)
+            ),
+            arrayOf(
+                BlockMatcher(0, 4, allCopperVariants),
+                BlockMatcher(0, 3, endPortalFrame),
+                BlockMatcher(0, 2, endPortalFrame),
+                BlockMatcher(0, 1, endPortalFrame),
+                BlockMatcher(0, 0, allCopperVariants),
+                BlockMatcher(-1, 4, endPortalFrame),
+                BlockMatcher(-1, 3, air),
+                BlockMatcher(-1, 2, air),
+                BlockMatcher(-1, 1, air),
+                BlockMatcher(-1, 0, endPortalFrame),
+                BlockMatcher(-2, 4, endPortalFrame),
+                BlockMatcher(-2, 3, air),
+                BlockMatcher(-2, 2, air),
+                BlockMatcher(-2, 1, air),
+                BlockMatcher(-2, 0, endPortalFrame),
+                BlockMatcher(-3, 4, endPortalFrame),
+                BlockMatcher(-3, 3, air),
+                BlockMatcher(-3, 2, air),
+                BlockMatcher(-3, 1, air),
+                BlockMatcher(-3, 0, endPortalFrame),
+                BlockMatcher(-4, 4, allCopperVariants),
+                BlockMatcher(-4, 3, endPortalFrame),
+                BlockMatcher(-4, 2, endPortalFrame),
+                BlockMatcher(-4, 1, endPortalFrame),
+                BlockMatcher(-4, 0, allCopperVariants)
+            ),
+            arrayOf(
+                BlockMatcher(0, 0, allCopperVariants),
+                BlockMatcher(0, -1, endPortalFrame),
+                BlockMatcher(0, -2, endPortalFrame),
+                BlockMatcher(0, -3, endPortalFrame),
+                BlockMatcher(0, -4, allCopperVariants),
+                BlockMatcher(-1, 0, endPortalFrame),
+                BlockMatcher(-1, -1, air),
+                BlockMatcher(-1, -2, air),
+                BlockMatcher(-1, -3, air),
+                BlockMatcher(-1, -4, endPortalFrame),
+                BlockMatcher(-2, 0, endPortalFrame),
+                BlockMatcher(-2, -1, air),
+                BlockMatcher(-2, -2, air),
+                BlockMatcher(-2, -3, air),
+                BlockMatcher(-2, -4, endPortalFrame),
+                BlockMatcher(-3, 0, endPortalFrame),
+                BlockMatcher(-3, -1, air),
+                BlockMatcher(-3, -2, air),
+                BlockMatcher(-3, -3, air),
+                BlockMatcher(-3, -4, endPortalFrame),
+                BlockMatcher(-4, 0, allCopperVariants),
+                BlockMatcher(-4, -1, endPortalFrame),
+                BlockMatcher(-4, -2, endPortalFrame),
+                BlockMatcher(-4, -3, endPortalFrame),
+                BlockMatcher(-4, -4, allCopperVariants)
+            )
+        )
+    }
 
     @EventHandler
-    public void onLightningStrike(LightningStrikeEvent event) {
-        LightningStrike lightning = event.getLightning();
-        Block struckBlock = lightning.getLocation().getBlock();
-
-        if (struckBlock.getType() == Material.LIGHTNING_ROD) {
-            tryBuildEndPortal(struckBlock);
-            tryDestroyEndPortal(struckBlock);
+    fun onLightningStrike(event: LightningStrikeEvent) {
+        val block = event.lightning.location.block
+        if (block.type in lightningRodVariants) {
+            tryBuildEndPortal(block)
+            tryDestroyEndPortal(block)
         }
     }
 
-    private static final List<BlockMatcher> PORTAL_BUILD_PATTERN = List.of(
+    private fun tryBuildEndPortal(startBlock: Block) {
+        val world = startBlock.world
+        val x = startBlock.x
+        val y = startBlock.y - 1
+        val z = startBlock.z
 
-            new BlockMatcher(2, 1, endStoneBricks), new BlockMatcher(2, 0, endStoneBricks), new BlockMatcher(2, -1, endStoneBricks),
-            new BlockMatcher(1, 2, endStoneBricks), new BlockMatcher(1, 1, cryingObsidian), new BlockMatcher(1, 0, cryingObsidian),
-            new BlockMatcher(1, -1, cryingObsidian), new BlockMatcher(1, -2, endStoneBricks),
-            new BlockMatcher(0, 2, endStoneBricks), new BlockMatcher(0, 1, cryingObsidian), new BlockMatcher(0, 0, cryingObsidian),
-            new BlockMatcher(0, -1, cryingObsidian), new BlockMatcher(0, -2, endStoneBricks),
-            new BlockMatcher(-1, 2, endStoneBricks), new BlockMatcher(-1, 1, cryingObsidian), new BlockMatcher(-1, 0, cryingObsidian),
-            new BlockMatcher(-1, -1, cryingObsidian), new BlockMatcher(-1, -2, endStoneBricks),
-            new BlockMatcher(-2, 1, endStoneBricks), new BlockMatcher(-2, 0, endStoneBricks), new BlockMatcher(-2, -1, endStoneBricks)
-    );
+        if (PORTAL_BUILD_PATTERN.any {
+                !it.matches(world.getBlockAt(x + it.dx, y, z + it.dz).type)
+            }) return
 
-    private static final List<BlockMatcher[]> PORTAL_DESTROY_PATTERN = List.of(
+        for (matcher in PORTAL_BUILD_PATTERN) {
+            val block = world.getBlockAt(x + matcher.dx, y, z + matcher.dz)
+            val result = convertMaterial(matcher.types.single())
 
-            new BlockMatcher[]{
-                    new BlockMatcher(4, 4, allCopperVariants), new BlockMatcher(4, 3, endPortalFrame), new BlockMatcher(4, 2, endPortalFrame), new BlockMatcher(4, 1, endPortalFrame), new BlockMatcher(4, 0, allCopperVariants),
-                    new BlockMatcher(3, 4, endPortalFrame), new BlockMatcher(3, 3, air), new BlockMatcher(3, 2, air), new BlockMatcher(3, 1, air), new BlockMatcher(3, 0, endPortalFrame),
-                    new BlockMatcher(2, 4, endPortalFrame), new BlockMatcher(2, 3, air), new BlockMatcher(2, 2, air), new BlockMatcher(2, 1, air), new BlockMatcher(2, 0, endPortalFrame),
-                    new BlockMatcher(1, 4, endPortalFrame), new BlockMatcher(1, 3, air), new BlockMatcher(1, 2, air), new BlockMatcher(1, 1, air), new BlockMatcher(1, 0, endPortalFrame),
-                    new BlockMatcher(0, 4, allCopperVariants), new BlockMatcher(0, 3, endPortalFrame), new BlockMatcher(0, 2, endPortalFrame), new BlockMatcher(0, 1, endPortalFrame), new BlockMatcher(0, 0, allCopperVariants),
-            },
+            block.type = result
 
-            new BlockMatcher[]{
-                    new BlockMatcher(4, 0, allCopperVariants), new BlockMatcher(4, -1, endPortalFrame), new BlockMatcher(4, -2, endPortalFrame), new BlockMatcher(4, -3, endPortalFrame), new BlockMatcher(4, -4, allCopperVariants),
-                    new BlockMatcher(3, 0, endPortalFrame), new BlockMatcher(3, -1, air), new BlockMatcher(3, -2, air), new BlockMatcher(3, -3, air), new BlockMatcher(3, -4, endPortalFrame),
-                    new BlockMatcher(2, 0, endPortalFrame), new BlockMatcher(2, -1, air), new BlockMatcher(2, -2, air), new BlockMatcher(2, -3, air), new BlockMatcher(2, -4, endPortalFrame),
-                    new BlockMatcher(1, 0, endPortalFrame), new BlockMatcher(1, -1, air), new BlockMatcher(1, -2, air), new BlockMatcher(1, -3, air), new BlockMatcher(1, -4, endPortalFrame),
-                    new BlockMatcher(0, 0, allCopperVariants), new BlockMatcher(0, -1, endPortalFrame), new BlockMatcher(0, -2, endPortalFrame), new BlockMatcher(0, -3, endPortalFrame), new BlockMatcher(0, -4, allCopperVariants),
-            },
-
-            new BlockMatcher[]{
-                    new BlockMatcher(0, 4, allCopperVariants), new BlockMatcher(0, 3, endPortalFrame), new BlockMatcher(0, 2, endPortalFrame), new BlockMatcher(0, 1, endPortalFrame), new BlockMatcher(0, 0, allCopperVariants),
-                    new BlockMatcher(-1, 4, endPortalFrame), new BlockMatcher(-1, 3, air), new BlockMatcher(-1, 2, air), new BlockMatcher(-1, 1, air), new BlockMatcher(-1, 0, endPortalFrame),
-                    new BlockMatcher(-2, 4, endPortalFrame), new BlockMatcher(-2, 3, air), new BlockMatcher(-2, 2, air), new BlockMatcher(-2, 1, air), new BlockMatcher(-2, 0, endPortalFrame),
-                    new BlockMatcher(-3, 4, endPortalFrame), new BlockMatcher(-3, 3, air), new BlockMatcher(-3, 2, air), new BlockMatcher(-3, 1, air), new BlockMatcher(-3, 0, endPortalFrame),
-                    new BlockMatcher(-4, 4, allCopperVariants), new BlockMatcher(-4, 3, endPortalFrame), new BlockMatcher(-4, 2, endPortalFrame), new BlockMatcher(-4, 1, endPortalFrame), new BlockMatcher(-4, 0, allCopperVariants),
-            },
-
-            new BlockMatcher[]{
-                    new BlockMatcher(0, 0, allCopperVariants), new BlockMatcher(0, -1, endPortalFrame), new BlockMatcher(0, -2, endPortalFrame), new BlockMatcher(0, -3, endPortalFrame), new BlockMatcher(0, -4, allCopperVariants),
-                    new BlockMatcher(-1, 0, endPortalFrame), new BlockMatcher(-1, -1, air), new BlockMatcher(-1, -2, air), new BlockMatcher(-1, -3, air), new BlockMatcher(-1, -4, endPortalFrame),
-                    new BlockMatcher(-2, 0, endPortalFrame), new BlockMatcher(-2, -1, air), new BlockMatcher(-2, -2, air), new BlockMatcher(-2, -3, air), new BlockMatcher(-2, -4, endPortalFrame),
-                    new BlockMatcher(-3, 0, endPortalFrame), new BlockMatcher(-3, -1, air), new BlockMatcher(-3, -2, air), new BlockMatcher(-3, -3, air), new BlockMatcher(-3, -4, endPortalFrame),
-                    new BlockMatcher(-4, 0, allCopperVariants), new BlockMatcher(-4, -1, endPortalFrame), new BlockMatcher(-4, -2, endPortalFrame), new BlockMatcher(-4, -3, endPortalFrame), new BlockMatcher(-4, -4, allCopperVariants),
-            }
-    );
-
-    private void tryBuildEndPortal(Block startBlock) {
-        var world = startBlock.getWorld();
-        int x = startBlock.getX();
-        int y = startBlock.getY() - 1;
-        int z = startBlock.getZ();
-
-        for (BlockMatcher blockMatcher : PORTAL_BUILD_PATTERN) {
-            if (!blockMatcher.matches(world.getBlockAt(x + blockMatcher.dx(), y, z + blockMatcher.dz()).getType())) {
-                return;
-            }
-        }
-
-        for (BlockMatcher blockMatcher : PORTAL_BUILD_PATTERN) {
-            Block current = world.getBlockAt(x + blockMatcher.dx(), y, z + blockMatcher.dz());
-            Material resultType = convertMaterial(blockMatcher.types()[0]);
-
-            current.setType(resultType);
-
-            if (resultType == endPortalFrame) {
-                orientPortalFrame(current, blockMatcher.dx(), blockMatcher.dz());
+            if (result == endPortalFrame) {
+                orientPortalFrame(block, matcher.dx, matcher.dz)
             }
         }
     }
 
-    private void tryDestroyEndPortal(Block startBlock) {
-        int x = startBlock.getX();
-        int y = startBlock.getY() - 1;
-        int z = startBlock.getZ();
-        var world = startBlock.getWorld();
+    private fun tryDestroyEndPortal(startBlock: Block) {
+        val world = startBlock.world
+        val x = startBlock.x
+        val y = startBlock.y - 1
+        val z = startBlock.z
 
-        for (BlockMatcher[] blockMatchers : PORTAL_DESTROY_PATTERN) {
+        for (pattern in PORTAL_DESTROY_PATTERN) {
+            if (pattern.any {
+                    val type = world.getBlockAt(x + it.dx, y, z + it.dz).type
+                    !it.matches(air) && !it.matches(type)
+                }) continue
 
-            boolean valid = true;
-
-            for (BlockMatcher blockMatcher : blockMatchers) {
-                Material current = world.getBlockAt(x + blockMatcher.dx(), y, z + blockMatcher.dz()).getType();
-
-                if (blockMatcher.matches(air)) continue;
-
-                if (!blockMatcher.matches(current)) {
-                    valid = false;
-                    break;
+            for (matcher in pattern) {
+                val block = world.getBlockAt(x + matcher.dx, y, z + matcher.dz)
+                if (!matcher.matches(air)) {
+                    block.type = convertMaterial(block.type)
+                }
+                if (block.type == endPortal) {
+                    block.type = air
                 }
             }
-
-            if (!valid) continue;
-
-            for (BlockMatcher blockMatcher : blockMatchers) {
-                Block block = world.getBlockAt(x + blockMatcher.dx(), y, z + blockMatcher.dz());
-
-                if (!blockMatcher.matches(air)) {
-                    block.setType(convertMaterial(block.getType()));
-                }
-
-                if (block.getType() == endPortal) {
-                    block.setType(air);
-                }
-            }
-
-            return;
+            return
         }
     }
 
-    private Material convertMaterial(Material input) {
-        if (input == endStoneBricks) return endPortalFrame;
-        if (input == endPortalFrame) return endStoneBricks;
-        if (input == cryingObsidian) return obsidian;
-        return input;
+    private fun convertMaterial(input: Material): Material =
+        when (input) {
+            endStoneBricks -> endPortalFrame
+            endPortalFrame -> endStoneBricks
+            cryingObsidian -> obsidian
+            else -> input
+        }
+
+    private fun orientPortalFrame(block: Block, dx: Int, dz: Int) {
+        val frame = block.blockData as? EndPortalFrame ?: return
+        frame.facing = getDirectionToCenter(dx, dz)
+        block.blockData = frame
     }
 
-    private void orientPortalFrame(Block block, int dx, int dz) {
-        BlockData data = block.getBlockData();
-        if (!(data instanceof EndPortalFrame frame)) return;
-
-        frame.setFacing(getDirectionToCenter(dx, dz));
-        block.setBlockData(frame);
-    }
-
-    private BlockFace getDirectionToCenter(int dx, int dz) {
-        if (dz == 2) return BlockFace.NORTH;
-        else if (dz == -2) return BlockFace.SOUTH;
-        else if (dx == 2) return BlockFace.WEST;
-        else if (dx == -2) return BlockFace.EAST;
-        return BlockFace.SELF;
-    }
+    private fun getDirectionToCenter(dx: Int, dz: Int): BlockFace =
+        when {
+            dz == 2 -> BlockFace.NORTH
+            dz == -2 -> BlockFace.SOUTH
+            dx == 2 -> BlockFace.WEST
+            dx == -2 -> BlockFace.EAST
+            else -> BlockFace.SELF
+        }
 }
