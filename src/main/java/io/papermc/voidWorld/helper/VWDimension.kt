@@ -1,28 +1,21 @@
-package io.papermc.voidWorld.helper;
+package io.papermc.voidWorld.helper
 
-import org.bukkit.World;
+import org.bukkit.World
+import java.util.*
 
-public enum VWDimension {
+enum class VWDimension(val environment: World.Environment) {
     OVERWORLD(World.Environment.NORMAL),
     NETHER(World.Environment.NETHER),
-    END(World.Environment.THE_END);
+    END(World.Environment.THE_END),
+    ;
 
-    private final World.Environment env;
-
-    VWDimension(World.Environment env) {
-        this.env = env;
-    }
-
-    public World.Environment getEnvironment() {
-        return env;
-    }
-
-    public static VWDimension fromString(String name) {
-        if (name == null) return null;
-        try {
-            return VWDimension.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+    companion object {
+        @JvmStatic
+        fun fromString(name: String?): VWDimension? =
+            name
+                ?.uppercase(Locale.ROOT)
+                ?.let {
+                    runCatching { valueOf(it) }.getOrNull()
+                }
     }
 }
