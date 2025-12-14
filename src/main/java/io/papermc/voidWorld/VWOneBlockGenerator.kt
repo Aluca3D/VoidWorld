@@ -1,44 +1,39 @@
-package io.papermc.voidWorld;
+package io.papermc.voidWorld
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.plugin.java.JavaPlugin
 
-public class VWOneBlockGenerator implements Listener {
-    private final JavaPlugin plugin;
-    private Location oneBlockLocation;
+class VWOneBlockGenerator(private val plugin: JavaPlugin) : Listener {
+    private var oneBlockLocation: Location? = null
 
-    public VWOneBlockGenerator(JavaPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    public void setOneBlock() {
-        World world = Bukkit.getWorld("world");
+    fun setOneBlock() {
+        val world = Bukkit.getWorld("world")
         if (world == null) {
-            plugin.getLogger().warning("Overworld not found, cannot place OneBlock!");
-            return;
+            plugin.logger.warning("Overworld not found, cannot place OneBlock!")
+            return
         }
-        
-        Location spawn = world.getSpawnLocation().getBlock().getLocation();
 
-        if (spawn.getBlock().getType() != Material.AIR) {
-            plugin.getLogger().info("OneBlock already exists at spawn, skipping placement.");
+        val spawn = world.spawnLocation.block.location
+
+        if (spawn.block.type != Material.AIR) {
+            plugin.logger.info("OneBlock already exists at spawn, skipping placement.")
         } else {
-            plugin.getLogger().info("Placed OneBlock at spawn: " + spawn);
-            spawn.getBlock().setType(Material.DIRT);
+            plugin.logger.info("Placed OneBlock at spawn: $spawn")
+            spawn.block.type = Material.DIRT
         }
-        oneBlockLocation = spawn.clone();
+        oneBlockLocation = spawn.clone()
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getBlock().getLocation().equals(oneBlockLocation)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> oneBlockLocation.getBlock().setType(Material.DIRT), 1L);
+    fun onBlockBreak(event: BlockBreakEvent) {
+        if (event.getBlock().location == oneBlockLocation) {
+            Bukkit.getScheduler()
+                .runTaskLater(plugin, Runnable { oneBlockLocation?.block?.type = Material.DIRT }, 1L)
         }
     }
 }
