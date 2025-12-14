@@ -1,74 +1,67 @@
-package io.papermc.voidWorld;
+package io.papermc.voidWorld
 
-import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection;
-import io.papermc.voidWorld.mobs.config.VWMobLootDropConfig;
-import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig;
-import io.papermc.voidWorld.mobs.listeners.VWMobLootDrop;
-import io.papermc.voidWorld.mobs.listeners.VWMobVariationSpawn;
-import io.papermc.voidWorld.recipes.VWRecipeHelper;
-import io.papermc.voidWorld.recipes.VWRecipeRegistry;
-import io.papermc.voidWorld.recipes.recipes.*;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.spongepowered.configurate.ConfigurationNode;
+import io.papermc.voidWorld.VWConfigLoader.loadConfig
+import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
+import io.papermc.voidWorld.mobs.config.VWMobLootDropConfig
+import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig
+import io.papermc.voidWorld.mobs.listeners.VWMobLootDrop
+import io.papermc.voidWorld.mobs.listeners.VWMobVariationSpawn
+import io.papermc.voidWorld.recipes.VWRecipeHelper
+import io.papermc.voidWorld.recipes.VWRecipeRegistry
+import io.papermc.voidWorld.recipes.recipes.*
+import org.bukkit.Bukkit
+import org.bukkit.event.Listener
+import org.bukkit.plugin.java.JavaPlugin
 
-import java.util.Arrays;
-import java.util.List;
-
-public final class VoidWorld extends JavaPlugin {
-    @Override
-    public void onLoad() {
-        getLogger().info("VoidWorld loaded!");
+class VoidWorld : JavaPlugin() {
+    override fun onLoad() {
+        logger.info("VoidWorld loaded!")
     }
 
-    @Override
-    public void onEnable() {
-        getLogger().info("VoidWorld enabled!");
+    override fun onEnable() {
+        logger.info("VoidWorld enabled!")
 
         // Recipes
-        VWRecipeRegistry recipeRegistry = new VWRecipeRegistry(
-                Arrays.asList(
-                        new ShapedRecipesGenerator(),
-                        new ShapelessRecipesGenerator(),
-                        new FurnaceRecipesGenerator(),
-                        new BlastingRecipesGenerator(),
-                        new SmokingRecipesGenerator()
-                )
+        val recipeRegistry = VWRecipeRegistry(
+            mutableListOf(
+                ShapedRecipesGenerator(),
+                ShapelessRecipesGenerator(),
+                FurnaceRecipesGenerator(),
+                BlastingRecipesGenerator(),
+                SmokingRecipesGenerator()
+            ).toList().toMutableList()
+        )
 
-        );
-        VWRecipeHelper helper = new VWRecipeHelper(this);
-        recipeRegistry.registerAll(helper);
+        val helper = VWRecipeHelper(this)
+        recipeRegistry.registerAll(helper)
 
         // OneBlock
-        VWOneBlockGenerator oneBlock = new VWOneBlockGenerator(this);
-        Bukkit.getScheduler().runTask(this, oneBlock::setOneBlock);
+        val oneBlock = VWOneBlockGenerator(this)
+        Bukkit.getScheduler().runTask(this, Runnable { oneBlock.setOneBlock() })
 
-        ConfigurationNode variationNode = VWConfigLoader.loadConfig(this, "mob-variation.json");
-        ConfigurationNode lootNode = VWConfigLoader.loadConfig(this, "mob-loot.json");
+        val variationNode = loadConfig(this, "mob-variation.json")
+        val lootNode = loadConfig(this, "mob-loot.json")
 
-        VWMobVariationSpawnConfig spawnConfig = new VWMobVariationSpawnConfig(this, variationNode);
-        VWMobLootDropConfig lootConfig = new VWMobLootDropConfig(this, lootNode);
-
+        val spawnConfig = VWMobVariationSpawnConfig(this, variationNode)
+        val lootConfig = VWMobLootDropConfig(this, lootNode)
 
         registerEventListeners(
-                Arrays.asList(
-                        oneBlock,
-                        new VWMobLootDrop(this, lootConfig),
-                        new VWMobVariationSpawn(this, spawnConfig),
-                        new EndPortalDetection()
-                )
-        );
+            mutableListOf(
+                oneBlock,
+                VWMobLootDrop(this, lootConfig),
+                VWMobVariationSpawn(this, spawnConfig),
+                EndPortalDetection()
+            ).toList().toMutableList()
+        )
     }
 
-    @Override
-    public void onDisable() {
-        getLogger().info("VoidWorld disabled!");
+    override fun onDisable() {
+        logger.info("VoidWorld disabled!")
     }
 
-    private void registerEventListeners(List<Listener> listeners) {
-        for (Listener listener : listeners) {
-            Bukkit.getPluginManager().registerEvents(listener, this);
+    private fun registerEventListeners(listeners: MutableList<Listener>) {
+        for (listener in listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, this)
         }
     }
 }

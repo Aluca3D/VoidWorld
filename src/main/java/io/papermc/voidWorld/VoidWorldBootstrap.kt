@@ -1,29 +1,25 @@
-package io.papermc.voidWorld;
+package io.papermc.voidWorld
 
-import io.papermc.paper.plugin.bootstrap.BootstrapContext;
-import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import org.jspecify.annotations.NullMarked;
+import io.papermc.paper.plugin.bootstrap.BootstrapContext
+import io.papermc.paper.plugin.bootstrap.PluginBootstrap
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import java.io.IOException
+import java.net.URISyntaxException
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Objects;
+class VoidWorldBootstrap : PluginBootstrap {
 
-@NullMarked
-public class VoidWorldBootstrap implements PluginBootstrap {
-    @Override
-    public void bootstrap(BootstrapContext context) {
-        context.getLifecycleManager().registerEventHandler(LifecycleEvents.DATAPACK_DISCOVERY.newHandler(
-                event -> {
-                    try {
-                        URI uri = Objects.requireNonNull(getClass().getResource("/void_world_pack")).toURI();
-                        event.registrar().discoverPack(uri, "provided");
-                    } catch (URISyntaxException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
+    override fun bootstrap(context: BootstrapContext) {
+        context.lifecycleManager.registerEventHandler(
+            LifecycleEvents.DATAPACK_DISCOVERY.newHandler { event ->
+                try {
+                    val uri = requireNotNull(javaClass.getResource("/void_world_pack")).toURI()
+                    event.registrar().discoverPack(uri, "provided")
+                } catch (e: URISyntaxException) {
+                    throw RuntimeException(e)
+                } catch (e: IOException) {
+                    throw RuntimeException(e)
                 }
-        ));
+            }
+        )
     }
-
 }
