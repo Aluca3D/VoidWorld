@@ -6,8 +6,10 @@ import io.papermc.voidWorld.mobs.config.VWMobLootDropConfig
 import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig
 import io.papermc.voidWorld.mobs.listeners.VWMobLootDrop
 import io.papermc.voidWorld.mobs.listeners.VWMobVariationSpawn
+import io.papermc.voidWorld.recipes.RecipeGenerator
 import io.papermc.voidWorld.recipes.VWRecipeHelper
 import io.papermc.voidWorld.recipes.VWRecipeRegistry
+import io.papermc.voidWorld.recipes.config.ShapedRecipeConfig
 import io.papermc.voidWorld.recipes.recipes.*
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
@@ -21,10 +23,10 @@ class VoidWorld : JavaPlugin() {
     override fun onEnable() {
         logger.info("VoidWorld enabled!")
 
-        // Recipes
+        // Recipes OLD!!
+        // TODO: Move to kotlin / config solution
         val recipeRegistry = VWRecipeRegistry(
             mutableListOf(
-                ShapedRecipesGenerator(),
                 ShapelessRecipesGenerator(),
                 FurnaceRecipesGenerator(),
                 BlastingRecipesGenerator(),
@@ -39,11 +41,18 @@ class VoidWorld : JavaPlugin() {
         val oneBlock = VWOneBlockGenerator(this)
         Bukkit.getScheduler().runTask(this, Runnable { oneBlock.setOneBlock() })
 
-        val variationNode = loadConfig(this, "mob-variation.json")
-        val lootNode = loadConfig(this, "mob-loot.json")
+        // Mob Variation/Loot
+        val variationNode = loadConfig(this, "config/mobs/mob-variation.json")
+        val lootNode = loadConfig(this, "config/mobs/mob-loot.json")
 
         val spawnConfig = VWMobVariationSpawnConfig(this, variationNode)
         val lootConfig = VWMobLootDropConfig(this, lootNode)
+
+        // Recipes
+        val recipeGenerator = RecipeGenerator(this)
+        val shapedRecipeNode = loadConfig(this, "config/recipes/shaped.json")
+
+        ShapedRecipeConfig(recipeGenerator, shapedRecipeNode).loadRecipes()
 
         registerEventListeners(
             mutableListOf(

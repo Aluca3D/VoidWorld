@@ -1,0 +1,213 @@
+{
+  "oak_sapling_from_dirt_and_bone_meal": {
+    "result": "OAK_SAPLING",
+    "amount": 1,
+    "pattern": [
+      "DD",
+      "BD"
+    ],
+    "ingredients": {
+      "D": "DIRT",
+      "B": "BONE_MEAL"
+    }
+  },
+  "stick_from_arrows": {
+    "result": "STICK",
+    "amount": 1,
+    "pattern": [
+      " A",
+      "A "
+    ],
+    "ingredients": {
+      "A": [
+        "ARROW",
+        "SPECTRAL_ARROW",
+        "TIPPED_ARROW"
+      ]
+    }
+  },
+  "ice_from_snow_blocks": {
+    "result": "ICE",
+    "amount": 1,
+    "pattern": [
+      "SS",
+      "SS"
+    ],
+    "ingredients": {
+      "S": "SNOW_BLOCK"
+    }
+  },
+  "powder_snow_bucket_from_snowballs": {
+    "result": "POWDER_SNOW_BUCKET",
+    "amount": 1,
+    "pattern": [
+      "SSS",
+      "SSS",
+      " B "
+    ],
+    "ingredients": {
+      "S": "SNOWBALL",
+      "B": "BUCKET"
+    }
+  },
+  "tuff_from_blackstone_and_bonemeal": {
+    "result": "TUFF",
+    "amount": 1,
+    "pattern": [
+      " B ",
+      "BSB",
+      " B "
+    ],
+    "ingredients": {
+      "S": "BLACKSTONE",
+      "B": "BONE_MEAL"
+    }
+  },
+  "calcite_from_diorite_and_bonemeal": {
+    "result": "CALCITE",
+    "amount": 1,
+    "pattern": [
+      " B ",
+      "BSB",
+      " B "
+    ],
+    "ingredients": {
+      "S": "DIORITE",
+      "B": "BONE_MEAL"
+    }
+  },
+  "amethyst_shard_from_mixture": {
+    "result": "AMETHYST_SHARD",
+    "amount": 4,
+    "pattern": [
+      "GLG",
+      "BWB",
+      "GLG"
+    ],
+    "ingredients": {
+      "G": "GUNPOWDER",
+      "L": "GLOWSTONE_DUST",
+      "B": "BONE_MEAL",
+      "W": "WATER_BUCKET"
+    }
+  },
+  "crying_obsidian_from_obsidian_and_amethyst": {
+    "result": "CRYING_OBSIDIAN",
+    "amount": 1,
+    "pattern": [
+      " B ",
+      "BSB",
+      " B "
+    ],
+    "ingredients": {
+      "S": "OBSIDIAN",
+      "B": "AMETHYST_SHARD"
+    }
+  },
+  "echo_shard_from_amethyst_and_sculk": {
+    "result": "ECHO_SHARD",
+    "amount": 1,
+    "pattern": [
+      " B ",
+      "BSB",
+      " B "
+    ],
+    "ingredients": {
+      "S": "AMETHYST_SHARD",
+      "B": "SCULK_VEIN"
+    }
+  },
+  "crimson_nylium_from_wart_and_netherrack": {
+    "result": "CRIMSON_NYLIUM",
+    "amount": 3,
+    "pattern": [
+      "WWW",
+      "WWW",
+      "NNN"
+    ],
+    "ingredients": {
+      "W": "NETHER_WART",
+      "N": "NETHERRACK"
+    }
+  },
+  "warped_wart_block_from_glow_ink": {
+    "result": "WARPED_WART_BLOCK",
+    "amount": 1,
+    "pattern": [
+      " B ",
+      "BSB",
+      " B "
+    ],
+    "ingredients": {
+      "S": "NETHER_WART_BLOCK",
+      "B": "GLOW_INK_SAC"
+    }
+  },
+  "warped_nylium_from_warped_wart": {
+    "result": "WARPED_NYLIUM",
+    "amount": 2,
+    "pattern": [
+      "WW",
+      "NN"
+    ],
+    "ingredients": {
+      "W": "WARPED_WART_BLOCK",
+      "N": "NETHERRACK"
+    }
+  },
+  "sculk_catalyst_from_soul_sand_and_endstone": {
+    "result": "SCULK_CATALYST",
+    "amount": 1,
+    "pattern": [
+      "SWS",
+      "SSS",
+      "EEE"
+    ],
+    "ingredients": {
+      "S": "SOUL_SAND",
+      "W": "WARPED_WART_BLOCK",
+      "E": "END_STONE"
+    }
+  },
+  "mycelium_from_mushroom_mix": {
+    "result": "MYCELIUM",
+    "amount": 2,
+    "pattern": [
+      "BRB",
+      "RBR",
+      " D "
+    ],
+    "ingredients": {
+      "B": "BROWN_MUSHROOM",
+      "R": "RED_MUSHROOM",
+      "D": "DIRT"
+    }
+  },
+  "reinforced_deepslate_from_components": {
+    "result": "REINFORCED_DEEPSLATE",
+    "amount": 1,
+    "pattern": [
+      "SCS",
+      "COC",
+      "SCS"
+    ],
+    "ingredients": {
+      "S": "END_STONE_BRICK_STAIRS",
+      "C": "DEEPSLATE_TILES",
+      "O": "OBSIDIAN"
+    }
+  },
+  "enchanted_golden_apple_from_gold_blocks": {
+    "result": "ENCHANTED_GOLDEN_APPLE",
+    "amount": 1,
+    "pattern": [
+      "GGG",
+      "GAG",
+      "GGG"
+    ],
+    "ingredients": {
+      "G": "GOLD_BLOCK",
+      "A": "APPLE"
+    }
+  }
+}
