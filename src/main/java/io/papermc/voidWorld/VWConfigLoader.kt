@@ -19,6 +19,13 @@ object VWConfigLoader {
 
         val configFile = File(dataFolder, fileName)
 
+        val parentDir = configFile.parentFile
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                plugin.logger.warning("Failed to create config directories: ${parentDir.path}")
+            }
+        }
+
         if (!configFile.exists()) {
             try {
                 plugin.getResource(fileName).use { `in` ->
