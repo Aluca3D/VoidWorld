@@ -1,29 +1,25 @@
-package io.papermc.voidWorld.mobs.helper;
+package io.papermc.voidWorld.mobs.helper
 
-import io.papermc.voidWorld.helper.EDimension;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.EntityType;
-import org.bukkit.potion.PotionEffectType;
+import io.papermc.voidWorld.helper.EDimension
+import net.kyori.adventure.text.Component
+import org.bukkit.Material
+import org.bukkit.attribute.Attribute
+import org.bukkit.entity.EntityType
+import org.bukkit.potion.PotionEffectType
 
-import java.util.List;
-import java.util.Map;
-
-public record MobVariation(
-        EntityType replacement,
-        int intervalMin,
-        int intervalMax,
-        boolean isBurning,
-        boolean isHitByLightning,
-        Material standingOn,
-        PotionEffectType hasEffect,
-        boolean useDimension,
-        EDimension inDimension,
-
-        Component name,
-        Map<Attribute, Double> attributes,
-        List<String> tags,
-        MobEquipment equipment
-) {
-}
+@JvmRecord
+data class MobVariation(
+    val replacement: EntityType?,
+    val intervalMin: Int,
+    val intervalMax: Int,
+    val isBurning: Boolean,
+    val isHitByLightning: Boolean,
+    val standingOn: Material?,
+    val hasEffect: PotionEffectType?,
+    val useDimension: Boolean,
+    val inDimension: EDimension?,
+    val name: Component?,
+    val attributes: Map<Attribute?, Double>?,
+    val tags: List<String>?,
+    val equipment: MobEquipment?
+)
