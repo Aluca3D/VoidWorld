@@ -1,10 +1,11 @@
-package io.papermc.voidWorld.mobs.helper;
+package io.papermc.voidWorld.mobs.helper
 
-public record MobEquipment(
-        ItemStackConfiguration mainHand,
-        ItemStackConfiguration offHand,
-        ItemStackConfiguration helmet,
-        ItemStackConfiguration chestplate,
-        ItemStackConfiguration leggings,
-        ItemStackConfiguration boots
-) {}
+@JvmRecord
+data class MobEquipment(
+    val mainHand: ItemStackConfiguration?,
+    val offHand: ItemStackConfiguration?,
+    val helmet: ItemStackConfiguration?,
+    val chestplate: ItemStackConfiguration?,
+    val leggings: ItemStackConfiguration?,
+    val boots: ItemStackConfiguration?
+) 
