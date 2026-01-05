@@ -1,0 +1,8 @@
+{
+  "leather_from_rotten_flesh": {
+    "input": "ROTTEN_FLESH",
+    "result": "LEATHER",
+    "xp": 0.2,
+    "cookingTime": 100
+  }
+}

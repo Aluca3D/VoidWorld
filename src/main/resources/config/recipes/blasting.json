@@ -1,0 +1,20 @@
+{
+  "magma_from_cobble": {
+    "input": "COBBLESTONE",
+    "result": "MAGMA_BLOCK",
+    "xp": 0.5,
+    "cookingTime": 300
+  },
+  "soulsoil_from_soulsand": {
+    "input": "SOUL_SAND",
+    "result": "SOUL_SOIL",
+    "xp": 0.6,
+    "cookingTime": 150
+  },
+  "sand_from_coarse_dirt": {
+    "input": "COARSE_DIRT",
+    "result": "SAND",
+    "xp": 0.4,
+    "cookingTime": 150
+  }
+}

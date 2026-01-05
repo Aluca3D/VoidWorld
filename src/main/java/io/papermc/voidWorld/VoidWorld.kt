@@ -7,15 +7,21 @@ import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig
 import io.papermc.voidWorld.mobs.listeners.VWMobLootDrop
 import io.papermc.voidWorld.mobs.listeners.VWMobVariationSpawn
 import io.papermc.voidWorld.recipes.RecipeGenerator
-import io.papermc.voidWorld.recipes.VWRecipeHelper
-import io.papermc.voidWorld.recipes.VWRecipeRegistry
+import io.papermc.voidWorld.recipes.config.BlastingRecipeConfig
+import io.papermc.voidWorld.recipes.config.CampfireRecipeConfig
+import io.papermc.voidWorld.recipes.config.FurnaceRecipeConfig
 import io.papermc.voidWorld.recipes.config.ShapedRecipeConfig
-import io.papermc.voidWorld.recipes.recipes.*
+import io.papermc.voidWorld.recipes.config.ShapelessRecipeConfig
+import io.papermc.voidWorld.recipes.config.SmokingRecipeConfig
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitScheduler
 
 class VoidWorld : JavaPlugin() {
+
+    private var scheduler: BukkitScheduler = this.server.scheduler
+
     override fun onLoad() {
         logger.info("VoidWorld loaded!")
     }
@@ -23,23 +29,9 @@ class VoidWorld : JavaPlugin() {
     override fun onEnable() {
         logger.info("VoidWorld enabled!")
 
-        // Recipes OLD!!
-        // TODO: Move to kotlin / config solution
-        val recipeRegistry = VWRecipeRegistry(
-            mutableListOf(
-                ShapelessRecipesGenerator(),
-                FurnaceRecipesGenerator(),
-                BlastingRecipesGenerator(),
-                SmokingRecipesGenerator()
-            ).toList().toMutableList()
-        )
-
-        val helper = VWRecipeHelper(this)
-        recipeRegistry.registerAll(helper)
-
         // OneBlock
         val oneBlock = VWOneBlockGenerator(this)
-        Bukkit.getScheduler().runTask(this, Runnable { oneBlock.setOneBlock() })
+        scheduler.runTask(this, Runnable { oneBlock.setOneBlock() })
 
         // Mob Variation/Loot
         val variationNode = loadConfig(this, "config/mobs/mob-variation.json")
@@ -50,10 +42,22 @@ class VoidWorld : JavaPlugin() {
 
         // Recipes
         val recipeGenerator = RecipeGenerator(this)
+
+        val blastingRecipeNode = loadConfig(this, "config/recipes/blasting.json")
+        val campfireRecipeNode = loadConfig(this, "config/recipes/campfire.json")
+        val furnaceRecipeNode = loadConfig(this, "config/recipes/furnace.json")
         val shapedRecipeNode = loadConfig(this, "config/recipes/shaped.json")
+        val shapelessRecipeNode = loadConfig(this, "config/recipes/shapeless.json")
+        val smokingRecipeNode = loadConfig(this, "config/recipes/smoking.json")
 
+        BlastingRecipeConfig(recipeGenerator, blastingRecipeNode).loadRecipes()
+        CampfireRecipeConfig(recipeGenerator, campfireRecipeNode).loadRecipes()
+        FurnaceRecipeConfig(recipeGenerator, furnaceRecipeNode).loadRecipes()
         ShapedRecipeConfig(recipeGenerator, shapedRecipeNode).loadRecipes()
+        ShapelessRecipeConfig(recipeGenerator, shapelessRecipeNode).loadRecipes()
+        SmokingRecipeConfig(recipeGenerator, smokingRecipeNode).loadRecipes()
 
+        // Register Event Listeners
         registerEventListeners(
             mutableListOf(
                 oneBlock,
