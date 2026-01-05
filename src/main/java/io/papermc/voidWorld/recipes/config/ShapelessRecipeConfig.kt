@@ -1,7 +1,7 @@
 package io.papermc.voidWorld.recipes.config
 
 import io.papermc.voidWorld.recipes.IRecipe
-import io.papermc.voidWorld.recipes.IngredientEntry
+import io.papermc.voidWorld.recipes.DIngredientEntry
 import io.papermc.voidWorld.recipes.RecipeGenerator
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -17,7 +17,7 @@ class ShapelessRecipeConfig(val recipeGen: RecipeGenerator, val root: Configurat
         id: String,
         result: Material,
         amount: Int,
-        ingredients: List<IngredientEntry>
+        ingredients: List<DIngredientEntry>
     ) {
         val key = NamespacedKey(recipeGen.plugin, "${id.lowercase()}_shapeless")
 
@@ -42,7 +42,7 @@ class ShapelessRecipeConfig(val recipeGen: RecipeGenerator, val root: Configurat
             val result = Material.valueOf(resultName)
             val resultAmount = recipeNode.node("amount").int
 
-            val ingredients = mutableListOf<IngredientEntry>()
+            val ingredients = mutableListOf<DIngredientEntry>()
             val ingredientNode = recipeNode.node("ingredients")
 
             for ((keyNode, valueNode) in ingredientNode.childrenMap()) {
@@ -75,14 +75,14 @@ class ShapelessRecipeConfig(val recipeGen: RecipeGenerator, val root: Configurat
                         }
                     }
 
-                    ingredients.add(IngredientEntry(amount, recipeChoice))
+                    ingredients.add(DIngredientEntry(amount, recipeChoice))
 
                 } else {
                     val material = Material.valueOf(key)
                     val amount = valueNode.int
 
                     ingredients.add(
-                        IngredientEntry(
+                        DIngredientEntry(
                             amount = amount,
                             choice = RecipeChoice.MaterialChoice(material)
                         )

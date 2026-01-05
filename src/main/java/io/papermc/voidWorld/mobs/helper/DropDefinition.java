@@ -1,6 +1,6 @@
 package io.papermc.voidWorld.mobs.helper;
 
-import io.papermc.voidWorld.helper.VWDimension;
+import io.papermc.voidWorld.helper.EDimension;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public record DropDefinition(
         double extraChancePerLevel,
         int extraAmountPerLevel,
         boolean useDimension,
-        VWDimension inDimension,
+        EDimension inDimension,
 
         List<String> tags
 ) {

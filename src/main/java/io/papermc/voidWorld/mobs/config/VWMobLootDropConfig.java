@@ -1,6 +1,6 @@
 package io.papermc.voidWorld.mobs.config;
 
-import io.papermc.voidWorld.helper.VWDimension;
+import io.papermc.voidWorld.helper.EDimension;
 import io.papermc.voidWorld.mobs.helper.ItemStackConfiguration;
 import io.papermc.voidWorld.mobs.helper.DropDefinition;
 import org.bukkit.entity.EntityType;
@@ -55,7 +55,7 @@ public class VWMobLootDropConfig {
 
                 boolean useDimension = dropNode.node("useDimension").getBoolean(false);
                 String dimensionStr = dropNode.node("inDimension").getString("OVERWORLD");
-                VWDimension dimension = VWDimension.fromString(dimensionStr);
+                EDimension dimension = EDimension.fromString(dimensionStr);
 
                 List<String> tags = new ArrayList<>();
                 for (ConfigurationNode tagNode : dropNode.node("tags").childrenList()) {

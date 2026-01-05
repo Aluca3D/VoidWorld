@@ -1,7 +1,7 @@
 package io.papermc.voidWorld.recipes.config
 
 import io.papermc.voidWorld.recipes.IRecipe
-import io.papermc.voidWorld.recipes.IngredientEntry
+import io.papermc.voidWorld.recipes.DIngredientEntry
 import io.papermc.voidWorld.recipes.RecipeGenerator
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -16,7 +16,7 @@ open class FurnaceRecipeConfig(val recipeGen: RecipeGenerator, val root: Configu
     protected open fun genRecipe(
         id: String,
         result: Material,
-        ingredient: IngredientEntry,
+        ingredient: DIngredientEntry,
         experience: Float,
         cookingTime: Int,
     ) {
@@ -59,7 +59,7 @@ open class FurnaceRecipeConfig(val recipeGen: RecipeGenerator, val root: Configu
                 }
             }
 
-            val ingredientEntry = IngredientEntry(
+            val ingredientEntry = DIngredientEntry(
                 amount = 1,
                 choice = inputChoice
             )
