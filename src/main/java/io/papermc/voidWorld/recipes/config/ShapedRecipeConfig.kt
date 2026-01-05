@@ -1,5 +1,7 @@
 package io.papermc.voidWorld.recipes.config
 
+import io.papermc.voidWorld.recipes.IRecipe
+import io.papermc.voidWorld.recipes.IngredientEntry
 import io.papermc.voidWorld.recipes.RecipeGenerator
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -10,14 +12,14 @@ import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
 import org.spongepowered.configurate.ConfigurationNode
 
-class ShapedRecipeConfig(val recipeGen: RecipeGenerator, val root: ConfigurationNode) {
+class ShapedRecipeConfig(val recipeGen: RecipeGenerator, val root: ConfigurationNode) : IRecipe {
 
-    private fun genShapedRecipe(
+    private fun genRecipe(
         id: String,
         result: Material,
         amount: Int,
         shape: List<String>,
-        ingredients: Map<Char, Any>
+        ingredients: Map<Char, IngredientEntry>
     ) {
         val key = NamespacedKey(recipeGen.plugin, "${id.lowercase()}_shaped")
 
@@ -27,19 +29,13 @@ class ShapedRecipeConfig(val recipeGen: RecipeGenerator, val root: Configuration
         recipe.shape(*shape.toTypedArray())
 
         for ((char, ingredient) in ingredients) {
-            when (ingredient) {
-                is Material -> recipe.setIngredient(char, ingredient)
-                is RecipeChoice -> recipe.setIngredient(char, ingredient)
-                else -> throw IllegalArgumentException(
-                    "Invalid ingredient type for '$char': ${ingredient::class.qualifiedName}"
-                )
-            }
+            recipe.setIngredient(char, ingredient.choice)
         }
 
         recipeGen.addRecipe(id, key, recipe)
     }
 
-    fun loadRecipes() {
+    override fun loadRecipes() {
         for ((recipeId, recipeNode) in root.childrenMap()) {
             val id = recipeId.toString()
 
@@ -47,48 +43,42 @@ class ShapedRecipeConfig(val recipeGen: RecipeGenerator, val root: Configuration
                 ?: throw IllegalArgumentException("Recipe $id missing result")
 
             val result = Material.valueOf(resultName)
-            val amount = recipeNode.node("amount").int // TODO: add default value of 1
+            val resultAmount = recipeNode.node("amount").int
 
             val pattern = recipeNode.node("pattern").childrenList().mapNotNull { it.string }
 
-            val ingredientMap = mutableMapOf<Char, Any>()
+            val ingredientMap = mutableMapOf<Char, IngredientEntry>()
             val ingredientsNode = recipeNode.node("ingredients")
 
-            // TODO: Make helper function for easy reusability
             for ((charKey, ingredientNode) in ingredientsNode.childrenMap()) {
                 val keyChar = charKey.toString()[0]
 
-                val ingredient: Any = when {
+                val ingredientEntry: IngredientEntry = when {
                     ingredientNode.isList -> {
                         val materials = ingredientNode.childrenList().map {
                             Material.valueOf(it.string!!)
                         }
-                        RecipeChoice.MaterialChoice(materials)
+                        IngredientEntry(1, RecipeChoice.MaterialChoice(materials))
                     }
 
                     ingredientNode.string!!.startsWith("_") -> {
                         val tagName = ingredientNode.string!!.substring(1).lowercase()
                         val tagKey = NamespacedKey.minecraft(tagName)
-
-                        val tag = Bukkit.getTag(
-                            Tag.REGISTRY_ITEMS,
-                            tagKey,
-                            Material::class.java
-                        ) ?: throw IllegalArgumentException("Unknown tag: $tagName")
-
-                        RecipeChoice.MaterialChoice(tag)
+                        val tag = Bukkit.getTag(Tag.REGISTRY_ITEMS, tagKey, Material::class.java)
+                            ?: throw IllegalArgumentException("Unknown tag: $tagName")
+                        IngredientEntry(1, RecipeChoice.MaterialChoice(tag))
                     }
 
                     else -> {
-                        Material.valueOf(ingredientNode.string!!)
+                        val material = Material.valueOf(ingredientNode.string!!.uppercase())
+                        IngredientEntry(1, RecipeChoice.MaterialChoice(material))
                     }
                 }
 
-                ingredientMap[keyChar] = ingredient
+                ingredientMap[keyChar] = ingredientEntry
             }
 
-            genShapedRecipe(id, result, amount, pattern, ingredientMap)
+            genRecipe(id, result, resultAmount, pattern, ingredientMap)
         }
     }
-
 }

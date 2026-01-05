@@ -1,0 +1,8 @@
+{
+  "iron_nugget_from_gravel": {
+    "input": "GRAVEL",
+    "result": "IRON_NUGGET",
+    "xp": 0.4,
+    "cookingTime": 125
+  }
+}

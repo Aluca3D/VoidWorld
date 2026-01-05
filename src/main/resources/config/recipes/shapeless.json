@@ -1,0 +1,74 @@
+{
+  "gravel_from_gunpowder": {
+    "result": "GRAVEL",
+    "amount": 2,
+    "ingredients": {
+      "DIRT": 2,
+      "GUNPOWDER": 2
+    }
+  },
+  "red_sand_from_dye": {
+    "result": "RED_SAND",
+    "amount": 4,
+    "ingredients": {
+      "SAND": 4,
+      "&1": [
+        "RED_DYE",
+        "ORANGE_DYE"
+      ]
+    }
+  },
+  "gravel_from_bone_meal": {
+    "result": "GRAVEL",
+    "amount": 1,
+    "ingredients": {
+      "DIRT": 3,
+      "BONE_MEAL": 1
+    }
+  },
+  "grass_block_from_bonemeal": {
+    "result": "GRASS_BLOCK",
+    "amount": 1,
+    "ingredients": {
+      "DIRT": 1,
+      "BONE_MEAL": 8
+    }
+  },
+  "cobblestone_from_gravel": {
+    "result": "COBBLESTONE",
+    "amount": 1,
+    "ingredients": {
+      "GRAVEL": 4
+    }
+  },
+  "obsidian_from_magma_water": {
+    "result": "OBSIDIAN",
+    "amount": 1,
+    "ingredients": {
+      "MAGMA_BLOCK": 1,
+      "WATER_BUCKET": 1
+    }
+  },
+  "lava_bucket_from_magma_bucket": {
+    "result": "LAVA_BUCKET",
+    "amount": 1,
+    "ingredients": {
+      "MAGMA_BLOCK": 1,
+      "BUCKET": 1
+    }
+  },
+  "cobbled_deepslate_from_blackstone": {
+    "result": "COBBLED_DEEPSLATE",
+    "amount": 3,
+    "ingredients": {
+      "BLACKSTONE": 9
+    }
+  },
+  "cobweb_from_string": {
+    "result": "COBWEB",
+    "amount": 1,
+    "ingredients": {
+      "STRING": 9
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "blackstone_from_cobblestone": {
+    "input": "COBBLESTONE",
+    "result": "BLACKSTONE",
+    "xp": 0.7,
+    "cookingTime": 100
+  },
+  "dead_bush_from_saplings": {
+    "input": "_SAPLINGS",
+    "result": "DEAD_BUSH",
+    "xp": 0.7,
+    "cookingTime": 100
+  }
+}

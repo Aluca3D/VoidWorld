@@ -7,9 +7,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitScheduler
 
 class VWOneBlockGenerator(private val plugin: JavaPlugin) : Listener {
     private var oneBlockLocation: Location? = null
+    private var scheduler: BukkitScheduler = plugin.server.scheduler
 
     fun setOneBlock() {
         val world = Bukkit.getWorld("world")
@@ -32,8 +34,7 @@ class VWOneBlockGenerator(private val plugin: JavaPlugin) : Listener {
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         if (event.getBlock().location == oneBlockLocation) {
-            Bukkit.getScheduler()
-                .runTaskLater(plugin, Runnable { oneBlockLocation?.block?.type = Material.DIRT }, 1L)
+            scheduler.runTaskLater(plugin, Runnable { oneBlockLocation?.block?.type = Material.DIRT }, 1L)
         }
     }
 }

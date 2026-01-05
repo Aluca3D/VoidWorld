@@ -1,7 +1,7 @@
 package io.papermc.voidWorld.recipes
 
 import org.bukkit.NamespacedKey
-import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.inventory.Recipe
 import org.bukkit.plugin.java.JavaPlugin
 
 class RecipeGenerator(val plugin: JavaPlugin) {
@@ -22,9 +22,9 @@ class RecipeGenerator(val plugin: JavaPlugin) {
         return recipeKeys[id]
     }
 
-    fun addRecipe(id: String?, key: NamespacedKey?, recipe: ShapedRecipe) {
+    fun addRecipe(id: String?, key: NamespacedKey?, recipe: Recipe) {
         addRecipeKey(id, key)
-        plugin.server.addRecipe(recipe);
+        plugin.server.addRecipe(recipe)
     }
 
     // TODO:
