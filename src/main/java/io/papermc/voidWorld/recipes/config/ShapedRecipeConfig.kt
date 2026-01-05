@@ -1,7 +1,7 @@
 package io.papermc.voidWorld.recipes.config
 
 import io.papermc.voidWorld.recipes.IRecipe
-import io.papermc.voidWorld.recipes.IngredientEntry
+import io.papermc.voidWorld.recipes.DIngredientEntry
 import io.papermc.voidWorld.recipes.RecipeGenerator
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -19,7 +19,7 @@ class ShapedRecipeConfig(val recipeGen: RecipeGenerator, val root: Configuration
         result: Material,
         amount: Int,
         shape: List<String>,
-        ingredients: Map<Char, IngredientEntry>
+        ingredients: Map<Char, DIngredientEntry>
     ) {
         val key = NamespacedKey(recipeGen.plugin, "${id.lowercase()}_shaped")
 
@@ -47,18 +47,18 @@ class ShapedRecipeConfig(val recipeGen: RecipeGenerator, val root: Configuration
 
             val pattern = recipeNode.node("pattern").childrenList().mapNotNull { it.string }
 
-            val ingredientMap = mutableMapOf<Char, IngredientEntry>()
+            val ingredientMap = mutableMapOf<Char, DIngredientEntry>()
             val ingredientsNode = recipeNode.node("ingredients")
 
             for ((charKey, ingredientNode) in ingredientsNode.childrenMap()) {
                 val keyChar = charKey.toString()[0]
 
-                val ingredientEntry: IngredientEntry = when {
+                val ingredientEntry: DIngredientEntry = when {
                     ingredientNode.isList -> {
                         val materials = ingredientNode.childrenList().map {
                             Material.valueOf(it.string!!)
                         }
-                        IngredientEntry(1, RecipeChoice.MaterialChoice(materials))
+                        DIngredientEntry(1, RecipeChoice.MaterialChoice(materials))
                     }
 
                     ingredientNode.string!!.startsWith("_") -> {
@@ -66,12 +66,12 @@ class ShapedRecipeConfig(val recipeGen: RecipeGenerator, val root: Configuration
                         val tagKey = NamespacedKey.minecraft(tagName)
                         val tag = Bukkit.getTag(Tag.REGISTRY_ITEMS, tagKey, Material::class.java)
                             ?: throw IllegalArgumentException("Unknown tag: $tagName")
-                        IngredientEntry(1, RecipeChoice.MaterialChoice(tag))
+                        DIngredientEntry(1, RecipeChoice.MaterialChoice(tag))
                     }
 
                     else -> {
                         val material = Material.valueOf(ingredientNode.string!!.uppercase())
-                        IngredientEntry(1, RecipeChoice.MaterialChoice(material))
+                        DIngredientEntry(1, RecipeChoice.MaterialChoice(material))
                     }
                 }
 

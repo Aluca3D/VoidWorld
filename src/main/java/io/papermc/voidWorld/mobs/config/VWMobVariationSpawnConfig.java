@@ -2,7 +2,7 @@ package io.papermc.voidWorld.mobs.config;
 
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
-import io.papermc.voidWorld.helper.VWDimension;
+import io.papermc.voidWorld.helper.EDimension;
 import io.papermc.voidWorld.mobs.helper.MobEquipment;
 import io.papermc.voidWorld.mobs.helper.MobVariation;
 import net.kyori.adventure.text.Component;
@@ -68,7 +68,7 @@ public class VWMobVariationSpawnConfig {
 
                 boolean useDimension = replacementNode.node("useDimension").getBoolean(false);
                 String dimensionStr = replacementNode.node("inDimension").getString("OVERWORLD");
-                VWDimension dimension = VWDimension.fromString(dimensionStr);
+                EDimension dimension = EDimension.fromString(dimensionStr);
 
                 String standingOnStr = replacementNode.node("standingOn").getString("NONE");
                 Material standingOn = parseBlock(standingOnStr);

@@ -1,6 +1,6 @@
 package io.papermc.voidWorld.recipes.config
 
-import io.papermc.voidWorld.recipes.IngredientEntry
+import io.papermc.voidWorld.recipes.DIngredientEntry
 import io.papermc.voidWorld.recipes.RecipeGenerator
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -14,7 +14,7 @@ class SmokingRecipeConfig(recipeGen: RecipeGenerator, root: ConfigurationNode) :
     override fun genRecipe(
         id: String,
         result: Material,
-        ingredient: IngredientEntry,
+        ingredient: DIngredientEntry,
         experience: Float,
         cookingTime: Int,
     ) {

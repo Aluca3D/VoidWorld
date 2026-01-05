@@ -1,6 +1,6 @@
 package io.papermc.voidWorld.mobs.helper;
 
-import io.papermc.voidWorld.helper.VWDimension;
+import io.papermc.voidWorld.helper.EDimension;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -19,7 +19,7 @@ public record MobVariation(
         Material standingOn,
         PotionEffectType hasEffect,
         boolean useDimension,
-        VWDimension inDimension,
+        EDimension inDimension,
 
         Component name,
         Map<Attribute, Double> attributes,

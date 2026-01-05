@@ -7,7 +7,7 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 
-object VWConfigLoader {
+object OConfigLoader {
     @JvmStatic
     fun loadConfig(plugin: JavaPlugin, fileName: String): ConfigurationNode {
         val dataFolder = plugin.dataFolder

@@ -132,6 +132,7 @@ public class VWMobVariationSpawn implements Listener {
 
     private void replaceEntity(LivingEntity originalEntity, EntityType replacementType, MobVariation variation) {
 
+        // TODO Change how the scheduler is used
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Location location = originalEntity.getLocation();
             originalEntity.remove();

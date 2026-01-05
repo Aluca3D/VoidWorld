@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitScheduler
 
-class VWOneBlockGenerator(private val plugin: JavaPlugin) : Listener {
+class OneBlockGenerator(private val plugin: JavaPlugin) : Listener {
     private var oneBlockLocation: Location? = null
     private var scheduler: BukkitScheduler = plugin.server.scheduler
 

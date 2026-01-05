@@ -1,6 +1,6 @@
 package io.papermc.voidWorld
 
-import io.papermc.voidWorld.VWConfigLoader.loadConfig
+import io.papermc.voidWorld.OConfigLoader.loadConfig
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
 import io.papermc.voidWorld.mobs.config.VWMobLootDropConfig
 import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig
@@ -30,7 +30,7 @@ class VoidWorld : JavaPlugin() {
         logger.info("VoidWorld enabled!")
 
         // OneBlock
-        val oneBlock = VWOneBlockGenerator(this)
+        val oneBlock = OneBlockGenerator(this)
         scheduler.runTask(this, Runnable { oneBlock.setOneBlock() })
 
         // Mob Variation/Loot
