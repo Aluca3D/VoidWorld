@@ -14,7 +14,7 @@ class RecipeGenerator(val plugin: JavaPlugin) {
                 "Duplicate recipe id detected: $id — previous recipe will be overwritten!"
             )
         }
-        plugin.logger.info { "Recipe added with key: $key" }
+        //plugin.logger.info { "Recipe added with key: $key" }
         recipeKeys[id] = key
     }
 
