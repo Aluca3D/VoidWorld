@@ -1,223 +1,199 @@
-package io.papermc.voidWorld.mobs.listeners;
+package io.papermc.voidWorld.mobs.listeners
 
-import io.papermc.voidWorld.mobs.helper.ItemStackConfiguration;
-import io.papermc.voidWorld.mobs.helper.MobEquipment;
-import io.papermc.voidWorld.mobs.helper.MobVariation;
-import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig;
-import org.bukkit.*;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
+import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
+import io.papermc.voidWorld.mobs.helper.RItemStackConfiguration
+import io.papermc.voidWorld.mobs.helper.RMobEquipment
+import io.papermc.voidWorld.mobs.helper.RMobVariation
+import org.bukkit.NamespacedKey
+import org.bukkit.Registry
+import org.bukkit.attribute.Attribute
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause
+import org.bukkit.event.entity.EntityEvent
+import org.bukkit.event.entity.EntityPotionEffectEvent
+import org.bukkit.event.entity.EntitySpawnEvent
+import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitScheduler
+import java.util.*
+import java.util.function.BiConsumer
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+class MobVariationSpawn(private val plugin: JavaPlugin, private val config: MobVariationSpawnConfig) : Listener {
+    private val mobCounts: MutableMap<NamespacedKey?, Int?> = HashMap<NamespacedKey?, Int?>()
+    private val mobNextInterval: MutableMap<NamespacedKey?, Int?> = HashMap<NamespacedKey?, Int?>()
 
-public class VWMobVariationSpawn implements Listener {
+    private var scheduler: BukkitScheduler = plugin.server.scheduler
 
-    private final Map<NamespacedKey, Integer> mobCounts = new HashMap<>();
-    private final Map<NamespacedKey, Integer> mobNextInterval = new HashMap<>();
-
-    private final EnumSet<EntityDamageEvent.DamageCause> burningCauses = EnumSet.of(
-            EntityDamageEvent.DamageCause.FIRE,
-            EntityDamageEvent.DamageCause.FIRE_TICK,
-            EntityDamageEvent.DamageCause.LAVA,
-            EntityDamageEvent.DamageCause.HOT_FLOOR,
-            EntityDamageEvent.DamageCause.CAMPFIRE
-    );
-
-    private final JavaPlugin plugin;
-    private final VWMobVariationSpawnConfig config;
-
-    public VWMobVariationSpawn(JavaPlugin plugin, VWMobVariationSpawnConfig config) {
-        this.plugin = plugin;
-        this.config = config;
-    }
+    private val burningCauses: EnumSet<DamageCause?> = EnumSet.of(
+        DamageCause.FIRE,
+        DamageCause.FIRE_TICK,
+        DamageCause.LAVA,
+        DamageCause.HOT_FLOOR,
+        DamageCause.CAMPFIRE
+    )
 
     @EventHandler
-    public void onMobSpawn(EntitySpawnEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity entity)) return;
+    fun onMobSpawn(event: EntitySpawnEvent) {
+        val (entity, keys) = getType(event) ?: return
 
-        EntityType type = entity.getType();
+        for (key in keys) {
+            if (config.getRandomInterval(key) == 0) continue
+            if (isNotInDimension(entity, key)) continue
 
-        if (!config.hasVariation(type)) return;
+            val count = mobCounts.getOrDefault(key, 0)!! + 1
+            mobCounts[key] = count
 
-        List<NamespacedKey> keys = config.getKeysForEntity(type);
-
-        for (NamespacedKey key : keys) {
-            if (config.getRandomInterval(key) == 0) continue;
-            if (isNotInDimension(entity, key)) continue;
-
-            int count = mobCounts.getOrDefault(key, 0) + 1;
-            mobCounts.put(key, count);
-
-            int nextInterval = mobNextInterval.computeIfAbsent(key, k -> config.getRandomInterval(key));
+            val nextInterval =
+                mobNextInterval.computeIfAbsent(key) { _: NamespacedKey? -> config.getRandomInterval(key) }!!
 
             if (count >= nextInterval) {
-                EntityType replacement = config.getReplacement(key);
+                val replacement = config.getReplacement(key)!!
 
-                MobVariation variation = config.getVariation(key);
-                if (variation == null) continue;
+                val variation = config.getVariation(key) ?: continue
 
-                replaceEntity(entity, replacement, variation);
+                replaceEntity(entity, replacement, variation)
 
-                mobCounts.put(key, 0);
-                mobNextInterval.put(key, config.getRandomInterval(key));
-                break;
+                mobCounts[key] = 0
+                mobNextInterval[key] = config.getRandomInterval(key)
+                break
             }
         }
     }
 
     @EventHandler
-    public void onMobDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity entity)) return;
-        EntityType type = entity.getType();
-        if (!config.hasVariation(type)) return;
+    fun onMobDamage(event: EntityDamageEvent) {
+        val (entity, keys) = getType(event) ?: return
 
-        List<NamespacedKey> keys = config.getKeysForEntity(type);
-        for (NamespacedKey key : keys) {
-            if (config.getRandomInterval(key) != 0) continue;
-            if (isNotInDimension(entity, key)) continue;
-            if (isNotStandingOn(entity, key)) continue;
+        for (key in keys) {
+            if (config.getRandomInterval(key) != 0) continue
+            if (isNotInDimension(entity, key)) continue
+            if (isNotStandingOn(entity, key)) continue
 
-            MobVariation variation = config.getVariation(key);
-            if (variation == null) continue;
+            val variation = config.getVariation(key) ?: continue
 
-            if (!variation.isHitByLightning() && !variation.isBurning()) continue;
-            if (variation.isHitByLightning() && event.getCause() != EntityDamageEvent.DamageCause.LIGHTNING) continue;
+            if (!variation.isHitByLightning!! && !variation.isBurning!!) continue
+            if (variation.isHitByLightning && event.cause != DamageCause.LIGHTNING) continue
 
-            if (variation.isBurning() && !burningCauses.contains(event.getCause())) {
-                continue;
+            if (variation.isBurning == true && !burningCauses.contains(event.cause)) {
+                continue
             }
 
-            EntityType replacement = config.getReplacement(key);
-            replaceEntity(entity, replacement, variation);
-            break;
+            val replacement = config.getReplacement(key)!!
+            replaceEntity(entity, replacement, variation)
+            break
         }
     }
 
     @EventHandler
-    public void onMobEffect(EntityPotionEffectEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity entity)) return;
-        EntityType type = entity.getType();
-        if (!config.hasVariation(type)) return;
+    fun onMobEffect(event: EntityPotionEffectEvent) {
+        val (entity, keys) = getType(event) ?: return
 
-        PotionEffect effect = event.getNewEffect();
-        if (effect == null) return;
+        val effect = event.newEffect ?: return
 
-        List<NamespacedKey> keys = config.getKeysForEntity(type);
-        for (NamespacedKey key : keys) {
-            if (config.getRandomInterval(key) != 0) continue;
-            if (isNotInDimension(entity, key)) continue;
-            if (isNotStandingOn(entity, key)) continue;
+        for (key in keys) {
+            if (config.getRandomInterval(key) != 0) continue
+            if (isNotInDimension(entity, key)) continue
+            if (isNotStandingOn(entity, key)) continue
 
-            MobVariation variation = config.getVariation(key);
-            if (variation == null) continue;
+            val variation = config.getVariation(key) ?: continue
 
-            if (variation.hasEffect() == null) continue;
-            if (Registry.MOB_EFFECT.get(variation.hasEffect().key()) != effect.getType()) continue;
+            if (variation.hasEffect == null) continue
+            if (Registry.MOB_EFFECT.get(variation.hasEffect.key()) !== effect.type) continue
 
-            EntityType replacement = config.getReplacement(key);
-            replaceEntity(entity, replacement, variation);
-            break;
+            val replacement = config.getReplacement(key)!!
+            replaceEntity(entity, replacement, variation)
+            break
         }
     }
 
-    private void replaceEntity(LivingEntity originalEntity, EntityType replacementType, MobVariation variation) {
+    private fun getType(event: EntityEvent): Pair<LivingEntity, List<NamespacedKey>>? {
+        val entity = event.entity as? LivingEntity ?: return null
 
-        // TODO Change how the scheduler is used
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Location location = originalEntity.getLocation();
-            originalEntity.remove();
+        val type = entity.type
+        if (!config.hasVariation(type)) return null
 
-            LivingEntity spawned = (LivingEntity) location.getWorld().spawnEntity(location, replacementType);
+        val keys = config.getKeysForEntity(type)
+        if (keys.isEmpty()) return null
 
-            List<String> tags = variation.tags();
+        return Pair(entity, keys)
+    }
+
+
+    private fun replaceEntity(originalEntity: LivingEntity, replacementType: EntityType, variation: RMobVariation) {
+        scheduler.runTaskLater(plugin, Runnable {
+            val location = originalEntity.location
+            originalEntity.remove()
+
+            val spawned = location.getWorld().spawnEntity(location, replacementType) as LivingEntity
+
+            val tags: List<String>? = variation.tags
 
             if (tags != null) {
-                for (String tag : tags) {
-                    if (tag == null || tag.isBlank()) continue;
-                    spawned.addScoreboardTag(tag);
+                for (tag in tags) {
+                    if (tag.isBlank()) continue
+                    spawned.addScoreboardTag(tag)
                 }
             }
 
-            if (variation.name() != null) {
-                spawned.customName(variation.name());
-                spawned.setCustomNameVisible(true);
+            if (variation.name != null) {
+                spawned.customName(variation.name)
+                spawned.isCustomNameVisible = true
             }
 
-            if (variation.attributes() != null) {
-                variation.attributes().forEach(((attribute, value) -> {
-                    var instance = spawned.getAttribute(attribute);
-                    if (instance == null) {
-                        spawned.registerAttribute(attribute);
-                        instance = spawned.getAttribute(attribute);
-                    }
+            variation.attributes?.forEach((BiConsumer { attribute: Attribute?, value: Double? ->
+                var instance = spawned.getAttribute(attribute!!)
+                if (instance == null) {
+                    spawned.registerAttribute(attribute)
+                    instance = spawned.getAttribute(attribute)
+                }
+                instance?.baseValue = value!!
+            }))
 
-                    if (instance != null) {
-                        instance.setBaseValue(value);
-                    }
-                }));
-            }
-
-            MobEquipment equipment = variation.equipment();
-            applyEquipment(spawned, equipment);
-        }, 1L);
+            val equipment = variation.equipment
+            applyEquipment(spawned, equipment)
+        }, 1L)
     }
 
-    private void applyEquipment(LivingEntity mob, MobEquipment eq) {
-        if (eq == null || mob.getEquipment() == null) return;
+    private fun applyEquipment(mob: LivingEntity, eq: RMobEquipment?) {
+        if (eq == null || mob.equipment == null) return
 
-        if (eq.mainHand() != null)
-            mob.getEquipment().setItemInMainHand(ItemStackConfiguration.build(eq.mainHand()));
+        if (eq.mainHand != null) mob.equipment!!.setItemInMainHand(RItemStackConfiguration.build(eq.mainHand))
 
-        if (eq.offHand() != null)
-            mob.getEquipment().setItemInOffHand(ItemStackConfiguration.build(eq.offHand()));
+        if (eq.offHand != null) mob.equipment!!.setItemInOffHand(RItemStackConfiguration.build(eq.offHand))
 
-        if (eq.helmet() != null)
-            mob.getEquipment().setHelmet(ItemStackConfiguration.build(eq.helmet()));
+        if (eq.helmet != null) mob.equipment!!.setHelmet(RItemStackConfiguration.build(eq.helmet))
 
-        if (eq.chestplate() != null)
-            mob.getEquipment().setChestplate(ItemStackConfiguration.build(eq.chestplate()));
+        if (eq.chestplate != null) mob.equipment!!.setChestplate(RItemStackConfiguration.build(eq.chestplate))
 
-        if (eq.leggings() != null)
-            mob.getEquipment().setLeggings(ItemStackConfiguration.build(eq.leggings()));
+        if (eq.leggings != null) mob.equipment!!.setLeggings(RItemStackConfiguration.build(eq.leggings))
 
-        if (eq.boots() != null)
-            mob.getEquipment().setBoots(ItemStackConfiguration.build(eq.boots()));
+        if (eq.boots != null) mob.equipment!!.setBoots(RItemStackConfiguration.build(eq.boots))
     }
 
-    private boolean isNotInDimension(LivingEntity entity, NamespacedKey key) {
-        MobVariation variation = config.getVariation(key);
-        if (variation == null) return false;
+    private fun isNotInDimension(entity: LivingEntity, key: NamespacedKey): Boolean {
+        val variation = config.getVariation(key) ?: return false
 
-        World.Environment environment = entity.getWorld().getEnvironment();
-        boolean notInDimension = environment != variation.inDimension().getEnvironment();
+        val environment = entity.world.environment
+        val notInDimension = environment != variation.inDimension!!.environment
 
-        if (!variation.useDimension()) return false;
+        variation.useDimension?.let { if (!it) return false }
 
-        return notInDimension;
+        return notInDimension
     }
 
-    private boolean isNotStandingOn(LivingEntity entity, NamespacedKey key) {
-        MobVariation variation = config.getVariation(key);
-        if (variation == null) return false;
+    private fun isNotStandingOn(entity: LivingEntity, key: NamespacedKey): Boolean {
+        val variation = config.getVariation(key) ?: return false
 
-        Material blockBelow = entity.getLocation()
-                .subtract(0, 0.1, 0)
-                .getBlock()
-                .getType();
+        val blockBelow = entity.location
+            .subtract(0.0, 0.1, 0.0)
+            .block
+            .type
 
-        Material standingOn = variation.standingOn();
-        if (standingOn == null) return false;
+        val standingOn = variation.standingOn ?: return false
 
-        return blockBelow != standingOn;
+        return blockBelow != standingOn
     }
 }

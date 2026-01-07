@@ -1,95 +1,86 @@
-package io.papermc.voidWorld.mobs.config;
+package io.papermc.voidWorld.mobs.config
 
-import io.papermc.voidWorld.helper.EDimension;
-import io.papermc.voidWorld.mobs.helper.ItemStackConfiguration;
-import io.papermc.voidWorld.mobs.helper.DropDefinition;
-import org.bukkit.entity.EntityType;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.spongepowered.configurate.ConfigurationNode;
+import io.papermc.voidWorld.helper.EDimension
+import io.papermc.voidWorld.mobs.helper.RDropDefinition
+import io.papermc.voidWorld.mobs.helper.RItemStackConfiguration
+import org.bukkit.entity.EntityType
+import org.bukkit.plugin.java.JavaPlugin
+import org.spongepowered.configurate.ConfigurationNode
+import java.util.*
 
-import java.util.*;
+class MobLootDropConfig(plugin: JavaPlugin, root: ConfigurationNode) {
 
-public class VWMobLootDropConfig {
+    private val lootTable: MutableMap<EntityType, List<RDropDefinition>> = EnumMap(EntityType::class.java)
 
-    private final Map<EntityType, List<DropDefinition>> lootTable = new HashMap<>();
-
-    public VWMobLootDropConfig(JavaPlugin plugin, ConfigurationNode root) {
-
+    init {
         if (root.empty()) {
-            System.out.println("No " + root + " section found!");
-            return;
+            plugin.logger.warning("No $root section found!")
+        } else {
+            loadConfig(plugin, root)
         }
+    }
 
-        plugin.getLogger().info("<##> Begin of VWMobLootDropConfig <##>");
+    private fun loadConfig(plugin: JavaPlugin, root: ConfigurationNode) {
+        plugin.logger.info("<##> Begin of VWMobLootDropConfig <##>")
 
-        for (Map.Entry<Object, ? extends ConfigurationNode> entry : root.childrenMap().entrySet()) {
+        for ((key, mobNode) in root.childrenMap()) {
 
-            String mobName = entry.getKey().toString();
-            ConfigurationNode mobNode = entry.getValue();
-
-            EntityType type;
-            try {
-                type = EntityType.valueOf(mobName.toUpperCase());
-            } catch (Exception e) {
-                plugin.getLogger().warning("Invalid mob: " + mobName);
-                continue;
+            val mobName = key.toString()
+            val type = runCatching {
+                EntityType.valueOf(mobName.uppercase())
+            }.getOrElse {
+                plugin.logger.warning("Invalid mob: $mobName")
+                continue
             }
 
-            List<DropDefinition> drops = new ArrayList<>();
+            val drops = mobNode.node("drops")
+                .childrenList()
+                .mapNotNull { dropNode ->
 
-            List<? extends ConfigurationNode> dropNodes = mobNode.node("drops").childrenList();
+                    val itemConfig = RItemStackConfiguration.parseItem(dropNode)
+                        ?: run {
+                            plugin.logger.warning("Item is null, skipping drop")
+                            return@mapNotNull null
+                        }
 
-            for (ConfigurationNode dropNode : dropNodes) {
+                    val min = dropNode.node("amount", "min").getInt(1)
+                    val max = dropNode.node("amount", "max").getInt(1)
+                    val chance = dropNode.node("chance").getDouble(1.0)
 
-                ItemStackConfiguration itemStackConfiguration = ItemStackConfiguration.parseItem(dropNode);
+                    val useDimension = dropNode.node("useDimension").getBoolean(false)
+                    val dimensionStr = dropNode.node("inDimension").getString("OVERWORLD")
+                    val dimension = EDimension.fromString(dimensionStr)
 
-                if (itemStackConfiguration == null) {
-                    plugin.getLogger().warning("Item is null, skipping drop");
-                    continue;
-                }
+                    val tags = dropNode.node("tags")
+                        .childrenList()
+                        .mapNotNull { it.string }
 
-                int min = dropNode.node("amount", "min").getInt(1);
-                int max = dropNode.node("amount", "max").getInt(1);
+                    val lootingNode = dropNode.node("looting")
+                    val lootingEnabled = lootingNode.node("enabled").getBoolean(false)
+                    val extraChance = lootingNode.node("extra-chance-per-level").getDouble(0.0)
+                    val extraAmount = lootingNode.node("extra-amount-per-level").getInt(0)
 
-                double chance = dropNode.node("chance").getDouble(1.0);
-
-                boolean useDimension = dropNode.node("useDimension").getBoolean(false);
-                String dimensionStr = dropNode.node("inDimension").getString("OVERWORLD");
-                EDimension dimension = EDimension.fromString(dimensionStr);
-
-                List<String> tags = new ArrayList<>();
-                for (ConfigurationNode tagNode : dropNode.node("tags").childrenList()) {
-                    String tag = tagNode.getString();
-                    if (tag != null) tags.add(tag);
-                }
-
-                ConfigurationNode lootingNode = dropNode.node("looting");
-
-                boolean lootingEnabled = lootingNode.node("enabled").getBoolean(false);
-                double extraChance = lootingNode.node("extra-chance-per-level").getDouble(0.0);
-                int extraAmount = lootingNode.node("extra-amount-per-level").getInt(0);
-
-                drops.add(new DropDefinition(
-                        itemStackConfiguration,
+                    RDropDefinition(
+                        itemConfig,
                         min, max, chance,
                         lootingEnabled,
                         extraChance, extraAmount,
                         useDimension, dimension,
                         tags
-                ));
-            }
+                    )
+                }
 
-            lootTable.put(type, drops);
+            lootTable[type] = drops
 
-            plugin.getLogger().info("Loaded " + drops.size() + " drops for " + type);
-            for (DropDefinition drop : drops) {
-                plugin.getLogger().info(" -> Item:" + drop.itemStackConfiguration().material());
+            plugin.logger.info("Loaded ${drops.size} drops for $type")
+            drops.forEach {
+                plugin.logger.info(" -> Item:${it.itemStackConfiguration?.material}")
             }
         }
-        plugin.getLogger().info("<##> End of VWMobLootDropConfig <##>");
+
+        plugin.logger.info("<##> End of VWMobLootDropConfig <##>")
     }
 
-    public List<DropDefinition> getDrops(EntityType type) {
-        return lootTable.getOrDefault(type, Collections.emptyList());
-    }
+    fun getDrops(type: EntityType): List<RDropDefinition> =
+        lootTable[type].orEmpty()
 }

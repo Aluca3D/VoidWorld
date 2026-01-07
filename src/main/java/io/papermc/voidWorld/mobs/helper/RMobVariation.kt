@@ -8,18 +8,18 @@ import org.bukkit.entity.EntityType
 import org.bukkit.potion.PotionEffectType
 
 @JvmRecord
-data class MobVariation(
+data class RMobVariation(
     val replacement: EntityType?,
     val intervalMin: Int,
     val intervalMax: Int,
-    val isBurning: Boolean,
-    val isHitByLightning: Boolean,
+    val isBurning: Boolean?,
+    val isHitByLightning: Boolean?,
     val standingOn: Material?,
     val hasEffect: PotionEffectType?,
-    val useDimension: Boolean,
+    val useDimension: Boolean?,
     val inDimension: EDimension?,
     val name: Component?,
-    val attributes: Map<Attribute?, Double>?,
+    val attributes: Map<Attribute, Double>?,
     val tags: List<String>?,
-    val equipment: MobEquipment?
+    val equipment: RMobEquipment?
 )

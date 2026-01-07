@@ -2,10 +2,10 @@ package io.papermc.voidWorld
 
 import io.papermc.voidWorld.OConfigLoader.loadConfig
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
-import io.papermc.voidWorld.mobs.config.VWMobLootDropConfig
-import io.papermc.voidWorld.mobs.config.VWMobVariationSpawnConfig
-import io.papermc.voidWorld.mobs.listeners.VWMobLootDrop
-import io.papermc.voidWorld.mobs.listeners.VWMobVariationSpawn
+import io.papermc.voidWorld.mobs.config.MobLootDropConfig
+import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
+import io.papermc.voidWorld.mobs.listeners.MobLootDrop
+import io.papermc.voidWorld.mobs.listeners.MobVariationSpawn
 import io.papermc.voidWorld.recipes.RecipeGenerator
 import io.papermc.voidWorld.recipes.config.BlastingRecipeConfig
 import io.papermc.voidWorld.recipes.config.CampfireRecipeConfig
@@ -37,8 +37,8 @@ class VoidWorld : JavaPlugin() {
         val variationNode = loadConfig(this, "config/mobs/mob-variation.json")
         val lootNode = loadConfig(this, "config/mobs/mob-loot.json")
 
-        val spawnConfig = VWMobVariationSpawnConfig(this, variationNode)
-        val lootConfig = VWMobLootDropConfig(this, lootNode)
+        val spawnConfig = MobVariationSpawnConfig(this, variationNode)
+        val lootConfig = MobLootDropConfig(this, lootNode)
 
         // Recipes
         val recipeGenerator = RecipeGenerator(this)
@@ -61,8 +61,8 @@ class VoidWorld : JavaPlugin() {
         registerEventListeners(
             mutableListOf(
                 oneBlock,
-                VWMobLootDrop(this, lootConfig),
-                VWMobVariationSpawn(this, spawnConfig),
+                MobLootDrop(this, lootConfig),
+                MobVariationSpawn(this, spawnConfig),
                 EndPortalDetection()
             ).toList().toMutableList()
         )
