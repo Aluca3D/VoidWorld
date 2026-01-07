@@ -1,139 +1,137 @@
-package io.papermc.voidWorld.mobs.helper;
+package io.papermc.voidWorld.mobs.helper
 
-import io.papermc.paper.registry.RegistryAccess;
-import io.papermc.paper.registry.RegistryKey;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.inventory.EquipmentSlotGroup;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.spongepowered.configurate.ConfigurationNode;
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
+import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.EquipmentSlotGroup
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
+import org.spongepowered.configurate.ConfigurationNode
+import java.util.*
+import kotlin.math.ceil
 
-import java.util.*;
-
-public record ItemStackConfiguration(
-        Material material,
-        int damage,
-        String name,
-        List<String> lore,
-        Map<String, Integer> enchants,
-        Map<Attribute, Double> attributes
+@JvmRecord
+data class RItemStackConfiguration(
+    val material: Material,
+    val damage: Int,
+    val name: String?,
+    val lore: MutableList<String?>?,
+    val enchants: MutableMap<String?, Int?>?,
+    val attributes: MutableMap<Attribute?, Double?>?
 ) {
-    public static ItemStackConfiguration parseItem(ConfigurationNode node) {
-        if (node == null || node.empty()) return null;
+    companion object {
+        @JvmStatic
+        fun parseItem(node: ConfigurationNode?): RItemStackConfiguration? {
+            if (node == null || node.empty()) return null
 
-        String materialStr = node.node("material").getString();
-        if (materialStr == null) return null;
+            val materialStr = node.node("material").string ?: return null
 
-        Material material = Material.matchMaterial(materialStr.toUpperCase());
-        if (material == null) return null;
+            val material = Material.matchMaterial(materialStr.uppercase(Locale.getDefault())) ?: return null
 
-        String name = node.node("name").getString();
+            val name = node.node("name").string
 
-        int damage = node.node("damage").getInt(0);
+            val damage = node.node("damage").getInt(0)
 
-        List<String> lore = new ArrayList<>();
-        for (ConfigurationNode line : node.node("lore").childrenList()) {
-            String string = line.getString();
-            if (string != null) lore.add(string);
-        }
-
-        Map<String, Integer> enchants = new HashMap<>();
-        for (Map.Entry<Object, ? extends ConfigurationNode> enchant : node.node("enchants").childrenMap().entrySet()) {
-            String enchantment = enchant.getKey().toString();
-            Integer level = enchant.getValue().getInt(0);
-            enchants.put(enchantment, level);
-        }
-
-        Map<Attribute, Double> attributes = new HashMap<>();
-        ConfigurationNode attributesNode = node.node("attributes");
-
-        for (Map.Entry<Object, ? extends ConfigurationNode> entry : attributesNode.childrenMap().entrySet()) {
-            String key = entry.getKey().toString();
-            double value = entry.getValue().getDouble();
-
-            Attribute attribute = RegistryAccess.registryAccess()
-                    .getRegistry(RegistryKey.ATTRIBUTE)
-                    .get(NamespacedKey.minecraft(key.toLowerCase()));
-
-            if (attribute != null) {
-                attributes.put(attribute, value);
+            val lore: MutableList<String?> = ArrayList<String?>()
+            for (line in node.node("lore").childrenList()) {
+                val string = line.string
+                if (string != null) lore.add(string)
             }
-        }
 
-        return new ItemStackConfiguration(material, damage, name, lore, enchants, attributes);
-    }
+            val enchants: MutableMap<String?, Int?> = HashMap<String?, Int?>()
+            for (enchant in node.node("enchants").childrenMap().entries) {
+                val enchantment = enchant.key.toString()
+                val level = enchant.value.getInt(0)
+                enchants[enchantment] = level
+            }
 
-    public static ItemStack build(ItemStackConfiguration itemStackConfiguration) {
-        if (itemStackConfiguration == null || itemStackConfiguration.material() == null) return null;
+            val attributes: MutableMap<Attribute?, Double?> = HashMap<Attribute?, Double?>()
+            val attributesNode = node.node("attributes")
 
-        Material material = itemStackConfiguration.material();
+            for (entry in attributesNode.childrenMap().entries) {
+                val key = entry.key.toString()
+                val value = entry.value.double
 
-        ItemStack item = new ItemStack(material);
+                val attribute: Attribute? = RegistryAccess.registryAccess()
+                    .getRegistry(RegistryKey.ATTRIBUTE)
+                    .get(NamespacedKey.minecraft(key.lowercase(Locale.getDefault())))
 
-        ItemMeta meta = item.getItemMeta();
-
-        if (itemStackConfiguration.name() != null) {
-            meta.displayName(MiniMessage.miniMessage().deserialize(itemStackConfiguration.name()));
-        }
-
-        if (itemStackConfiguration.lore() != null) {
-            meta.lore(
-                    itemStackConfiguration.lore().stream()
-                            .map(line -> MiniMessage.miniMessage().deserialize(line))
-                            .toList()
-            );
-        }
-
-        if (itemStackConfiguration.enchants() != null) {
-            itemStackConfiguration.enchants().forEach((key, level) -> {
-                var enchantment = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(NamespacedKey.minecraft(key.toLowerCase()));
-                if (enchantment != null) {
-                    meta.addEnchant(enchantment, level, true);
+                if (attribute != null) {
+                    attributes[attribute] = value
                 }
-            });
+            }
+
+            return RItemStackConfiguration(material, damage, name, lore, enchants, attributes)
         }
 
-        if (itemStackConfiguration.attributes() != null) {
-            itemStackConfiguration.attributes().forEach((attribute, value) -> {
+        fun build(itemStackConfiguration: RItemStackConfiguration?): ItemStack? {
+            if (itemStackConfiguration == null) return null
 
-                AttributeModifier modifier = new AttributeModifier(
-                        NamespacedKey.minecraft(attribute.key().value()),
-                        value,
-                        AttributeModifier.Operation.ADD_NUMBER,
-                        EquipmentSlotGroup.ANY
-                );
+            val material = itemStackConfiguration.material
 
-                meta.addAttributeModifier(attribute, modifier);
-            });
-        }
+            val item = ItemStack(material)
 
-        if (itemStackConfiguration.damage() != 0) {
-            if (meta instanceof Damageable damageable) {
-                int maxDurability = item.getType().getMaxDurability();
-                if (maxDurability > 0) {
-                    int currentDamage = damageable.getDamage();
+            val meta = item.itemMeta
 
-                    int damageToAdd = (int) Math.ceil(maxDurability * (itemStackConfiguration.damage() / 100.0));
+            if (itemStackConfiguration.name != null) {
+                meta.displayName(MiniMessage.miniMessage().deserialize(itemStackConfiguration.name))
+            }
 
-                    int newDamage = currentDamage + damageToAdd;
+            if (itemStackConfiguration.lore != null) {
+                meta.lore(
+                    itemStackConfiguration.lore.stream()
+                        .map { line: String? -> MiniMessage.miniMessage().deserialize(line!!) }
+                        .toList()
+                )
+            }
 
-                    if (newDamage >= maxDurability) {
-                        return null;
-                    } else {
-                        damageable.setDamage(newDamage);
-                        item.setItemMeta(damageable);
-                        return item;
+            itemStackConfiguration.enchants?.forEach { (key: String?, level: Int?) ->
+                val enchantment: Enchantment? = RegistryAccess.registryAccess().getRegistry(
+                    RegistryKey.ENCHANTMENT
+                )[NamespacedKey.minecraft(key!!.lowercase(Locale.getDefault()))]
+                if (enchantment != null) {
+                    meta.addEnchant(enchantment, level!!, true)
+                }
+            }
+
+            itemStackConfiguration.attributes?.forEach { (attribute: Attribute?, value: Double?) ->
+                val modifier = AttributeModifier(
+                    NamespacedKey.minecraft(attribute!!.key().value()),
+                    value!!,
+                    AttributeModifier.Operation.ADD_NUMBER,
+                    EquipmentSlotGroup.ANY
+                )
+                meta.addAttributeModifier(attribute, modifier)
+            }
+
+            if (itemStackConfiguration.damage != 0) {
+                if (meta is Damageable) {
+                    val maxDurability = item.type.getMaxDurability().toInt()
+                    if (maxDurability > 0) {
+                        val currentDamage = meta.damage
+
+                        val damageToAdd = ceil(maxDurability * (itemStackConfiguration.damage / 100.0)).toInt()
+
+                        val newDamage = currentDamage + damageToAdd
+
+                        if (newDamage >= maxDurability) {
+                            return null
+                        } else {
+                            meta.damage = newDamage
+                            item.setItemMeta(meta)
+                            return item
+                        }
                     }
                 }
             }
-        }
 
-        item.setItemMeta(meta);
-        return item;
+            item.setItemMeta(meta)
+            return item
+        }
     }
 }
