@@ -18,6 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitScheduler
 
+@Suppress("UNUSED_PARAMETER")
 class VoidWorld : JavaPlugin() {
 
     private var scheduler: BukkitScheduler = this.server.scheduler

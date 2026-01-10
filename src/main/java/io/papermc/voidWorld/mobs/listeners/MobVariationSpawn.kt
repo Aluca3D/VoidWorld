@@ -22,8 +22,8 @@ import java.util.*
 import java.util.function.BiConsumer
 
 class MobVariationSpawn(private val plugin: JavaPlugin, private val config: MobVariationSpawnConfig) : Listener {
-    private val mobCounts: MutableMap<NamespacedKey?, Int?> = HashMap<NamespacedKey?, Int?>()
-    private val mobNextInterval: MutableMap<NamespacedKey?, Int?> = HashMap<NamespacedKey?, Int?>()
+    private val mobCounts: MutableMap<NamespacedKey?, Int?> = HashMap()
+    private val mobNextInterval: MutableMap<NamespacedKey?, Int?> = HashMap()
 
     private var scheduler: BukkitScheduler = plugin.server.scheduler
 
@@ -127,7 +127,7 @@ class MobVariationSpawn(private val plugin: JavaPlugin, private val config: MobV
             val location = originalEntity.location
             originalEntity.remove()
 
-            val spawned = location.getWorld().spawnEntity(location, replacementType) as LivingEntity
+            val spawned = location.world.spawnEntity(location, replacementType) as LivingEntity
 
             val tags: List<String>? = variation.tags
 
