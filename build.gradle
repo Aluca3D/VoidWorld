@@ -26,25 +26,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
-tasks.register('updatePaperPluginYaml') {
-    doLast {
-        def paperPluginFile = file('src/main/resources/paper-plugin.yml')
-        def buildPaperPluginFile = file(layout.buildDirectory.dir("resources/paper-plugin.yml"))
-
-        if (paperPluginFile.exists()) {
-            def props = new Properties()
-            props.load(new FileInputStream('gradle.properties'))
-            def projectVersion = props.getProperty('projectVersion')
-            def apiVersion = props.getProperty('apiVersion')
-
-            def yamlContent = paperPluginFile.text
-            yamlContent = yamlContent.replace('$projectVersion', projectVersion)
-            yamlContent = yamlContent.replace('$apiVersion', apiVersion)
-            buildPaperPluginFile.text = yamlContent
-        }
-    }
-}
-
 tasks.register('installGitHook', Copy) {
   description = "Installs the pre-commit hook."
   group = "git"
@@ -109,8 +90,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    dependsOn "updatePaperPluginYaml"
-
     from('src/main/resources') {
         include 'paper-plugin.yml'
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
