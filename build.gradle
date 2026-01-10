@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "$runPaperVersion"
     id("com.gradleup.shadow") version "$shadowVersion"
+    id("com.diffplug.spotless") version "$spotlessVersion"
+    id("io.gitlab.arturbosch.detekt") version "$detektVersion"
     id 'org.jetbrains.kotlin.jvm'
 }
 
@@ -47,6 +49,33 @@ tasks {
     runServer {
         minecraftVersion("$gameVersion")
     }
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        ktlint("$ktlintVersion")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktlint("$ktlintVersion")
+    }
+
+    json {
+        target("**/*.json")
+        jackson()
+    }
+}
+
+detekt {
+    config.setFrom(files("$rootDir/detekt.yml"))
+    buildUponDefaultConfig = true
+    allRules = false
+
+    ignoreFailures = true
 }
 
 def targetJavaVersion = 21
