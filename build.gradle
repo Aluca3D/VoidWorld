@@ -45,6 +45,21 @@ tasks.register('updatePaperPluginYaml') {
     }
 }
 
+tasks.register('installGitHook', Copy) {
+  description = "Installs the pre-commit hook."
+  group = "git"
+
+  from("scripts/pre-commit.sh")
+  into(".git/hooks")
+  rename { "pre-commit" }
+
+  // Make executable
+  doLast {
+    file(".git/hooks/pre-commit").setExecutable(true)
+  }
+}
+
+
 tasks {
     runServer {
         minecraftVersion("$gameVersion")
