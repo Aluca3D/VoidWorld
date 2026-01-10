@@ -1,0 +1,43 @@
+build:
+  maxIssues: 0
+  weights:
+    complexity: 2
+    LongParameterList: 1
+    style: 1
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 50
+
+  TooManyFunctions:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+
+  UnusedImports:
+    active: false
+
+  WildcardImport:
+    active: false
+
+  UnusedPrivateMember:
+    active: true
+
+  NewLineAtEndOfFile:
+    active: true
+
+  ForbiddenComment:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: false
+
+  VariableNaming:
+    active: false
+
+  ClassNaming:
+    active: true
