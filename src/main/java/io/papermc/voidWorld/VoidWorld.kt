@@ -24,6 +24,16 @@ class VoidWorld : JavaPlugin() {
 
   override fun onLoad() {
     logger.info("VoidWorld loaded!")
+
+    // Check if Datapack is Loaded
+    val pack = this.server.datapackManager.getPack(pluginMeta.name + "/provided")
+    if (pack != null) {
+      if (pack.isEnabled) {
+        this.logger.info("The VoidWorld datapack loaded successfully!")
+      } else {
+        this.logger.warning("The VoidWorld datapack failed to loaded successfully!")
+      }
+    }
   }
 
   override fun onEnable() {
