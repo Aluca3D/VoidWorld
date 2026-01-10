@@ -53,7 +53,6 @@ tasks.register('installGitHook', Copy) {
   into(".git/hooks")
   rename { "pre-commit" }
 
-  // Make executable
   doLast {
     file(".git/hooks/pre-commit").setExecutable(true)
   }
