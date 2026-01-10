@@ -37,20 +37,20 @@ data class RItemStackConfiguration(
 
             val damage = node.node("damage").getInt(0)
 
-            val lore: MutableList<String?> = ArrayList<String?>()
+            val lore: MutableList<String?> = ArrayList()
             for (line in node.node("lore").childrenList()) {
                 val string = line.string
                 if (string != null) lore.add(string)
             }
 
-            val enchants: MutableMap<String?, Int?> = HashMap<String?, Int?>()
+            val enchants: MutableMap<String?, Int?> = HashMap()
             for (enchant in node.node("enchants").childrenMap().entries) {
                 val enchantment = enchant.key.toString()
                 val level = enchant.value.getInt(0)
                 enchants[enchantment] = level
             }
 
-            val attributes: MutableMap<Attribute?, Double?> = HashMap<Attribute?, Double?>()
+            val attributes: MutableMap<Attribute?, Double?> = HashMap()
             val attributesNode = node.node("attributes")
 
             for (entry in attributesNode.childrenMap().entries) {
@@ -111,7 +111,7 @@ data class RItemStackConfiguration(
 
             if (itemStackConfiguration.damage != 0) {
                 if (meta is Damageable) {
-                    val maxDurability = item.type.getMaxDurability().toInt()
+                    val maxDurability = item.type.maxDurability.toInt()
                     if (maxDurability > 0) {
                         val currentDamage = meta.damage
 
