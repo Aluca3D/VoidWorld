@@ -2,7 +2,7 @@ package io.papermc.voidWorld.buildStructureDetection
 
 import org.bukkit.Material
 
-data class BlockMatcher(
+data class DBlockMatcher(
     val dx: Int,
     val dz: Int,
     val types: Set<Material>
