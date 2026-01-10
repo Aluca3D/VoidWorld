@@ -8,10 +8,8 @@
     "spread": 3,
     "frequency": 0
   },
-  "structures": [
-    {
-      "structure": "minecraft:stronghold",
-      "weight": 1
-    }
-  ]
+  "structures": [ {
+    "structure": "minecraft:stronghold",
+    "weight": 1
+  } ]
 }

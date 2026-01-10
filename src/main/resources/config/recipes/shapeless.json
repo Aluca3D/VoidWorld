@@ -12,10 +12,7 @@
     "amount": 4,
     "ingredients": {
       "SAND": 4,
-      "&1": [
-        "RED_DYE",
-        "ORANGE_DYE"
-      ]
+      "&1": [ "RED_DYE", "ORANGE_DYE" ]
     }
   },
   "gravel_from_bone_meal": {
