@@ -7,10 +7,8 @@
     "spread_type": "triangular",
     "frequency": 0
   },
-  "structures": [
-    {
-      "structure": "minecraft:monument",
-      "weight": 1
-    }
-  ]
+  "structures": [ {
+    "structure": "minecraft:monument",
+    "weight": 1
+  } ]
 }

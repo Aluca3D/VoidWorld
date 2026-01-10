@@ -3,13 +3,12 @@ package io.papermc.voidWorld.buildStructureDetection
 import org.bukkit.Material
 
 data class DBlockMatcher(
-    val dx: Int,
-    val dz: Int,
-    val types: Set<Material>
+  val dx: Int,
+  val dz: Int,
+  val types: Set<Material>,
 ) {
-    constructor(dx: Int, dz: Int, type: Material) :
-            this(dx, dz, setOf(type))
+  constructor(dx: Int, dz: Int, type: Material) :
+    this(dx, dz, setOf(type))
 
-    fun matches(blockType: Material): Boolean =
-        blockType in types
+  fun matches(blockType: Material): Boolean = blockType in types
 }
