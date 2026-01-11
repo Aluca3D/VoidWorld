@@ -33,7 +33,7 @@ class MobVariationSpawnConfig(
   }
 
   private fun loadConfig(root: ConfigurationNode) {
-    plugin.logger.info("<##> Begin of VWMobVariationSpawnConfig <##>")
+    // plugin.logger.info("<##> Begin of VWMobVariationSpawnConfig <##>")
 
     for ((key, mobNode) in root.childrenMap()) {
       val entityType =
@@ -137,11 +137,11 @@ class MobVariationSpawnConfig(
           )
 
         list.add(variation)
-        plugin.logger.info(" -> $replacement ($min-$max) Key: $namespacedKey")
+        // plugin.logger.info(" -> $replacement ($min-$max) Key: $namespacedKey")
       }
     }
 
-    plugin.logger.info("<##> End of VWMobVariationSpawnConfig <##>")
+    // plugin.logger.info("<##> End of VWMobVariationSpawnConfig <##>")
   }
 
   fun hasVariation(type: EntityType): Boolean = getAllVariations(type).isNotEmpty()

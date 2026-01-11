@@ -26,7 +26,7 @@ class MobLootDropConfig(
     plugin: JavaPlugin,
     root: ConfigurationNode,
   ) {
-    plugin.logger.info("<##> Begin of VWMobLootDropConfig <##>")
+    // plugin.logger.info("<##> Begin of VWMobLootDropConfig <##>")
 
     for ((key, mobNode) in root.childrenMap()) {
       val mobName = key.toString()
@@ -86,13 +86,13 @@ class MobLootDropConfig(
 
       lootTable[type] = drops
 
-      plugin.logger.info("Loaded ${drops.size} drops for $type")
-      drops.forEach {
-        plugin.logger.info(" -> Item:${it.itemStackConfiguration?.material}")
-      }
+      // plugin.logger.info("Loaded ${drops.size} drops for $type")
+      // drops.forEach {
+      //  plugin.logger.info(" -> Item:${it.itemStackConfiguration?.material}")
+      // }
     }
 
-    plugin.logger.info("<##> End of VWMobLootDropConfig <##>")
+    // plugin.logger.info("<##> End of VWMobLootDropConfig <##>")
   }
 
   fun getDrops(type: EntityType): List<RDropDefinition> = lootTable[type].orEmpty()
