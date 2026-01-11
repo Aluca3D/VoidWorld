@@ -112,7 +112,7 @@ tasks.shadowJar {
 }
 
 tasks.named("build") {
-    dependsOn(tasks.named("shadowJar"))
+  dependsOn("spotlessApply", "shadowJar")
 }
 kotlin {
     jvmToolchain(21)

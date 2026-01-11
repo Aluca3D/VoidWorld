@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:fishing",
+  "pools": [ {
+    "bonus_rolls": 0,
+    "entries": [ {
+      "type": "minecraft:item",
+      "name": "minecraft:dirt"
+    } ],
+    "rolls": 1
+  } ],
+  "random_sequence": "minecraft:gameplay/fishing/treasure"
+}
