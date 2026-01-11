@@ -44,7 +44,7 @@ class MobVariationSpawnConfig(
           continue
         }
 
-      plugin.logger.info("Variation: $entityType")
+      // plugin.logger.info("Variation: $entityType")
 
       mobNode.childrenList().forEachIndexed { index, replacementNode ->
 
