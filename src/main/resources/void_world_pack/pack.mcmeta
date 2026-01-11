@@ -1,7 +1,7 @@
 {
   "pack": {
-    "min_format": 88,
-    "max_format": 88,
-    "description": "Void World Generator"
+    "description": "Void World Datapack",
+    "min_format": [94, 1],
+    "max_format": [94, 1]
   }
 }
