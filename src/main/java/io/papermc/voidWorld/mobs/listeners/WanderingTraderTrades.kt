@@ -10,19 +10,21 @@ import org.bukkit.scheduler.BukkitScheduler
 
 class WanderingTraderTrades(
   var plugin: JavaPlugin,
-  val trades: WanderingTraderConfig,
+  val traderConfig: WanderingTraderConfig,
 ) : Listener {
   private var scheduler: BukkitScheduler = plugin.server.scheduler
 
   @EventHandler
   fun onWanderingTraderSpawn(event: CreatureSpawnEvent) {
     val trader = event.entity as? WanderingTrader ?: return
+    val trades = traderConfig.getTrades()
 
+    // make trades random
     scheduler.runTaskLater(
       plugin,
       Runnable {
         val newTrades = trader.recipes.toMutableList()
-        newTrades.addAll(trades.getTrades())
+        newTrades.addAll(trades)
 
         trader.recipes = newTrades
       },

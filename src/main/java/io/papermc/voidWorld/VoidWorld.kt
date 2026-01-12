@@ -59,7 +59,7 @@ class VoidWorld : JavaPlugin() {
     val mobVariation = MobVariationSpawn(this, spawnConfig)
 
     // / Wandering Trader
-    val wtNode = loadConfigFile(this, "config/mobs/wandering-trader-trades.json")
+    val wtNode = loadConfigFile(this, "config/mobs/wTrades.json")
     val wtConfig = WanderingTraderConfig(this, wtNode)
     val wtTrades = WanderingTraderTrades(this, wtConfig)
 
