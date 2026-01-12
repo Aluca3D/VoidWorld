@@ -2,7 +2,7 @@
 
 echo "Running Spotless formatter..."
 ./gradlew spotlessApply
-git add .
+git add -u
 
 echo "Running Detekt for warnings..."
 ./gradlew detekt
