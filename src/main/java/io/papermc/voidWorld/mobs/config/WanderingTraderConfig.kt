@@ -8,7 +8,7 @@ import org.spongepowered.configurate.ConfigurationNode
 
 class WanderingTraderConfig(
   var plugin: JavaPlugin,
-  // var root: ConfigurationNode,
+  var root: ConfigurationNode,
 ) {
   fun getTrades(): MutableList<MerchantRecipe> {
     val pool: MutableList<MerchantRecipe> = mutableListOf()
