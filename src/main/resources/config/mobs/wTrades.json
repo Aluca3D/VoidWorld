@@ -1,34 +1,19 @@
 {
+  "min": 1,
+  "max": 3,
   "tradeList": [ {
-    "maxUses": 1,
-    "costItem": {
-      "material": "dirt"
-    },
-    "costAmount": 1,
-    "resultItem": {
-      "material": "DIAMOND_sword",
-      "damage": 10,
-      "name": "<gold>Epic Sword",
-      "lore": [ "A powerful weapon", "<blue>with custom lore!" ],
-      "enchants": {
-        "sharpness": 5,
-        "fire_aspect": 2
-      },
-      "attributes": {
-        "ATTACK_SPEED": 1.6,
-        "ATTACK_DAMAGE": 10.0
-      }
-    },
-    "resultAmount": 1
-  }, {
     "maxUses": 2,
-    "costItem": {
+    "costItems": [ {
+      "amount": 1,
       "material": "dirt"
-    },
+    }, {
+      "amount": 2,
+      "material": "stone"
+    } ],
     "costAmount": 1,
     "resultItem": {
+      "amount": 2,
       "material": "dirt"
-    },
-    "resultAmount": 1
+    }
   } ]
 }
