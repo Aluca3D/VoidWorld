@@ -6,6 +6,7 @@ import io.papermc.voidWorld.mobs.config.MobLootDropConfig
 import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
 import io.papermc.voidWorld.mobs.listeners.MobLootDrop
 import io.papermc.voidWorld.mobs.listeners.MobVariationSpawn
+import io.papermc.voidWorld.mobs.listeners.WanderingTraderTrades
 import io.papermc.voidWorld.recipes.RecipeGenerator
 import io.papermc.voidWorld.recipes.config.BlastingRecipeConfig
 import io.papermc.voidWorld.recipes.config.CampfireRecipeConfig
@@ -54,8 +55,10 @@ class VoidWorld : JavaPlugin() {
 
     val variationNode = loadConfigFile(this, "config/mobs/mob-variation.json")
     val spawnConfig = MobVariationSpawnConfig(this, variationNode)
-    val lootConfig = MobLootDropConfig(this, lootNode)
     val mobVariation = MobVariationSpawn(this, spawnConfig)
+
+    // / Wandering Trader
+    val wanderingTrader = WanderingTraderTrades(this)
 
     // Recipes
     val recipeGenerator = RecipeGenerator(this)
@@ -78,11 +81,9 @@ class VoidWorld : JavaPlugin() {
     registerEventListeners(
       mutableListOf(
         oneBlock,
-        MobLootDrop(this, lootConfig),
-        MobVariationSpawn(this, spawnConfig),
-        EndPortalDetection(),
         mobLoot,
         mobVariation,
+        wanderingTrader,
         endPortalDetection,
       ).toList().toMutableList(),
     )
