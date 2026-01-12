@@ -4,6 +4,7 @@ import io.papermc.voidWorld.OConfigLoader.loadConfigFile
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
 import io.papermc.voidWorld.mobs.config.MobLootDropConfig
 import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
+import io.papermc.voidWorld.mobs.config.WanderingTraderConfig
 import io.papermc.voidWorld.mobs.listeners.MobLootDrop
 import io.papermc.voidWorld.mobs.listeners.MobVariationSpawn
 import io.papermc.voidWorld.mobs.listeners.WanderingTraderTrades
@@ -58,7 +59,9 @@ class VoidWorld : JavaPlugin() {
     val mobVariation = MobVariationSpawn(this, spawnConfig)
 
     // / Wandering Trader
-    val wanderingTrader = WanderingTraderTrades(this)
+    val wtNode = loadConfigFile(this, "config/mobs/wandering-trader-trades.json")
+    val wtConfig = WanderingTraderConfig(this, wtNode)
+    val wtTrades = WanderingTraderTrades(this, wtConfig)
 
     // Recipes
     val recipeGenerator = RecipeGenerator(this)
@@ -83,7 +86,7 @@ class VoidWorld : JavaPlugin() {
         oneBlock,
         mobLoot,
         mobVariation,
-        wanderingTrader,
+        wtTrades,
         endPortalDetection,
       ).toList().toMutableList(),
     )
