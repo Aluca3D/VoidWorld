@@ -1,6 +1,6 @@
 package io.papermc.voidWorld
 
-import io.papermc.voidWorld.OConfigLoader.loadConfig
+import io.papermc.voidWorld.OConfigLoader.loadConfigFile
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
 import io.papermc.voidWorld.mobs.config.MobLootDropConfig
 import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
@@ -43,22 +43,29 @@ class VoidWorld : JavaPlugin() {
     val oneBlock = OneBlockGenerator(this)
     scheduler.runTask(this, Runnable { oneBlock.setOneBlock() })
 
-    // Mob Variation/Loot
-    val variationNode = loadConfig(this, "config/mobs/mob-variation.json")
-    val lootNode = loadConfig(this, "config/mobs/mob-loot.json")
+    // Structure Detection
+    val endPortalDetection = EndPortalDetection()
 
+    // Mobs
+    // / Variation/Loot
+    val lootNode = loadConfigFile(this, "config/mobs/mob-loot.json")
+    val lootConfig = MobLootDropConfig(this, lootNode)
+    val mobLoot = MobLootDrop(this, lootConfig)
+
+    val variationNode = loadConfigFile(this, "config/mobs/mob-variation.json")
     val spawnConfig = MobVariationSpawnConfig(this, variationNode)
     val lootConfig = MobLootDropConfig(this, lootNode)
+    val mobVariation = MobVariationSpawn(this, spawnConfig)
 
     // Recipes
     val recipeGenerator = RecipeGenerator(this)
 
-    val blastingRecipeNode = loadConfig(this, "config/recipes/blasting.json")
-    val campfireRecipeNode = loadConfig(this, "config/recipes/campfire.json")
-    val furnaceRecipeNode = loadConfig(this, "config/recipes/furnace.json")
-    val shapedRecipeNode = loadConfig(this, "config/recipes/shaped.json")
-    val shapelessRecipeNode = loadConfig(this, "config/recipes/shapeless.json")
-    val smokingRecipeNode = loadConfig(this, "config/recipes/smoking.json")
+    val blastingRecipeNode = loadConfigFile(this, "config/recipes/blasting.json")
+    val campfireRecipeNode = loadConfigFile(this, "config/recipes/campfire.json")
+    val furnaceRecipeNode = loadConfigFile(this, "config/recipes/furnace.json")
+    val shapedRecipeNode = loadConfigFile(this, "config/recipes/shaped.json")
+    val shapelessRecipeNode = loadConfigFile(this, "config/recipes/shapeless.json")
+    val smokingRecipeNode = loadConfigFile(this, "config/recipes/smoking.json")
 
     BlastingRecipeConfig(recipeGenerator, blastingRecipeNode).loadRecipes()
     CampfireRecipeConfig(recipeGenerator, campfireRecipeNode).loadRecipes()
@@ -74,6 +81,9 @@ class VoidWorld : JavaPlugin() {
         MobLootDrop(this, lootConfig),
         MobVariationSpawn(this, spawnConfig),
         EndPortalDetection(),
+        mobLoot,
+        mobVariation,
+        endPortalDetection,
       ).toList().toMutableList(),
     )
   }

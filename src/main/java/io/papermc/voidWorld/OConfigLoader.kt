@@ -9,7 +9,7 @@ import java.nio.file.Files
 
 object OConfigLoader {
   @JvmStatic
-  fun loadConfig(
+  fun loadConfigFile(
     plugin: JavaPlugin,
     fileName: String,
   ): ConfigurationNode {
