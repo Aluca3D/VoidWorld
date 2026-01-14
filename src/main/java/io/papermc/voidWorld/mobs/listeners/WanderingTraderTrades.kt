@@ -17,16 +17,16 @@ class WanderingTraderTrades(
   @EventHandler
   fun onWanderingTraderSpawn(event: CreatureSpawnEvent) {
     val trader = event.entity as? WanderingTrader ?: return
-    val trades = traderConfig.getTrades()
+    val jsonTrades = traderConfig.getTrades()
 
-    // make trades random
     scheduler.runTaskLater(
       plugin,
       Runnable {
-        val newTrades = trader.recipes.toMutableList()
-        newTrades.addAll(trades)
+        val currTrades = trader.recipes.toMutableList()
+        currTrades.addAll(jsonTrades)
 
-        trader.recipes = newTrades
+        currTrades.shuffle()
+        trader.recipes = currTrades
       },
       1L,
     )
