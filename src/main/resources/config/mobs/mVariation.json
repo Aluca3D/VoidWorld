@@ -3,8 +3,8 @@
     "replacement": "creeper",
     "giveTags": [ "baby-creeper" ],
     "interval": {
-      "min": 6,
-      "max": 10
+      "min": 20,
+      "max": 30
     },
     "attributes": {
       "SCALE": 0.5,
