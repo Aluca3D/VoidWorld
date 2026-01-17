@@ -1,29 +1,29 @@
 plugins {
-    id 'java'
-    id("xyz.jpenilla.run-paper") version "$runPaperVersion"
-    id("com.gradleup.shadow") version "$shadowVersion"
-    id("com.diffplug.spotless") version "$spotlessVersion"
-    id("io.gitlab.arturbosch.detekt") version "$detektVersion"
-    id 'org.jetbrains.kotlin.jvm'
+  id 'java'
+  id("xyz.jpenilla.run-paper") version "$runPaperVersion"
+  id("com.gradleup.shadow") version "$shadowVersion"
+  id("com.diffplug.spotless") version "$spotlessVersion"
+  id("io.gitlab.arturbosch.detekt") version "$detektVersion"
+  id 'org.jetbrains.kotlin.jvm'
 }
 
 group = 'io.papermc'
 version = "$projectVersion"
 
 repositories {
-    mavenCentral()
-    maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
-    }
+  mavenCentral()
+  maven {
+    name = "papermc-repo"
+    url = "https://repo.papermc.io/repository/maven-public/"
+  }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:$paperVersion")
+  compileOnly("io.papermc.paper:paper-api:$paperVersion")
 
-    implementation("org.spongepowered:configurate-core:$configurateVersion")
-    implementation("org.spongepowered:configurate-jackson:$configurateVersion")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+  implementation("org.spongepowered:configurate-core:$configurateVersion")
+  implementation("org.spongepowered:configurate-jackson:$configurateVersion")
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 tasks.register('installGitHook', Copy) {
@@ -41,79 +41,80 @@ tasks.register('installGitHook', Copy) {
 
 
 tasks {
-    runServer {
-        minecraftVersion("$gameVersion")
-    }
+  runServer {
+    minecraftVersion("$gameVersion")
+  }
 }
 
 spotless {
-    kotlin {
-        target("**/*.kt")
-        ktlint("$ktlintVersion")
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
+  kotlin {
+    target("**/*.kt")
+    ktlint("$ktlintVersion")
+    trimTrailingWhitespace()
+    endWithNewline()
+  }
 
-    kotlinGradle {
-        target("**/*.gradle.kts")
-        ktlint("$ktlintVersion")
-    }
+  kotlinGradle {
+    target("**/*.gradle.kts")
+    ktlint("$ktlintVersion")
+  }
 
-    json {
-        target("**/*.json")
-        jackson()
-    }
+  json {
+    target("**/*.json")
+    jackson()
+    endWithNewline()
+  }
 }
 
 detekt {
-    config.setFrom(files("$rootDir/detekt.yml"))
-    buildUponDefaultConfig = true
-    allRules = false
+  config.setFrom(files("$rootDir/detekt.yml"))
+  buildUponDefaultConfig = true
+  allRules = false
 
-    ignoreFailures = true
+  ignoreFailures = true
 }
 
 def targetJavaVersion = 21
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
+  def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+  if (JavaVersion.current() < javaVersion) {
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+  }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+  options.encoding = 'UTF-8'
 
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release.set(targetJavaVersion)
-    }
+  if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+    options.release.set(targetJavaVersion)
+  }
 }
 
 processResources {
-    from('src/main/resources') {
-        include 'paper-plugin.yml'
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    }
+  from('src/main/resources') {
+    include 'paper-plugin.yml'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
 
-    def props = [
-            version       : version,
-            projectVersion: project.findProperty("projectVersion"),
-            apiVersion    : project.findProperty("apiVersion")
-    ]
-    filteringCharset 'UTF-8'
-    filesMatching('paper-plugin.yml') {
-        expand props
-    }
+  def props = [
+    version       : version,
+    projectVersion: project.findProperty("projectVersion"),
+    apiVersion    : project.findProperty("apiVersion")
+  ]
+  filteringCharset 'UTF-8'
+  filesMatching('paper-plugin.yml') {
+    expand props
+  }
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("")
-    relocate "org.spongepowered.configurate", "io.papermc.voidworld.lib.configurate"
+  archiveClassifier.set("")
+  relocate "org.spongepowered.configurate", "io.papermc.voidworld.lib.configurate"
 }
 
 tasks.named("build") {
   dependsOn("spotlessApply", "shadowJar")
 }
 kotlin {
-    jvmToolchain(21)
+  jvmToolchain(21)
 }
