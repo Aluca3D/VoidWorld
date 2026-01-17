@@ -3,8 +3,8 @@
   "generator": {
     "type": "minecraft:noise",
     "biome_source": {
-      "type": "minecraft:multi_noise",
-      "preset": "minecraft:overworld"
+      "type": "minecraft:fixed",
+      "biome": "minecraft:plains"
     },
     "settings": "minecraft:void_world"
   }
