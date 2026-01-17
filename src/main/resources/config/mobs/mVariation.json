@@ -1,4 +1,16 @@
 {
+  "creeper": [ {
+    "replacement": "creeper",
+    "giveTags": [ "baby-creeper" ],
+    "interval": {
+      "min": 6,
+      "max": 10
+    },
+    "attributes": {
+      "SCALE": 0.5,
+      "MOVEMENT_SPEED": 0.4
+    }
+  } ],
   "SKELETON": [ {
     "replacement": "STRAY",
     "useDimension": true,

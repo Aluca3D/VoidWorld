@@ -231,11 +231,13 @@ class MobVariationSpawn(
   ): Boolean {
     val variation = config.getVariation(key) ?: return false
 
-    val tags = variation.hasTags ?: return true
+    val tags = variation.hasTags ?: emptyList()
     val entityTags = entity.scoreboardTags
 
-    if (tags.isEmpty()) return true
-
-    return tags.all { it in entityTags }
+    return if (tags.isEmpty()) {
+      entityTags.isEmpty()
+    } else {
+      tags.all { it in entityTags }
+    }
   }
 }
