@@ -8,6 +8,7 @@
     }
   }, {
     "replacement": "BLAZE",
+    "hasTags": [ "nether-skeleton" ],
     "isBurning": true,
     "useDimension": true,
     "inDimension": "NETHER"
@@ -37,7 +38,7 @@
   } ],
   "ZOMBIFIED_PIGLIN": [ {
     "replacement": "SKELETON",
-    "tags": [ "nether-skeleton" ],
+    "giveTags": [ "nether-skeleton" ],
     "equipment": {
       "mainhand": {
         "material": "STONE_SWORD"

@@ -85,9 +85,15 @@ class MobVariationSpawnConfig(
             null
           }
 
-        val tags =
+        val hasTags =
           replacementNode
-            .node("tags")
+            .node("hasTags")
+            .childrenList()
+            .mapNotNull { it.string }
+
+        val giveTags =
+          replacementNode
+            .node("giveTags")
             .childrenList()
             .mapNotNull { it.string }
 
@@ -129,7 +135,8 @@ class MobVariationSpawnConfig(
             dimension,
             name,
             attributes,
-            tags,
+            hasTags,
+            giveTags,
             equipment,
           )
 

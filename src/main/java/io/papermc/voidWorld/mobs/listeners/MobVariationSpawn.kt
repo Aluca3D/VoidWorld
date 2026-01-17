@@ -46,6 +46,7 @@ class MobVariationSpawn(
     for (key in keys) {
       if (config.getRandomInterval(key) == 0) continue
       if (isNotInDimension(entity, key)) continue
+      if (!hasTags(entity, key)) continue
 
       val count = mobCounts.getOrDefault(key, 0)!! + 1
       mobCounts[key] = count
@@ -75,6 +76,7 @@ class MobVariationSpawn(
       if (config.getRandomInterval(key) != 0) continue
       if (isNotInDimension(entity, key)) continue
       if (isNotStandingOn(entity, key)) continue
+      if (!hasTags(entity, key)) continue
 
       val variation = config.getVariation(key) ?: continue
 
@@ -101,6 +103,7 @@ class MobVariationSpawn(
       if (config.getRandomInterval(key) != 0) continue
       if (isNotInDimension(entity, key)) continue
       if (isNotStandingOn(entity, key)) continue
+      if (!hasTags(entity, key)) continue
 
       val variation = config.getVariation(key) ?: continue
 
@@ -138,7 +141,7 @@ class MobVariationSpawn(
 
         val spawned = location.world.spawnEntity(location, replacementType) as LivingEntity
 
-        val tags: List<String>? = variation.tags
+        val tags: List<String>? = variation.giveTags
 
         if (tags != null) {
           for (tag in tags) {
@@ -220,5 +223,19 @@ class MobVariationSpawn(
     val standingOn = variation.standingOn ?: return false
 
     return blockBelow != standingOn
+  }
+
+  private fun hasTags(
+    entity: LivingEntity,
+    key: NamespacedKey,
+  ): Boolean {
+    val variation = config.getVariation(key) ?: return false
+
+    val tags = variation.hasTags ?: return true
+    val entityTags = entity.scoreboardTags
+
+    if (tags.isEmpty()) return true
+
+    return tags.all { it in entityTags }
   }
 }

@@ -20,6 +20,7 @@ data class RMobVariation(
   val inDimension: EDimension?,
   val name: Component?,
   val attributes: Map<Attribute, Double>?,
-  val tags: List<String>?,
+  val hasTags: List<String>?,
+  val giveTags: List<String>?,
   val equipment: RMobEquipment?,
 )
