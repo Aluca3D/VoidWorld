@@ -2,18 +2,259 @@
   "min": 1,
   "max": 3,
   "tradeList": [ {
-    "maxUses": 2,
+    "maxUses": 8,
     "costItems": [ {
       "amount": 1,
-      "material": "dirt"
-    }, {
-      "amount": 2,
-      "material": "stone"
+      "material": "emerald"
     } ],
-    "costAmount": 1,
+    "resultItem": {
+      "amount": 1,
+      "material": "glow_berries"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 1,
+      "material": "emerald"
+    } ],
     "resultItem": {
       "amount": 2,
-      "material": "dirt"
+      "material": "glow_lichen"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 1,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "nether_wart"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 1,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "sweet_berries"
+    }
+  }, {
+    "maxUses": 5,
+    "costItems": [ {
+      "amount": 1,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "wither_rose"
+    }
+  }, {
+    "maxUses": 6,
+    "costItems": [ {
+      "amount": 2,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "frogspawn"
+    }
+  }, {
+    "maxUses": 6,
+    "costItems": [ {
+      "amount": 2,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "allay_spawn_egg"
+    }
+  }, {
+    "maxUses": 6,
+    "costItems": [ {
+      "amount": 2,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "parrot_spawn_egg"
+    }
+  }, {
+    "maxUses": 6,
+    "costItems": [ {
+      "amount": 2,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "rabbit_spawn_egg"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 3,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 4,
+      "material": "brain_coral"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 3,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 4,
+      "material": "bubble_coral"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 3,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 4,
+      "material": "fire_coral"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 3,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 4,
+      "material": "horn_coral"
+    }
+  }, {
+    "maxUses": 8,
+    "costItems": [ {
+      "amount": 3,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 4,
+      "material": "tube_coral"
+    }
+  }, {
+    "maxUses": 4,
+    "costItems": [ {
+      "amount": 3,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "wolf_spawn_egg"
+    }
+  }, {
+    "maxUses": 2,
+    "costItems": [ {
+      "amount": 4,
+      "material": "emerald"
+    }, {
+      "amount": 1,
+      "material": "white_wool"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "goat_spawn_egg"
+    }
+  }, {
+    "maxUses": 5,
+    "costItems": [ {
+      "amount": 5,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "diamond"
+    }
+  }, {
+    "maxUses": 4,
+    "costItems": [ {
+      "amount": 5,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "donkey_spawn_egg"
+    }
+  }, {
+    "maxUses": 2,
+    "costItems": [ {
+      "amount": 5,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "dolphin_spawn_egg"
+    }
+  }, {
+    "maxUses": 2,
+    "costItems": [ {
+      "amount": 5,
+      "material": "emerald"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "llama_spawn_egg"
+    }
+  }, {
+    "maxUses": 12,
+    "costItems": [ {
+      "amount": 1,
+      "material": "emerald"
+    }, {
+      "amount": 1,
+      "material": "wither_skeleton_skull"
+    } ],
+    "resultItem": {
+      "amount": 2,
+      "material": "ancient_debris"
+    }
+  }, {
+    "maxUses": 4,
+    "costItems": [ {
+      "amount": 5,
+      "material": "emerald"
+    }, {
+      "amount": 8,
+      "material": "sweet_berries"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "fox_spawn_egg"
+    }
+  }, {
+    "maxUses": 2,
+    "costItems": [ {
+      "amount": 5,
+      "material": "emerald"
+    }, {
+      "amount": 8,
+      "material": "bamboo"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "panda_spawn_egg"
+    }
+  }, {
+    "maxUses": 2,
+    "costItems": [ {
+      "amount": 5,
+      "material": "emerald"
+    }, {
+      "amount": 1,
+      "material": "blue_ice"
+    } ],
+    "resultItem": {
+      "amount": 1,
+      "material": "polar_bear_spawn_egg"
     }
   } ]
 }
