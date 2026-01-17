@@ -46,59 +46,93 @@ class VoidWorld : JavaPlugin() {
     scheduler.runTask(this, Runnable { oneBlock.setOneBlock() })
 
     // Structure Detection
-    val endPortalDetection = EndPortalDetection()
+    registerListener(EndPortalDetection())
 
     // Mobs
-    // / Variation/Loot
-    val lootNode = loadConfigFile(this, "config/mobs/mLoot.json")
-    val lootConfig = MobLootDropConfig(this, lootNode)
-    val mobLoot = MobLootDrop(this, lootConfig)
-
-    val variationNode = loadConfigFile(this, "config/mobs/mVariation.json")
-    val spawnConfig = MobVariationSpawnConfig(this, variationNode)
-    val mobVariation = MobVariationSpawn(this, spawnConfig)
-
-    // / Wandering Trader
-    val wtNode = loadConfigFile(this, "config/mobs/wTrades.json")
-    val wtConfig = WanderingTraderConfig(this, wtNode)
-    val wtTrades = WanderingTraderTrades(this, wtConfig)
+    setupMobs()
 
     // Recipes
-    val recipeGenerator = RecipeGenerator(this)
-
-    val blastingRecipeNode = loadConfigFile(this, "config/recipes/blasting.json")
-    val campfireRecipeNode = loadConfigFile(this, "config/recipes/campfire.json")
-    val furnaceRecipeNode = loadConfigFile(this, "config/recipes/furnace.json")
-    val shapedRecipeNode = loadConfigFile(this, "config/recipes/shaped.json")
-    val shapelessRecipeNode = loadConfigFile(this, "config/recipes/shapeless.json")
-    val smokingRecipeNode = loadConfigFile(this, "config/recipes/smoking.json")
-
-    BlastingRecipeConfig(recipeGenerator, blastingRecipeNode).loadRecipes()
-    CampfireRecipeConfig(recipeGenerator, campfireRecipeNode).loadRecipes()
-    FurnaceRecipeConfig(recipeGenerator, furnaceRecipeNode).loadRecipes()
-    ShapedRecipeConfig(recipeGenerator, shapedRecipeNode).loadRecipes()
-    ShapelessRecipeConfig(recipeGenerator, shapelessRecipeNode).loadRecipes()
-    SmokingRecipeConfig(recipeGenerator, smokingRecipeNode).loadRecipes()
-
-    // Register Event Listeners
-    registerEventListeners(
-      mutableListOf(
-        oneBlock,
-        mobLoot,
-        mobVariation,
-        wtTrades,
-        endPortalDetection,
-      ).toList().toMutableList(),
-    )
+    setupRecipes()
   }
 
   override fun onDisable() {
     logger.info("VoidWorld disabled!")
   }
 
-  private fun registerEventListeners(listeners: MutableList<Listener>) {
-    for (listener in listeners) {
-      Bukkit.getPluginManager().registerEvents(listener, this)
-    }
+  private fun setupMobs() {
+    loadMobLoot()
+    loadMobVariation()
+    loadWanderingTrader()
+  }
+
+  private fun setupRecipes() {
+    val generator = RecipeGenerator(this)
+
+    loadBlasting(generator)
+    loadCampfire(generator)
+    loadFurnace(generator)
+    loadShaped(generator)
+    loadShapeless(generator)
+    loadSmoking(generator)
+  }
+
+  private fun loadMobLoot() {
+    val node = loadConfigFile(this, "config/mobs/mLoot.json")
+    val config = MobLootDropConfig(this, node)
+    val listener = MobLootDrop(this, config)
+
+    config.loadConfig()
+    registerListener(listener)
+  }
+
+  private fun loadMobVariation() {
+    val node = loadConfigFile(this, "config/mobs/mVariation.json")
+    val config = MobVariationSpawnConfig(this, node)
+    val listener = MobVariationSpawn(this, config)
+
+    config.loadConfig()
+    registerListener(listener)
+  }
+
+  private fun loadWanderingTrader() {
+    val node = loadConfigFile(this, "config/mobs/wTrades.json")
+    val config = WanderingTraderConfig(this, node)
+    val listener = WanderingTraderTrades(this, config)
+
+    registerListener(listener)
+  }
+
+  private fun loadBlasting(generator: RecipeGenerator) {
+    val node = loadConfigFile(this, "config/recipes/blasting.json")
+    BlastingRecipeConfig(generator, node).loadRecipes()
+  }
+
+  private fun loadCampfire(generator: RecipeGenerator) {
+    val node = loadConfigFile(this, "config/recipes/campfire.json")
+    CampfireRecipeConfig(generator, node).loadRecipes()
+  }
+
+  private fun loadFurnace(generator: RecipeGenerator) {
+    val node = loadConfigFile(this, "config/recipes/furnace.json")
+    FurnaceRecipeConfig(generator, node).loadRecipes()
+  }
+
+  private fun loadShaped(generator: RecipeGenerator) {
+    val node = loadConfigFile(this, "config/recipes/shaped.json")
+    ShapedRecipeConfig(generator, node).loadRecipes()
+  }
+
+  private fun loadShapeless(generator: RecipeGenerator) {
+    val node = loadConfigFile(this, "config/recipes/shapeless.json")
+    ShapelessRecipeConfig(generator, node).loadRecipes()
+  }
+
+  private fun loadSmoking(generator: RecipeGenerator) {
+    val node = loadConfigFile(this, "config/recipes/smoking.json")
+    SmokingRecipeConfig(generator, node).loadRecipes()
+  }
+
+  private fun registerListener(listener: Listener) {
+    Bukkit.getPluginManager().registerEvents(listener, this)
   }
 }

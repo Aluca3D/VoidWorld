@@ -7,8 +7,8 @@ import org.spongepowered.configurate.ConfigurationNode
 import kotlin.random.Random
 
 class WanderingTraderConfig(
-  var plugin: JavaPlugin,
-  var root: ConfigurationNode,
+  private var plugin: JavaPlugin,
+  private var root: ConfigurationNode,
 ) {
   fun getTrades(): MutableList<MerchantRecipe> {
     val pool: MutableList<MerchantRecipe> = mutableListOf()

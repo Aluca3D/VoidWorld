@@ -9,24 +9,18 @@ import org.spongepowered.configurate.ConfigurationNode
 import java.util.*
 
 class MobLootDropConfig(
-  plugin: JavaPlugin,
-  root: ConfigurationNode,
+  private val plugin: JavaPlugin,
+  private val root: ConfigurationNode,
 ) {
   private val lootTable: MutableMap<EntityType, List<RDropDefinition>> = EnumMap(EntityType::class.java)
 
-  init {
+  fun loadConfig() {
+    // plugin.logger.info("<##> Begin of VWMobLootDropConfig <##>")
+
     if (root.empty()) {
       plugin.logger.warning("No $root section found!")
-    } else {
-      loadConfig(plugin, root)
+      return
     }
-  }
-
-  private fun loadConfig(
-    plugin: JavaPlugin,
-    root: ConfigurationNode,
-  ) {
-    // plugin.logger.info("<##> Begin of VWMobLootDropConfig <##>")
 
     for ((key, mobNode) in root.childrenMap()) {
       val mobName = key.toString()

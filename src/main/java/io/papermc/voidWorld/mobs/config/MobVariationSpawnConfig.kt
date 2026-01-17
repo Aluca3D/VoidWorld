@@ -19,21 +19,18 @@ import java.util.concurrent.ThreadLocalRandom
 
 class MobVariationSpawnConfig(
   private val plugin: JavaPlugin,
-  root: ConfigurationNode,
+  private val root: ConfigurationNode,
 ) {
   private val variations: MutableMap<NamespacedKey, MutableList<RMobVariation>> = HashMap()
   private val keysByEntity: MutableMap<EntityType, MutableList<NamespacedKey>> = EnumMap(EntityType::class.java)
 
-  init {
+  fun loadConfig() {
+    // plugin.logger.info("<##> Begin of VWMobVariationSpawnConfig <##>")
+
     if (root.empty()) {
       plugin.logger.warning("No $root found!")
-    } else {
-      loadConfig(root)
+      return
     }
-  }
-
-  private fun loadConfig(root: ConfigurationNode) {
-    // plugin.logger.info("<##> Begin of VWMobVariationSpawnConfig <##>")
 
     for ((key, mobNode) in root.childrenMap()) {
       val entityType =
