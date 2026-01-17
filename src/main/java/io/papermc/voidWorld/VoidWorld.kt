@@ -50,11 +50,11 @@ class VoidWorld : JavaPlugin() {
 
     // Mobs
     // / Variation/Loot
-    val lootNode = loadConfigFile(this, "config/mobs/mob-loot.json")
+    val lootNode = loadConfigFile(this, "config/mobs/mLoot.json")
     val lootConfig = MobLootDropConfig(this, lootNode)
     val mobLoot = MobLootDrop(this, lootConfig)
 
-    val variationNode = loadConfigFile(this, "config/mobs/mob-variation.json")
+    val variationNode = loadConfigFile(this, "config/mobs/mVariation.json")
     val spawnConfig = MobVariationSpawnConfig(this, variationNode)
     val mobVariation = MobVariationSpawn(this, spawnConfig)
 
