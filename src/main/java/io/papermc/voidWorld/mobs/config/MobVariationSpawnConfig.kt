@@ -78,6 +78,8 @@ class MobVariationSpawnConfig(
     val isBurning = node.node("isBurning").getBoolean(false)
     val isHitByLightning = node.node("isHitByLightning").getBoolean(false)
 
+    val setBaby = node.node("setBaby").getBoolean(false)
+
     val useDimension = node.node("useDimension").getBoolean(false)
     val dimensionStr = node.node("inDimension").getString("OVERWORLD")
     val dimension = EDimension.fromString(dimensionStr)
@@ -144,6 +146,7 @@ class MobVariationSpawnConfig(
       passenger,
       min,
       max,
+      setBaby,
       isBurning,
       isHitByLightning,
       standingOn,
@@ -161,6 +164,8 @@ class MobVariationSpawnConfig(
   private fun createPassenger(node: ConfigurationNode): RMobVariation? {
     val entityStr = node.node("entity").string ?: return null
     val entity = EntityType.valueOf(entityStr.uppercase())
+
+    val setBaby = node.node("setBaby").getBoolean(false)
 
     val nameString = node.node("name").getString("NONE")
     val name: Component? =
@@ -208,6 +213,7 @@ class MobVariationSpawnConfig(
       passenger,
       0,
       0,
+      setBaby,
       null,
       null,
       null,
