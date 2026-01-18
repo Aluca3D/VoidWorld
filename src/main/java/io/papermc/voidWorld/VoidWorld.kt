@@ -43,7 +43,8 @@ class VoidWorld : JavaPlugin() {
 
     // OneBlock
     val oneBlock = OneBlockGenerator(this)
-    scheduler.runTask(this, Runnable { oneBlock.setOneBlock() })
+    oneBlock.setOneBlock()
+    oneBlock.placeOneBlock()
 
     // Structure Detection
     registerListener(EndPortalDetection())
