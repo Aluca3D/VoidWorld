@@ -43,54 +43,66 @@ class MobVariationSpawn(
   fun onMobSpawn(event: EntitySpawnEvent) {
     val (entity, keys) = getType(event) ?: return
 
-    for (key in keys) {
-      if (config.getRandomInterval(key) == 0) continue
-      if (isNotInDimension(entity, key)) continue
-      if (!hasTags(entity, key)) continue
+    scheduler.runTaskLater(
+      plugin,
+      Runnable {
+        for (key in keys) {
+          if (config.getRandomInterval(key) == 0) continue
+          if (isNotInDimension(entity, key)) continue
+          if (!hasTags(entity, key)) continue
 
-      val count = mobCounts.getOrDefault(key, 0)!! + 1
-      mobCounts[key] = count
+          val count = mobCounts.getOrDefault(key, 0)!! + 1
+          mobCounts[key] = count
 
-      val nextInterval =
-        mobNextInterval.computeIfAbsent(key) { _: NamespacedKey? -> config.getRandomInterval(key) }!!
+          val nextInterval =
+            mobNextInterval.computeIfAbsent(key) { _: NamespacedKey? -> config.getRandomInterval(key) }!!
 
-      if (count >= nextInterval) {
-        val replacement = config.getReplacement(key)!!
+          if (count >= nextInterval) {
+            val replacement = config.getReplacement(key)!!
 
-        val variation = config.getVariation(key) ?: continue
+            val variation = config.getVariation(key) ?: continue
 
-        replaceEntity(entity, replacement, variation)
+            replaceEntity(entity, replacement, variation)
 
-        mobCounts[key] = 0
-        mobNextInterval[key] = config.getRandomInterval(key)
-        break
-      }
-    }
+            mobCounts[key] = 0
+            mobNextInterval[key] = config.getRandomInterval(key)
+            break
+          }
+        }
+      },
+      1L,
+    )
   }
 
   @EventHandler
   fun onMobDamage(event: EntityDamageEvent) {
     val (entity, keys) = getType(event) ?: return
 
-    for (key in keys) {
-      if (config.getRandomInterval(key) != 0) continue
-      if (isNotInDimension(entity, key)) continue
-      if (isNotStandingOn(entity, key)) continue
-      if (!hasTags(entity, key)) continue
+    scheduler.runTaskLater(
+      plugin,
+      Runnable {
+        for (key in keys) {
+          if (config.getRandomInterval(key) != 0) continue
+          if (isNotInDimension(entity, key)) continue
+          if (isNotStandingOn(entity, key)) continue
+          if (!hasTags(entity, key)) continue
 
-      val variation = config.getVariation(key) ?: continue
+          val variation = config.getVariation(key) ?: continue
 
-      if (!variation.isHitByLightning!! && !variation.isBurning!!) continue
-      if (variation.isHitByLightning && event.cause != DamageCause.LIGHTNING) continue
+          if (!variation.isHitByLightning!! && !variation.isBurning!!) continue
+          if (variation.isHitByLightning && event.cause != DamageCause.LIGHTNING) continue
 
-      if (variation.isBurning == true && !burningCauses.contains(event.cause)) {
-        continue
-      }
+          if (variation.isBurning == true && !burningCauses.contains(event.cause)) {
+            continue
+          }
 
-      val replacement = config.getReplacement(key)!!
-      replaceEntity(entity, replacement, variation)
-      break
-    }
+          val replacement = config.getReplacement(key)!!
+          replaceEntity(entity, replacement, variation)
+          break
+        }
+      },
+      1L,
+    )
   }
 
   @EventHandler
@@ -99,21 +111,27 @@ class MobVariationSpawn(
 
     val effect = event.newEffect ?: return
 
-    for (key in keys) {
-      if (config.getRandomInterval(key) != 0) continue
-      if (isNotInDimension(entity, key)) continue
-      if (isNotStandingOn(entity, key)) continue
-      if (!hasTags(entity, key)) continue
+    scheduler.runTaskLater(
+      plugin,
+      Runnable {
+        for (key in keys) {
+          if (config.getRandomInterval(key) != 0) continue
+          if (isNotInDimension(entity, key)) continue
+          if (isNotStandingOn(entity, key)) continue
+          if (!hasTags(entity, key)) continue
 
-      val variation = config.getVariation(key) ?: continue
+          val variation = config.getVariation(key) ?: continue
 
-      if (variation.hasEffect == null) continue
-      if (Registry.MOB_EFFECT.get(variation.hasEffect.key()) !== effect.type) continue
+          if (variation.hasEffect == null) continue
+          if (Registry.MOB_EFFECT.get(variation.hasEffect.key()) !== effect.type) continue
 
-      val replacement = config.getReplacement(key)!!
-      replaceEntity(entity, replacement, variation)
-      break
-    }
+          val replacement = config.getReplacement(key)!!
+          replaceEntity(entity, replacement, variation)
+          break
+        }
+      },
+      1L,
+    )
   }
 
   private fun getType(event: EntityEvent): Pair<LivingEntity, List<NamespacedKey>>? {
@@ -140,39 +158,64 @@ class MobVariationSpawn(
         originalEntity.remove()
 
         val spawned = location.world.spawnEntity(location, replacementType) as LivingEntity
-
-        val tags: List<String>? = variation.giveTags
-
-        if (tags != null) {
-          for (tag in tags) {
-            if (tag.isBlank()) continue
-            spawned.addScoreboardTag(tag)
-          }
-        }
-
-        if (variation.name != null) {
-          spawned.customName(variation.name)
-          spawned.isCustomNameVisible = true
-        }
-
-        variation.attributes?.forEach(
-          (
-            BiConsumer { attribute: Attribute?, value: Double? ->
-              var instance = spawned.getAttribute(attribute!!)
-              if (instance == null) {
-                spawned.registerAttribute(attribute)
-                instance = spawned.getAttribute(attribute)
-              }
-              instance?.baseValue = value!!
-            }
-          ),
-        )
-
-        val equipment = variation.equipment
-        applyEquipment(spawned, equipment)
+        modifyEntity(spawned, variation)
       },
       1L,
     )
+  }
+
+  private fun addPassenger(
+    spawned: LivingEntity,
+    variation: RMobVariation,
+  ) {
+    if (spawned.passengers.isNotEmpty()) return
+
+    val passengerType = variation.passenger?.replacement ?: return
+
+    val entity = spawned.world.spawnEntity(spawned.location, passengerType) as LivingEntity
+    modifyEntity(entity, variation.passenger)
+
+    spawned.addPassenger(entity)
+    if (variation.passenger.passenger != null) {
+      addPassenger(entity, variation.passenger)
+    }
+  }
+
+  private fun modifyEntity(
+    spawned: LivingEntity,
+    variation: RMobVariation,
+  ) {
+    val tags: List<String>? = variation.giveTags
+
+    if (tags != null) {
+      for (tag in tags) {
+        if (tag.isBlank()) continue
+        spawned.addScoreboardTag(tag)
+      }
+    }
+
+    if (variation.name != null) {
+      spawned.customName(variation.name)
+      spawned.isCustomNameVisible = true
+    }
+
+    variation.attributes?.forEach(
+      (
+        BiConsumer { attribute: Attribute?, value: Double? ->
+          var instance = spawned.getAttribute(attribute!!)
+          if (instance == null) {
+            spawned.registerAttribute(attribute)
+            instance = spawned.getAttribute(attribute)
+          }
+          instance?.baseValue = value!!
+        }
+      ),
+    )
+
+    val equipment = variation.equipment
+    applyEquipment(spawned, equipment)
+
+    addPassenger(spawned, variation)
   }
 
   private fun applyEquipment(

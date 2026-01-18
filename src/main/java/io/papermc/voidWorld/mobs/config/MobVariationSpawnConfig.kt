@@ -16,6 +16,10 @@ import org.bukkit.potion.PotionEffectType
 import org.spongepowered.configurate.ConfigurationNode
 import java.util.EnumMap
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.iterator
+import kotlin.text.isNotBlank
 
 class MobVariationSpawnConfig(
   private val plugin: JavaPlugin,
@@ -32,7 +36,7 @@ class MobVariationSpawnConfig(
       return
     }
 
-    for ((key, mobNode) in root.childrenMap()) {
+    loop@ for ((key, mobNode) in root.childrenMap()) {
       val entityType =
         runCatching {
           EntityType.valueOf(key.toString().uppercase())
@@ -54,91 +58,7 @@ class MobVariationSpawnConfig(
         val list = variations.computeIfAbsent(namespacedKey) { mutableListOf() }
         keysByEntity.computeIfAbsent(entityType) { mutableListOf() }.add(namespacedKey)
 
-        val replacementStr = replacementNode.node("replacement").string ?: return@forEachIndexed
-        val replacement = EntityType.valueOf(replacementStr.uppercase())
-
-        val min = replacementNode.node("interval", "min").getInt(0)
-        val max = replacementNode.node("interval", "max").getInt(min)
-
-        val isBurning = replacementNode.node("isBurning").getBoolean(false)
-        val isHitByLightning = replacementNode.node("isHitByLightning").getBoolean(false)
-
-        val useDimension = replacementNode.node("useDimension").getBoolean(false)
-        val dimensionStr = replacementNode.node("inDimension").getString("OVERWORLD")
-        val dimension = EDimension.fromString(dimensionStr)
-
-        val standingOn =
-          parseBlock(
-            replacementNode.node("standingOn").getString("NONE"),
-          )
-
-        val hasEffect =
-          parseEffect(
-            replacementNode.node("hasEffect").getString("NONE"),
-          )
-
-        val nameString = replacementNode.node("name").getString("NONE")
-        val name: Component? =
-          if (nameString != null && nameString != "NONE" && nameString.isNotBlank()) {
-            MiniMessage.miniMessage().deserialize(nameString)
-          } else {
-            null
-          }
-
-        val hasTags =
-          replacementNode
-            .node("hasTags")
-            .childrenList()
-            .mapNotNull { it.string }
-
-        val giveTags =
-          replacementNode
-            .node("giveTags")
-            .childrenList()
-            .mapNotNull { it.string }
-
-        val attributes = mutableMapOf<Attribute, Double>()
-
-        for ((attrKey, attrNode) in replacementNode.node("attributes").childrenMap()) {
-          val attribute =
-            RegistryAccess
-              .registryAccess()
-              .getRegistry(RegistryKey.ATTRIBUTE)
-              .get(NamespacedKey.minecraft(attrKey.toString().lowercase()))
-
-          attribute?.let {
-            attributes[it] = attrNode.getDouble(0.0)
-          }
-        }
-
-        val equipmentNode = replacementNode.node("equipment")
-        val equipment =
-          RMobEquipment(
-            parseItem(equipmentNode.node("mainhand")),
-            parseItem(equipmentNode.node("offhand")),
-            parseItem(equipmentNode.node("helmet")),
-            parseItem(equipmentNode.node("chestplate")),
-            parseItem(equipmentNode.node("leggings")),
-            parseItem(equipmentNode.node("boots")),
-          )
-
-        val variation =
-          RMobVariation(
-            replacement,
-            min,
-            max,
-            isBurning,
-            isHitByLightning,
-            standingOn,
-            hasEffect,
-            useDimension,
-            dimension,
-            name,
-            attributes,
-            hasTags,
-            giveTags,
-            equipment,
-          )
+        val variation = createVariation(replacementNode) ?: continue@loop
 
         list.add(variation)
         // plugin.logger.info(" -> $replacement ($min-$max) Key: $namespacedKey")
@@ -146,6 +66,160 @@ class MobVariationSpawnConfig(
     }
 
     // plugin.logger.info("<##> End of VWMobVariationSpawnConfig <##>")
+  }
+
+  private fun createVariation(node: ConfigurationNode): RMobVariation? {
+    val replacementStr = node.node("replacement").string ?: return null
+    val replacement = EntityType.valueOf(replacementStr.uppercase())
+
+    val min = node.node("interval", "min").getInt(0)
+    val max = node.node("interval", "max").getInt(min)
+
+    val isBurning = node.node("isBurning").getBoolean(false)
+    val isHitByLightning = node.node("isHitByLightning").getBoolean(false)
+
+    val useDimension = node.node("useDimension").getBoolean(false)
+    val dimensionStr = node.node("inDimension").getString("OVERWORLD")
+    val dimension = EDimension.fromString(dimensionStr)
+
+    val standingOn =
+      parseBlock(
+        node.node("standingOn").getString("NONE"),
+      )
+
+    val hasEffect =
+      parseEffect(
+        node.node("hasEffect").getString("NONE"),
+      )
+
+    val nameString = node.node("name").getString("NONE")
+    val name: Component? =
+      if (nameString != null && nameString != "NONE" && nameString.isNotBlank()) {
+        MiniMessage.miniMessage().deserialize(nameString)
+      } else {
+        null
+      }
+
+    val hasTags =
+      node
+        .node("hasTags")
+        .childrenList()
+        .mapNotNull { it.string }
+
+    val giveTags =
+      node
+        .node("giveTags")
+        .childrenList()
+        .mapNotNull { it.string }
+
+    val attributes = mutableMapOf<Attribute, Double>()
+
+    for ((attrKey, attrNode) in node.node("attributes").childrenMap()) {
+      val attribute =
+        RegistryAccess
+          .registryAccess()
+          .getRegistry(RegistryKey.ATTRIBUTE)
+          .get(NamespacedKey.minecraft(attrKey.toString().lowercase()))
+
+      attribute?.let {
+        attributes[it] = attrNode.getDouble(0.0)
+      }
+    }
+
+    val equipmentNode = node.node("equipment")
+    val equipment =
+      RMobEquipment(
+        parseItem(equipmentNode.node("mainhand")),
+        parseItem(equipmentNode.node("offhand")),
+        parseItem(equipmentNode.node("helmet")),
+        parseItem(equipmentNode.node("chestplate")),
+        parseItem(equipmentNode.node("leggings")),
+        parseItem(equipmentNode.node("boots")),
+      )
+
+    val passenger = createPassenger(node.node("passenger"))
+
+    return RMobVariation(
+      replacement,
+      passenger,
+      min,
+      max,
+      isBurning,
+      isHitByLightning,
+      standingOn,
+      hasEffect,
+      useDimension,
+      dimension,
+      name,
+      attributes,
+      hasTags,
+      giveTags,
+      equipment,
+    )
+  }
+
+  private fun createPassenger(node: ConfigurationNode): RMobVariation? {
+    val entityStr = node.node("entity").string ?: return null
+    val entity = EntityType.valueOf(entityStr.uppercase())
+
+    val nameString = node.node("name").getString("NONE")
+    val name: Component? =
+      if (nameString != null && nameString != "NONE" && nameString.isNotBlank()) {
+        MiniMessage.miniMessage().deserialize(nameString)
+      } else {
+        null
+      }
+
+    val giveTags =
+      node
+        .node("giveTags")
+        .childrenList()
+        .mapNotNull { it.string }
+
+    val attributes = mutableMapOf<Attribute, Double>()
+
+    for ((attrKey, attrNode) in node.node("attributes").childrenMap()) {
+      val attribute =
+        RegistryAccess
+          .registryAccess()
+          .getRegistry(RegistryKey.ATTRIBUTE)
+          .get(NamespacedKey.minecraft(attrKey.toString().lowercase()))
+
+      attribute?.let {
+        attributes[it] = attrNode.getDouble(0.0)
+      }
+    }
+
+    val equipmentNode = node.node("equipment")
+    val equipment =
+      RMobEquipment(
+        parseItem(equipmentNode.node("mainhand")),
+        parseItem(equipmentNode.node("offhand")),
+        parseItem(equipmentNode.node("helmet")),
+        parseItem(equipmentNode.node("chestplate")),
+        parseItem(equipmentNode.node("leggings")),
+        parseItem(equipmentNode.node("boots")),
+      )
+
+    val passenger = createPassenger(node.node("passenger"))
+
+    return RMobVariation(
+      entity,
+      passenger,
+      0,
+      0,
+      null,
+      null,
+      null,
+      null,
+      false,
+      null,
+      name,
+      attributes,
+      null,
+      giveTags,
+      equipment,
+    )
   }
 
   fun hasVariation(type: EntityType): Boolean = getAllVariations(type).isNotEmpty()
