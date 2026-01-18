@@ -10,6 +10,7 @@ import org.bukkit.potion.PotionEffectType
 @JvmRecord
 data class RMobVariation(
   val replacement: EntityType?,
+  val passenger: RMobVariation?,
   val intervalMin: Int,
   val intervalMax: Int,
   val isBurning: Boolean?,
