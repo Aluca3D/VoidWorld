@@ -13,6 +13,7 @@ data class RMobVariation(
   val passenger: RMobVariation?,
   val intervalMin: Int,
   val intervalMax: Int,
+  val setBaby: Boolean?,
   val isBurning: Boolean?,
   val isHitByLightning: Boolean?,
   val standingOn: Material?,

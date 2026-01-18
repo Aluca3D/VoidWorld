@@ -7,6 +7,7 @@ import io.papermc.voidWorld.mobs.helper.RMobVariation
 import org.bukkit.NamespacedKey
 import org.bukkit.Registry
 import org.bukkit.attribute.Attribute
+import org.bukkit.entity.Ageable
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -185,6 +186,10 @@ class MobVariationSpawn(
     spawned: LivingEntity,
     variation: RMobVariation,
   ) {
+    if (variation.setBaby == true && spawned is Ageable) {
+      spawned.setBaby()
+    }
+
     val tags: List<String>? = variation.giveTags
 
     if (tags != null) {
