@@ -3,6 +3,7 @@ package io.papermc.voidWorld
 import io.papermc.voidWorld.OConfigLoader.loadConfigFile
 import io.papermc.voidWorld.buildStructureDetection.structure.BuddingAmethystDetection
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
+import io.papermc.voidWorld.mobs.HideTagChecker
 import io.papermc.voidWorld.mobs.config.MobLootDropConfig
 import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
 import io.papermc.voidWorld.mobs.config.WanderingTraderConfig
@@ -56,6 +57,9 @@ class VoidWorld : JavaPlugin() {
 
     // Recipes
     setupRecipes()
+
+    // Tag checker
+    HideTagChecker(this).hideTagChecker()
   }
 
   override fun onDisable() {
