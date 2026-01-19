@@ -28,7 +28,7 @@ class OneBlockGenerator(
           plugin.logger.info("OneBlock already exists at spawn, skipping placement.")
         } else {
           plugin.logger.info("Placed OneBlock at spawn: $spawn")
-          spawn.block.type = Material.DIRT
+          spawn.block.type = Material.GRASS_BLOCK
         }
         oneBlockLocation = spawn.clone()
       },
