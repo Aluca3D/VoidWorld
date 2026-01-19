@@ -1,6 +1,7 @@
 package io.papermc.voidWorld
 
 import io.papermc.voidWorld.OConfigLoader.loadConfigFile
+import io.papermc.voidWorld.buildStructureDetection.structure.BuddingAmethystDetection
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
 import io.papermc.voidWorld.mobs.config.MobLootDropConfig
 import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
@@ -48,6 +49,7 @@ class VoidWorld : JavaPlugin() {
 
     // Structure Detection
     registerListener(EndPortalDetection())
+    registerListener(BuddingAmethystDetection())
 
     // Mobs
     setupMobs()
