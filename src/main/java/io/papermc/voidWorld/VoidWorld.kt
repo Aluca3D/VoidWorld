@@ -59,7 +59,9 @@ class VoidWorld : JavaPlugin() {
     setupRecipes()
 
     // Tag checker
-    HideTagChecker(this).hideTagChecker()
+    val hideTagChecker = HideTagChecker(this)
+    hideTagChecker.hideTagChecker()
+    registerListener(hideTagChecker)
   }
 
   override fun onDisable() {
