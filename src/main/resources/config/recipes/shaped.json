@@ -2,7 +2,7 @@
   "oak_sapling_from_dirt_and_bone_meal": {
     "result": "OAK_SAPLING",
     "amount": 1,
-    "pattern": [ "DD", "BD" ],
+    "pattern": [ "BD", "BD" ],
     "ingredients": {
       "D": "DIRT",
       "B": "BONE_MEAL"
