@@ -60,7 +60,7 @@ class VoidWorld : JavaPlugin() {
 
     // Tag checker
     val hideTagChecker = HideTagChecker(this)
-    hideTagChecker.hideTagChecker()
+    hideTagChecker.checker()
     registerListener(hideTagChecker)
   }
 

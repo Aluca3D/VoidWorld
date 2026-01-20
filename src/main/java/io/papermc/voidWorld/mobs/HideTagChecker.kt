@@ -15,8 +15,8 @@ class HideTagChecker(
 ) : Listener {
   private var scheduler: BukkitScheduler = plugin.server.scheduler
 
-  private val hiddenTag = "hidden"
-  private val seeingTag = "seeing"
+  val hiddenTag = "hidden"
+  val seeingTag = "seeing"
 
   @EventHandler
   fun onChat(event: AsyncChatEvent) {
@@ -34,11 +34,11 @@ class HideTagChecker(
     event.viewers().removeIf { audience ->
       val viewer = audience as? Player ?: return@removeIf true
 
-      !viewer.scoreboardTags.contains(seeingTag)
+      !viewer.scoreboardTags.contains(seeingTag) && !viewer.scoreboardTags.contains(hiddenTag)
     }
   }
 
-  fun hideTagChecker() {
+  fun checker() {
     scheduler.runTaskTimer(
       plugin,
       Runnable {
@@ -52,16 +52,17 @@ class HideTagChecker(
         }
       },
       0L,
-      40L,
+      40L, // TODO: Add Base Config
     )
   }
 
   private fun updateVisibility(entity: Entity) {
     val hidden = entity.scoreboardTags.contains(hiddenTag)
+    val seeing = entity.scoreboardTags.contains(seeingTag)
 
     plugin.server.onlinePlayers.forEach { viewer ->
       when {
-        viewer.scoreboardTags.contains(seeingTag) -> {
+        seeing -> {
           if (entity is Player) {
             viewer.showPlayer(plugin, entity)
           } else {
