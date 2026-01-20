@@ -5,6 +5,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.voidWorld.commands.helper.OCommandHelper
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
@@ -15,6 +17,7 @@ class SitCommand {
     val sitCommand: LiteralArgumentBuilder<CommandSourceStack> =
       Commands
         .literal("sit")
+        .requires { src -> src.sender.hasPermission("voidworld.sit") }
         .executes { ctx ->
           val sender = ctx.source.sender
           if (sender !is Player) return@executes OCommandHelper.fail()
@@ -33,11 +36,14 @@ class SitCommand {
 
               val target = sender.rayTraceEntities(2)?.hitEntity
 
-              if (target != null) {
-                target.addPassenger(sender)
-                sender.sendMessage("You are now sitting on ${target.type.name.lowercase()}")
+              if (target == null) {
+                sender.sendMessage(
+                  Component
+                    .text("No entity in range to sit on!")
+                    .color(NamedTextColor.RED),
+                )
               } else {
-                sender.sendMessage("No entity in range to sit on!")
+                target.addPassenger(sender)
               }
 
               OCommandHelper.success()

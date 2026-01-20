@@ -4,3 +4,13 @@ main: io.papermc.voidWorld.VoidWorld
 api-version: '$apiVersion'
 authors: [ VoidDevLuca ]
 bootstrapper: io.papermc.voidWorld.VoidWorldBootstrap
+commands:
+  sit:
+    description: "Sit where you stand or on an entity"
+    usage: "/sit or /sit on"
+    permission: voidworld.sit
+    permission-message: "You do not have permission to sit!"
+permissions:
+  voidworld.sit:
+    description: "Allows using /sit"
+    default: true
