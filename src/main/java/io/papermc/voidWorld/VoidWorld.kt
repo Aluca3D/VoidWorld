@@ -45,6 +45,7 @@ class VoidWorld : JavaPlugin() {
 
     // OneBlock
     val oneBlock = OneBlockGenerator(this)
+    registerListener(oneBlock)
     oneBlock.setOneBlock()
     oneBlock.placeOneBlock()
 
