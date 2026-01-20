@@ -3,6 +3,7 @@ package io.papermc.voidWorld
 import io.papermc.voidWorld.OConfigLoader.loadConfigFile
 import io.papermc.voidWorld.buildStructureDetection.structure.BuddingAmethystDetection
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
+import io.papermc.voidWorld.commands.SitListener
 import io.papermc.voidWorld.mobs.HideTagChecker
 import io.papermc.voidWorld.mobs.config.MobLootDropConfig
 import io.papermc.voidWorld.mobs.config.MobVariationSpawnConfig
@@ -58,6 +59,9 @@ class VoidWorld : JavaPlugin() {
 
     // Recipes
     setupRecipes()
+
+    // Commands
+    registerListener(SitListener())
 
     // Tag checker
     val hideTagChecker = HideTagChecker(this)

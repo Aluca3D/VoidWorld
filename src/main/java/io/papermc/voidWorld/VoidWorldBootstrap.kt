@@ -3,6 +3,7 @@ package io.papermc.voidWorld
 import io.papermc.paper.plugin.bootstrap.BootstrapContext
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import io.papermc.voidWorld.commands.SitCommand
 import java.io.IOException
 import java.net.URISyntaxException
 
@@ -19,6 +20,12 @@ class VoidWorldBootstrap : PluginBootstrap {
         } catch (e: IOException) {
           throw RuntimeException(e)
         }
+      },
+    )
+
+    context.lifecycleManager.registerEventHandler(
+      LifecycleEvents.COMMANDS.newHandler { commands ->
+        commands.registrar().register(SitCommand().sitCommand())
       },
     )
   }
