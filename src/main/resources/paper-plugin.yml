@@ -10,7 +10,15 @@ commands:
     usage: "/sit or /sit on"
     permission: voidworld.sit
     permission-message: "You do not have permission to sit!"
+  hidden:
+    description: "toggles if a entity has the hidden/seeing tag"
+    usage: "/hidden [entity] hidden | seeing>"
+    permission: voidworld.hidden
+    permission-message: "You do not have permission to be hidden!"
 permissions:
   voidworld.sit:
     description: "Allows using /sit"
     default: true
+  voidworld.hidden:
+    description: "Allows using /hidden"
+    default: op

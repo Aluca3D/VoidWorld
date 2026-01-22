@@ -4,7 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
-import io.papermc.voidWorld.commands.helper.OCommandHelper
+import io.papermc.voidWorld.commands.helper.ICommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.ArmorStand
@@ -12,27 +12,28 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
-class SitCommand {
-  fun sitCommand(): LiteralCommandNode<CommandSourceStack> {
-    val sitCommand: LiteralArgumentBuilder<CommandSourceStack> =
+class SitCommand : ICommand {
+  override fun command(): LiteralCommandNode<CommandSourceStack> {
+    val rootSit: LiteralArgumentBuilder<CommandSourceStack> =
       Commands
         .literal("sit")
-        .requires { src -> src.sender.hasPermission("voidworld.sit") }
-        .executes { ctx ->
-          val sender = ctx.source.sender
-          if (sender !is Player) return@executes OCommandHelper.fail()
+        .requires { src ->
+          src.sender is Player &&
+            src.sender.hasPermission("voidworld.sit")
+        }.executes { ctx ->
+          val sender = ctx.source.sender as Player
 
           val seat = EntityType.ARMOR_STAND
           val newSeat = summonSeat(sender, seat)
           newSeat.addPassenger(sender)
 
-          OCommandHelper.success()
+          success
         }.then(
           Commands
             .literal("on")
             .executes { ctx ->
               val sender = ctx.source.sender
-              if (sender !is Player) return@executes OCommandHelper.fail()
+              if (sender !is Player) return@executes fail
 
               val target = sender.rayTraceEntities(2)?.hitEntity
 
@@ -46,13 +47,11 @@ class SitCommand {
                 target.addPassenger(sender)
               }
 
-              OCommandHelper.success()
+              success
             },
         )
 
-    val buildSitCommand: LiteralCommandNode<CommandSourceStack> = sitCommand.build()
-
-    return buildSitCommand
+    return rootSit.build()
   }
 
   private fun summonSeat(
