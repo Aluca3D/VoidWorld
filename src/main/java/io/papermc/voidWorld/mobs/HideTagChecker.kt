@@ -1,6 +1,7 @@
 package io.papermc.voidWorld.mobs
 
 import io.papermc.paper.event.player.AsyncChatEvent
+import io.papermc.voidWorld.helper.OHidden
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Entity
@@ -15,8 +16,8 @@ class HideTagChecker(
 ) : Listener {
   private var scheduler: BukkitScheduler = plugin.server.scheduler
 
-  val hiddenTag = "hidden"
-  val seeingTag = "seeing"
+  private val hiddenTag: String = OHidden.HIDDEN_TAG
+  private val seeingTag: String = OHidden.SEEING_TAG
 
   @EventHandler
   fun onChat(event: AsyncChatEvent) {
@@ -58,11 +59,10 @@ class HideTagChecker(
 
   private fun updateVisibility(entity: Entity) {
     val hidden = entity.scoreboardTags.contains(hiddenTag)
-    val seeing = entity.scoreboardTags.contains(seeingTag)
 
     plugin.server.onlinePlayers.forEach { viewer ->
       when {
-        seeing -> {
+        viewer.scoreboardTags.contains(seeingTag) -> {
           if (entity is Player) {
             viewer.showPlayer(plugin, entity)
           } else {
