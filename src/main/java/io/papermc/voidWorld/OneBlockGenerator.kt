@@ -3,7 +3,6 @@ package io.papermc.voidWorld
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.entity.Item
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -14,7 +13,7 @@ class OneBlockGenerator(
   private val plugin: JavaPlugin,
 ) : Listener {
   private var oneBlockLocation: Location? = null
-  private var scheduler: BukkitScheduler = plugin.server.scheduler
+  private val scheduler: BukkitScheduler = plugin.server.scheduler
 
   @EventHandler
   fun onOneBlockBreak(event: BlockBreakEvent) {

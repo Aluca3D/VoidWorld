@@ -29,7 +29,7 @@ class MobVariationSpawn(
   private val mobCounts: MutableMap<NamespacedKey?, Int?> = HashMap()
   private val mobNextInterval: MutableMap<NamespacedKey?, Int?> = HashMap()
 
-  private var scheduler: BukkitScheduler = plugin.server.scheduler
+  private val scheduler: BukkitScheduler = plugin.server.scheduler
 
   private val burningCauses: EnumSet<DamageCause?> =
     EnumSet.of(

@@ -16,6 +16,7 @@ class HideTagChecker(
   private val plugin: JavaPlugin,
 ) : Listener {
   private var scheduler: BukkitScheduler = plugin.server.scheduler
+  private val scheduler: BukkitScheduler = plugin.server.scheduler
 
   private val hiddenTag: String = OHidden.HIDDEN_TAG
   private val seeingTag: String = OHidden.SEEING_TAG

@@ -26,6 +26,7 @@ import org.bukkit.scheduler.BukkitScheduler
 @Suppress("UNUSED_PARAMETER")
 class VoidWorld : JavaPlugin() {
   private var scheduler: BukkitScheduler = this.server.scheduler
+  private val scheduler: BukkitScheduler = this.server.scheduler
 
   override fun onLoad() {
     logger.info("VoidWorld loaded!")

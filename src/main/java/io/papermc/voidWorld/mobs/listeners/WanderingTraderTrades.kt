@@ -12,7 +12,7 @@ class WanderingTraderTrades(
   private var plugin: JavaPlugin,
   private val traderConfig: WanderingTraderConfig,
 ) : Listener {
-  private var scheduler: BukkitScheduler = plugin.server.scheduler
+  private val scheduler: BukkitScheduler = plugin.server.scheduler
 
   @EventHandler
   fun onWanderingTraderSpawn(event: CreatureSpawnEvent) {
