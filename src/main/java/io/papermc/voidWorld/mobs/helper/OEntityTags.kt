@@ -1,6 +1,6 @@
-package io.papermc.voidWorld.helper
+package io.papermc.voidWorld.mobs.helper
 
-object OHidden {
+object OEntityTags {
   const val HIDDEN_TAG = "hidden"
   const val SEEING_TAG = "seeing"
 }

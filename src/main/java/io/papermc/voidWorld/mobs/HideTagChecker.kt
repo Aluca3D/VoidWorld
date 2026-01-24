@@ -2,6 +2,7 @@ package io.papermc.voidWorld.mobs
 
 import io.papermc.paper.event.player.AsyncChatEvent
 import io.papermc.voidWorld.helper.OHidden
+import io.papermc.voidWorld.mobs.helper.OEntityTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Entity
@@ -18,6 +19,8 @@ class HideTagChecker(
 
   private val hiddenTag: String = OHidden.HIDDEN_TAG
   private val seeingTag: String = OHidden.SEEING_TAG
+  private val hiddenTag: String = OEntityTags.HIDDEN_TAG
+  private val seeingTag: String = OEntityTags.SEEING_TAG
 
   @EventHandler
   fun onChat(event: AsyncChatEvent) {
@@ -35,7 +38,8 @@ class HideTagChecker(
     event.viewers().removeIf { audience ->
       val viewer = audience as? Player ?: return@removeIf true
 
-      !viewer.scoreboardTags.contains(seeingTag) && !viewer.scoreboardTags.contains(hiddenTag)
+      !viewer.scoreboardTags.contains(seeingTag) &&
+        !viewer.scoreboardTags.contains(hiddenTag)
     }
   }
 

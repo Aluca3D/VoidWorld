@@ -7,14 +7,14 @@ import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.EntitySelectorArgumentResolver
 import io.papermc.voidWorld.commands.helper.ICommand
-import io.papermc.voidWorld.helper.OHidden
+import io.papermc.voidWorld.mobs.helper.OEntityTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
 
 class HiddenCommand : ICommand {
-  private val hiddenTag: String = OHidden.HIDDEN_TAG
-  private val seeingTag: String = OHidden.SEEING_TAG
+  private val hiddenTag: String = OEntityTags.HIDDEN_TAG
+  private val seeingTag: String = OEntityTags.SEEING_TAG
 
   override fun command(): LiteralCommandNode<CommandSourceStack> {
     val root: LiteralArgumentBuilder<CommandSourceStack> =
