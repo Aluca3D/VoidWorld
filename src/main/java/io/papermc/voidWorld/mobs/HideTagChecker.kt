@@ -1,7 +1,8 @@
 package io.papermc.voidWorld.mobs
 
 import io.papermc.paper.event.player.AsyncChatEvent
-import io.papermc.voidWorld.helper.OHidden
+import io.papermc.voidWorld.ConfigLoader
+import io.papermc.voidWorld.YamlSettings
 import io.papermc.voidWorld.mobs.helper.OEntityTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -15,11 +16,13 @@ import org.bukkit.scheduler.BukkitScheduler
 class HideTagChecker(
   private val plugin: JavaPlugin,
 ) : Listener {
-  private var scheduler: BukkitScheduler = plugin.server.scheduler
   private val scheduler: BukkitScheduler = plugin.server.scheduler
+  private val config = ConfigLoader(plugin).loadYamlConfig()
+  private val settings = YamlSettings(config)
 
-  private val hiddenTag: String = OHidden.HIDDEN_TAG
-  private val seeingTag: String = OHidden.SEEING_TAG
+  private val radius: Double = settings.hide.radius
+  private val period: Long = settings.hide.period
+
   private val hiddenTag: String = OEntityTags.HIDDEN_TAG
   private val seeingTag: String = OEntityTags.SEEING_TAG
 
@@ -51,14 +54,12 @@ class HideTagChecker(
         plugin.server.onlinePlayers.forEach { player ->
           updateVisibility(player)
 
-          val radius = 50.0 // TODO: Add Base Config
           val nearby = player.getNearbyEntities(radius, radius, radius)
-
           nearby.forEach { entity -> updateVisibility(entity) }
         }
       },
       0L,
-      40L, // TODO: Add Base Config
+      period,
     )
   }
 

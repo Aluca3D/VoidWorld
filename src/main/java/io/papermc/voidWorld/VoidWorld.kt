@@ -1,6 +1,5 @@
 package io.papermc.voidWorld
 
-import io.papermc.voidWorld.OConfigLoader.loadConfigFile
 import io.papermc.voidWorld.buildStructureDetection.structure.BuddingAmethystDetection
 import io.papermc.voidWorld.buildStructureDetection.structure.EndPortalDetection
 import io.papermc.voidWorld.commands.SitListener
@@ -25,8 +24,8 @@ import org.bukkit.scheduler.BukkitScheduler
 
 @Suppress("UNUSED_PARAMETER")
 class VoidWorld : JavaPlugin() {
-  private var scheduler: BukkitScheduler = this.server.scheduler
   private val scheduler: BukkitScheduler = this.server.scheduler
+  private val configLoader: ConfigLoader = ConfigLoader(this)
 
   override fun onLoad() {
     logger.info("VoidWorld loaded!")
@@ -92,7 +91,7 @@ class VoidWorld : JavaPlugin() {
   }
 
   private fun loadMobLoot() {
-    val node = loadConfigFile(this, "config/mobs/mLoot.json")
+    val node = configLoader.loadJson("config/mobs/mLoot.json")
     val config = MobLootDropConfig(this, node)
     val listener = MobLootDrop(this, config)
 
@@ -101,7 +100,7 @@ class VoidWorld : JavaPlugin() {
   }
 
   private fun loadMobVariation() {
-    val node = loadConfigFile(this, "config/mobs/mVariation.json")
+    val node = configLoader.loadJson("config/mobs/mVariation.json")
     val config = MobVariationSpawnConfig(this, node)
     val listener = MobVariationSpawn(this, config)
 
@@ -110,7 +109,7 @@ class VoidWorld : JavaPlugin() {
   }
 
   private fun loadWanderingTrader() {
-    val node = loadConfigFile(this, "config/mobs/wTrades.json")
+    val node = configLoader.loadJson("config/mobs/wTrades.json")
     val config = WanderingTraderConfig(this, node)
     val listener = WanderingTraderTrades(this, config)
 
@@ -118,32 +117,32 @@ class VoidWorld : JavaPlugin() {
   }
 
   private fun loadBlasting(generator: RecipeGenerator) {
-    val node = loadConfigFile(this, "config/recipes/blasting.json")
+    val node = configLoader.loadJson("config/recipes/blasting.json")
     BlastingRecipeConfig(generator, node).loadRecipes()
   }
 
   private fun loadCampfire(generator: RecipeGenerator) {
-    val node = loadConfigFile(this, "config/recipes/campfire.json")
+    val node = configLoader.loadJson("config/recipes/campfire.json")
     CampfireRecipeConfig(generator, node).loadRecipes()
   }
 
   private fun loadFurnace(generator: RecipeGenerator) {
-    val node = loadConfigFile(this, "config/recipes/furnace.json")
+    val node = configLoader.loadJson("config/recipes/furnace.json")
     FurnaceRecipeConfig(generator, node).loadRecipes()
   }
 
   private fun loadShaped(generator: RecipeGenerator) {
-    val node = loadConfigFile(this, "config/recipes/shaped.json")
+    val node = configLoader.loadJson("config/recipes/shaped.json")
     ShapedRecipeConfig(generator, node).loadRecipes()
   }
 
   private fun loadShapeless(generator: RecipeGenerator) {
-    val node = loadConfigFile(this, "config/recipes/shapeless.json")
+    val node = configLoader.loadJson("config/recipes/shapeless.json")
     ShapelessRecipeConfig(generator, node).loadRecipes()
   }
 
   private fun loadSmoking(generator: RecipeGenerator) {
-    val node = loadConfigFile(this, "config/recipes/smoking.json")
+    val node = configLoader.loadJson("config/recipes/smoking.json")
     SmokingRecipeConfig(generator, node).loadRecipes()
   }
 
