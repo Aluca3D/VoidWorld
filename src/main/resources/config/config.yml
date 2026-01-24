@@ -1,0 +1,7 @@
+hideTag:
+  # Radius in blocks around the player that have the seeing tag
+  # to check for nearby entities with the hidden tag
+  radius: 50
+  # How often (in ticks) the radius check is performed
+  # 20 ticks = 1 second
+  period: 40
